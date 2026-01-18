@@ -11,7 +11,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Shield, Zap, Heart, User, Swords, 
-  BookOpen, Settings, Plus, Pencil, Trash2 
+  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp 
 } from "lucide-react";
 
 import StatBlock, { getModifier, formatModifier } from "@/components/character/StatBlock";
@@ -20,6 +20,10 @@ import PowerCard from "@/components/character/PowerCard";
 import DiceRoller from "@/components/character/DiceRoller";
 import { CLASSIFICATION_LABELS, TIER_LABELS, ALIGNMENT_LABELS } from "@/components/character/CharacterCard";
 import PowerEditor from "@/components/character/PowerEditor";
+import ProgressionBar from "@/components/character/ProgressionBar";
+import LevelUpDialog from "@/components/character/LevelUpDialog";
+import EquipmentManager from "@/components/character/EquipmentManager";
+import PowerUpgradeDialog from "@/components/character/PowerUpgradeDialog";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -51,6 +55,8 @@ export default function CharacterSheet() {
   
   const [showPowerEditor, setShowPowerEditor] = useState(false);
   const [editingPower, setEditingPower] = useState(null);
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [upgradingPower, setUpgradingPower] = useState(null);
   
   const { data: character, isLoading } = useQuery({
     queryKey: ['character', characterId],
@@ -129,6 +135,23 @@ export default function CharacterSheet() {
     }
   };
   
+  const handleLevelUp = (updates) => {
+    updateMutation.mutate(updates);
+    setShowLevelUp(false);
+  };
+  
+  const handlePowerUpgrade = (upgradedPower) => {
+    const newPowers = character.powers.map(p => 
+      p.name === upgradedPower.name ? upgradedPower : p
+    );
+    updateMutation.mutate({ powers: newPowers });
+    setUpgradingPower(null);
+  };
+  
+  const handleEquipmentUpdate = (equipment) => {
+    updateMutation.mutate({ equipment });
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
       {/* Ambient glow */}
@@ -179,6 +202,14 @@ export default function CharacterSheet() {
           </div>
         </div>
         
+        {/* Progression Bar */}
+        <div className="mb-6">
+          <ProgressionBar 
+            character={character} 
+            onLevelUp={() => setShowLevelUp(true)}
+          />
+        </div>
+        
         {/* Quick Stats Bar */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           <Card className="bg-slate-800/50 border-slate-700">
@@ -225,6 +256,10 @@ export default function CharacterSheet() {
             <TabsTrigger value="powers" className="data-[state=active]:bg-violet-500/20">
               <Zap className="h-4 w-4 mr-2" />
               Powers
+            </TabsTrigger>
+            <TabsTrigger value="equipment" className="data-[state=active]:bg-violet-500/20">
+              <Shield className="h-4 w-4 mr-2" />
+              Equipment
             </TabsTrigger>
             <TabsTrigger value="info" className="data-[state=active]:bg-violet-500/20">
               <BookOpen className="h-4 w-4 mr-2" />
@@ -301,6 +336,15 @@ export default function CharacterSheet() {
                       <Button
                         size="icon"
                         variant="ghost"
+                        className="h-7 w-7 bg-violet-600/80 hover:bg-violet-500"
+                        onClick={() => setUpgradingPower(power)}
+                        title="Upgrade Power"
+                      >
+                        <ArrowUp className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
                         className="h-7 w-7 bg-slate-800/80 hover:bg-slate-700"
                         onClick={() => { setEditingPower(index); setShowPowerEditor(true); }}
                       >
@@ -333,6 +377,14 @@ export default function CharacterSheet() {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+          
+          {/* Equipment Tab */}
+          <TabsContent value="equipment">
+            <EquipmentManager 
+              character={character}
+              onUpdate={handleEquipmentUpdate}
+            />
           </TabsContent>
           
           {/* Info Tab */}
@@ -416,13 +468,29 @@ export default function CharacterSheet() {
         </Tabs>
       </div>
       
-      {/* Power Editor Modal */}
+      {/* Modals */}
       {showPowerEditor && (
         <PowerEditor
           power={editingPower !== null ? character.powers[editingPower] : null}
           character={character}
           onSave={handleSavePower}
           onClose={() => { setShowPowerEditor(false); setEditingPower(null); }}
+        />
+      )}
+      
+      {showLevelUp && (
+        <LevelUpDialog
+          character={character}
+          onConfirm={handleLevelUp}
+          onClose={() => setShowLevelUp(false)}
+        />
+      )}
+      
+      {upgradingPower && (
+        <PowerUpgradeDialog
+          power={upgradingPower}
+          onUpgrade={handlePowerUpgrade}
+          onClose={() => setUpgradingPower(null)}
         />
       )}
     </div>
