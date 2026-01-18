@@ -79,13 +79,14 @@ export default function Campaigns() {
             {filteredCampaigns.map((campaign, index) => {
               const StatusIcon = STATUS_ICONS[campaign.status];
               return (
-                <motion.div
-                  key={campaign.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Link to={createPageUrl(`CampaignDetail?id=${campaign.id}`)}>
+                <Link key={campaign.id} to={createPageUrl(`CampaignDetail?id=${campaign.id}`)}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all cursor-pointer group">
                       <CardHeader>
                         <div className="flex items-start justify-between">
@@ -108,9 +109,9 @@ export default function Campaigns() {
                           <span>{campaign.world_events?.length || 0} events</span>
                         </div>
                       </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
+                      </Card>
+                      </motion.div>
+                      </Link>
               );
             })}
           </div>

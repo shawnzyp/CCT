@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import ResourceBar from './ResourceBar';
 import StatBlock from './StatBlock';
 import { Shield, Zap, User } from "lucide-react";
+import { motion } from 'framer-motion';
 
 const CLASSIFICATION_LABELS = {
   mutant: 'Mutant',
@@ -43,8 +44,11 @@ export default function CharacterCard({ character, onClick, selected = false }) 
   const maxSP = 5 + conMod;
   
   return (
-    <div 
+    <motion.div 
       onClick={onClick}
+      whileHover={{ y: -8, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
       className={cn(
         "relative rounded-2xl overflow-hidden cursor-pointer",
         "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900",
@@ -143,7 +147,7 @@ export default function CharacterCard({ character, onClick, selected = false }) 
           <span className="text-xs text-slate-300">{ALIGNMENT_LABELS[character.alignment] || character.alignment}</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
