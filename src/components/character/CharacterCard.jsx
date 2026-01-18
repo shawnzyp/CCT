@@ -101,7 +101,7 @@ export default function CharacterCard({ character, onClick, selected = false }) 
             <h3 className="font-bold text-lg text-white truncate group-hover:text-violet-300 transition-colors">
               {character.name}
             </h3>
-            <p className="text-xs text-slate-400 truncate">{character.real_name || 'Unknown Identity'}</p>
+            <p className="text-xs text-slate-400 truncate">{character.secret_identity || 'Unknown Identity'}</p>
             <div className="flex flex-wrap gap-1 mt-1">
               <Badge variant="outline" className="text-[10px] border-violet-500/50 text-violet-400">
                 {CLASSIFICATION_LABELS[character.classification] || character.classification}
