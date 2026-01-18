@@ -10,11 +10,17 @@ import { Link } from "react-router-dom";
 
 export default function CreateCharacter() {
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(window.location.search);
+  const campaignId = urlParams.get('campaign');
   
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Character.create(data),
     onSuccess: (result) => {
-      navigate(createPageUrl(`CharacterSheet?id=${result.id}`));
+      if (campaignId) {
+        navigate(createPageUrl(`CampaignDetail?id=${campaignId}`));
+      } else {
+        navigate(createPageUrl(`CharacterSheet?id=${result.id}`));
+      }
     }
   });
   
@@ -39,6 +45,7 @@ export default function CreateCharacter() {
         <CreateCharacterForm 
           onSubmit={(data) => createMutation.mutate(data)}
           isLoading={createMutation.isPending}
+          campaignId={campaignId}
         />
       </div>
     </div>

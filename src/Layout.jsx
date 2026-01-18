@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
-import { Users, Zap, BookOpen, Menu, X } from 'lucide-react';
+import { Users, Zap, BookOpen, Menu, X, BookOpen as BookOpenIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
@@ -11,6 +11,7 @@ export default function Layout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [
+    { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
     { name: 'Characters', path: 'Characters', icon: Users },
     { name: 'Create', path: 'CreateCharacter', icon: Zap },
   ];

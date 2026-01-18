@@ -64,7 +64,7 @@ const ALIGNMENTS = [
 
 const STATS = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 
-export default function CreateCharacterForm({ onSubmit, initialData, isLoading }) {
+export default function CreateCharacterForm({ onSubmit, initialData, isLoading, campaignId }) {
   const [step, setStep] = useState(0);
   const [data, setData] = useState(initialData || {
     name: '',
@@ -77,7 +77,8 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading }
     ability_scores: { STR: 10, DEX: 10, CON: 10, INT: 10, WIS: 10, CHA: 10 },
     alignment: '',
     damage_resistance: '',
-    backstory_notes: ''
+    backstory_notes: '',
+    campaign_id: campaignId || ''
   });
   
   const steps = [
