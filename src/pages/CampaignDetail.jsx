@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
 import CampaignEvents from "@/components/campaign/CampaignEvents";
 import CombatTracker from "@/components/combat/CombatTracker";
-import QuestTracker from "@/components/campaign/QuestTracker";
+import QuestTrackerReadOnly from "@/components/campaign/QuestTrackerReadOnly";
 import StoryArcTracker from "@/components/campaign/StoryArcTracker";
+import WorldEventsReadOnly from "@/components/campaign/WorldEventsReadOnly";
 import SessionLog from "@/components/campaign/SessionLog";
 import CampaignDashboard from "@/components/campaign/CampaignDashboard";
 import WorldBuilder from "@/components/campaign/WorldBuilder";
@@ -98,10 +100,43 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="world">
-            <WorldBuilder 
-              campaign={campaign}
-              onUpdate={(data) => updateCampaign.mutate(data)}
-            />
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardContent className="py-8">
+                <h3 className="text-lg font-semibold text-white mb-4">World Information</h3>
+                <div className="space-y-6">
+                  {campaign.world_locations?.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-400 uppercase mb-2">Locations</h4>
+                      <div className="space-y-2">
+                        {campaign.world_locations.map((loc, i) => (
+                          <div key={i} className="bg-slate-700/50 rounded p-3">
+                            <div className="font-medium text-white">{loc.name}</div>
+                            <p className="text-sm text-slate-400">{loc.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {campaign.world_npcs?.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-400 uppercase mb-2">NPCs</h4>
+                      <div className="space-y-2">
+                        {campaign.world_npcs.map((npc, i) => (
+                          <div key={i} className="bg-slate-700/50 rounded p-3">
+                            <div className="font-medium text-white">{npc.name}</div>
+                            <p className="text-xs text-slate-400">{npc.role}</p>
+                            <p className="text-sm text-slate-300 mt-1">{npc.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {!campaign.world_locations?.length && !campaign.world_npcs?.length && (
+                    <p className="text-slate-400 text-center">No world information yet</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
           
           <TabsContent value="log">
@@ -113,17 +148,30 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="quests">
-            <QuestTracker 
-              quests={campaign.quests || []} 
-              onUpdate={(quests) => updateCampaign.mutate({ quests })}
-            />
+            <QuestTrackerReadOnly quests={campaign.quests || []} />
           </TabsContent>
           
           <TabsContent value="arcs">
-            <StoryArcTracker 
-              storyArcs={campaign.story_arcs || []} 
-              onUpdate={(story_arcs) => updateCampaign.mutate({ story_arcs })}
-            />
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardContent className="py-8">
+                <h3 className="text-lg font-semibold text-white mb-4">Story Arcs</h3>
+                {campaign.story_arcs?.length > 0 ? (
+                  <div className="space-y-3">
+                    {campaign.story_arcs.map((arc, i) => (
+                      <div key={i} className="bg-slate-700/50 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="font-medium text-white">{arc.title}</h4>
+                          <Badge variant="outline" className="text-xs">{arc.status}</Badge>
+                        </div>
+                        <p className="text-sm text-slate-300">{arc.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-400 text-center">No story arcs yet</p>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
           
           <TabsContent value="journal">
@@ -139,10 +187,7 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="events">
-            <WorldEventsManager 
-              campaign={campaign}
-              onUpdate={(data) => updateCampaign.mutate(data)}
-            />
+            <WorldEventsReadOnly campaign={campaign} />
           </TabsContent>
           
           <TabsContent value="resources">

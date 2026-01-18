@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Lock, Unlock, Dices, Users, Scroll, Zap, Eye } from 'lucide-react';
+import { Shield, Lock, Unlock, Dices, Users, Scroll, Zap, Eye, ScrollText, Milestone, Globe, Map } from 'lucide-react';
+import QuestTracker from '@/components/campaign/QuestTracker';
+import StoryArcTracker from '@/components/campaign/StoryArcTracker';
+import WorldEventsManager from '@/components/campaign/WorldEventsManager';
+import WorldBuilder from '@/components/campaign/WorldBuilder';
 
 const DEFAULT_PIN = '1234'; // In production, this should be stored securely
 
@@ -15,6 +22,28 @@ export default function DMTools() {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [rollResult, setRollResult] = useState(null);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const queryClient = useQueryClient();
+  
+  const { data: campaigns = [] } = useQuery({
+    queryKey: ['campaigns'],
+    queryFn: () => base44.entities.Campaign.list('-created_date'),
+    enabled: isAuthenticated
+  });
+  
+  const { data: campaign } = useQuery({
+    queryKey: ['campaign', selectedCampaign],
+    queryFn: () => base44.entities.Campaign.filter({ id: selectedCampaign }),
+    select: (data) => data[0],
+    enabled: !!selectedCampaign && isAuthenticated
+  });
+  
+  const updateCampaign = useMutation({
+    mutationFn: (data) => base44.entities.Campaign.update(selectedCampaign, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaign', selectedCampaign] });
+    },
+  });
 
   const handlePinSubmit = (e) => {
     e.preventDefault();
@@ -125,19 +154,52 @@ export default function DMTools() {
           </Badge>
         </motion.div>
 
+        {/* Campaign Selector */}
+        <Card className="bg-slate-800/50 border-slate-700 mb-4">
+          <CardContent className="p-4">
+            <Label className="text-slate-300 mb-2 block">Select Campaign to Manage</Label>
+            <Select value={selectedCampaign || ''} onValueChange={setSelectedCampaign}>
+              <SelectTrigger className="bg-slate-900 border-slate-700 text-white">
+                <SelectValue placeholder="Choose a campaign..." />
+              </SelectTrigger>
+              <SelectContent>
+                {campaigns.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="dice" className="space-y-4">
-          <TabsList className="bg-slate-800/50 border border-slate-700">
+          <TabsList className="bg-slate-800/50 border border-slate-700 flex-wrap h-auto">
             <TabsTrigger value="dice" className="data-[state=active]:bg-violet-500/20">
               <Dices className="h-4 w-4 mr-2" />
-              Dice Roller
+              Dice
+            </TabsTrigger>
+            <TabsTrigger value="quests" className="data-[state=active]:bg-violet-500/20" disabled={!selectedCampaign}>
+              <ScrollText className="h-4 w-4 mr-2" />
+              Quests
+            </TabsTrigger>
+            <TabsTrigger value="arcs" className="data-[state=active]:bg-violet-500/20" disabled={!selectedCampaign}>
+              <Milestone className="h-4 w-4 mr-2" />
+              Story Arcs
+            </TabsTrigger>
+            <TabsTrigger value="events" className="data-[state=active]:bg-violet-500/20" disabled={!selectedCampaign}>
+              <Globe className="h-4 w-4 mr-2" />
+              World Events
+            </TabsTrigger>
+            <TabsTrigger value="world" className="data-[state=active]:bg-violet-500/20" disabled={!selectedCampaign}>
+              <Map className="h-4 w-4 mr-2" />
+              World Builder
             </TabsTrigger>
             <TabsTrigger value="npc" className="data-[state=active]:bg-violet-500/20">
               <Users className="h-4 w-4 mr-2" />
-              NPC Generator
+              NPC Gen
             </TabsTrigger>
             <TabsTrigger value="loot" className="data-[state=active]:bg-violet-500/20">
               <Scroll className="h-4 w-4 mr-2" />
-              Loot Generator
+              Loot Gen
             </TabsTrigger>
           </TabsList>
 
@@ -193,6 +255,70 @@ export default function DMTools() {
                 </AnimatePresence>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="quests">
+            {campaign ? (
+              <QuestTracker 
+                quests={campaign.quests || []} 
+                onUpdate={(quests) => updateCampaign.mutate({ quests })}
+              />
+            ) : (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="py-12 text-center">
+                  <ScrollText className="h-12 w-12 mx-auto mb-3 text-slate-600" />
+                  <p className="text-slate-400">Select a campaign to manage quests</p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="arcs">
+            {campaign ? (
+              <StoryArcTracker 
+                storyArcs={campaign.story_arcs || []} 
+                onUpdate={(story_arcs) => updateCampaign.mutate({ story_arcs })}
+              />
+            ) : (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="py-12 text-center">
+                  <Milestone className="h-12 w-12 mx-auto mb-3 text-slate-600" />
+                  <p className="text-slate-400">Select a campaign to manage story arcs</p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="events">
+            {campaign ? (
+              <WorldEventsManager 
+                campaign={campaign}
+                onUpdate={(data) => updateCampaign.mutate(data)}
+              />
+            ) : (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="py-12 text-center">
+                  <Globe className="h-12 w-12 mx-auto mb-3 text-slate-600" />
+                  <p className="text-slate-400">Select a campaign to manage world events</p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="world">
+            {campaign ? (
+              <WorldBuilder 
+                campaign={campaign}
+                onUpdate={(data) => updateCampaign.mutate(data)}
+              />
+            ) : (
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="py-12 text-center">
+                  <Map className="h-12 w-12 mx-auto mb-3 text-slate-600" />
+                  <p className="text-slate-400">Select a campaign to build the world</p>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
 
           <TabsContent value="npc">
