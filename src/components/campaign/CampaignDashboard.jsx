@@ -1,14 +1,18 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ScrollText, Target, Users, Heart, Zap, TrendingUp, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { ScrollText, Target, Users, Heart, Zap, TrendingUp, AlertCircle, Play, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function CampaignDashboard({ campaign, characters }) {
+export default function CampaignDashboard({ campaign, characters, campaignId }) {
   const activeQuests = (campaign.quests || []).filter(q => q.status === 'active');
   const completedQuests = (campaign.quests || []).filter(q => q.status === 'completed');
   const activeArcs = (campaign.story_arcs || []).filter(a => a.status === 'in_progress');
+  const activeEvents = (campaign.world_events || []).filter(e => e.status === 'active');
   
   const avgCharLevel = characters.length > 0 
     ? Math.round(characters.reduce((sum, c) => sum + (c.level || 1), 0) / characters.length)
@@ -18,6 +22,20 @@ export default function CampaignDashboard({ campaign, characters }) {
   
   return (
     <div className="space-y-6">
+      {/* Player View Link */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-xl font-bold text-white">Campaign Dashboard</h2>
+          <p className="text-sm text-slate-400">Overview and quick stats</p>
+        </div>
+        <Link to={createPageUrl(`PlayCampaign?id=${campaignId}`)}>
+          <Button className="gap-2 bg-violet-600 hover:bg-violet-700">
+            <Play className="h-4 w-4" />
+            Player View
+          </Button>
+        </Link>
+      </div>
+      
       {/* Overview Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="bg-slate-800/50 border-slate-700">
@@ -71,6 +89,20 @@ export default function CampaignDashboard({ campaign, characters }) {
               <div>
                 <div className="text-2xl font-bold text-white">Lvl {avgCharLevel}</div>
                 <div className="text-xs text-slate-400">Avg Level</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                <Globe className="h-5 w-5 text-red-400" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">{activeEvents.length}</div>
+                <div className="text-xs text-slate-400">World Events</div>
               </div>
             </div>
           </CardContent>
