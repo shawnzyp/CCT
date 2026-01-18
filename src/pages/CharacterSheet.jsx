@@ -11,7 +11,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Shield, Zap, Heart, User, Swords, 
-  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp 
+  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package 
 } from "lucide-react";
 
 import StatBlock, { getModifier, formatModifier } from "@/components/character/StatBlock";
@@ -25,6 +25,7 @@ import LevelUpDialog from "@/components/character/LevelUpDialog";
 import EquipmentManager from "@/components/character/EquipmentManager";
 import PowerUpgradeDialog from "@/components/character/PowerUpgradeDialog";
 import SkillsPanel from "@/components/character/SkillsPanel";
+import InventoryPanel from "@/components/character/InventoryPanel";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -157,6 +158,14 @@ export default function CharacterSheet() {
     updateMutation.mutate({ skills });
   };
   
+  const handleInventoryUpdate = (updates) => {
+    updateMutation.mutate(updates);
+  };
+  
+  const handleEquipFromInventory = (updates) => {
+    updateMutation.mutate(updates);
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
       {/* Ambient glow */}
@@ -265,6 +274,10 @@ export default function CharacterSheet() {
             <TabsTrigger value="equipment" className="data-[state=active]:bg-violet-500/20">
               <Shield className="h-4 w-4 mr-2" />
               Equipment
+            </TabsTrigger>
+            <TabsTrigger value="inventory" className="data-[state=active]:bg-violet-500/20">
+              <Package className="h-4 w-4 mr-2" />
+              Inventory
             </TabsTrigger>
             <TabsTrigger value="info" className="data-[state=active]:bg-violet-500/20">
               <BookOpen className="h-4 w-4 mr-2" />
@@ -391,6 +404,15 @@ export default function CharacterSheet() {
             <EquipmentManager 
               character={character}
               onUpdate={handleEquipmentUpdate}
+            />
+          </TabsContent>
+          
+          {/* Inventory Tab */}
+          <TabsContent value="inventory">
+            <InventoryPanel 
+              character={character}
+              onUpdate={handleInventoryUpdate}
+              onEquip={handleEquipFromInventory}
             />
           </TabsContent>
           

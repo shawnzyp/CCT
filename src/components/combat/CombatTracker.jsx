@@ -7,13 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users } from "lucide-react";
+import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users, Gift } from "lucide-react";
 import { getModifier } from "@/components/character/StatBlock";
 import ResourceBar from "@/components/character/ResourceBar";
 import ConditionManager from "@/components/combat/ConditionManager";
 import EnemyGenerator from "@/components/combat/EnemyGenerator";
 import TacticalGrid from "@/components/combat/TacticalGrid";
 import CombatLog from "@/components/combat/CombatLog";
+import LootDialog from "@/components/character/LootDialog";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -23,6 +24,8 @@ export default function CombatTracker({ characters, campaignId }) {
   const [combatLog, setCombatLog] = useState([]);
   const [currentRound, setCurrentRound] = useState(1);
   const [showEnemyGen, setShowEnemyGen] = useState(false);
+  const [pendingLoot, setPendingLoot] = useState(null);
+  const [defeatedEnemies, setDefeatedEnemies] = useState([]);
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -135,9 +138,74 @@ export default function CombatTracker({ characters, campaignId }) {
   
   const handleHPChange = (charId, newHP) => {
     setInitiativeOrder(prev => 
-      prev.map(char => char.id === charId ? { ...char, current_hp: newHP } : char)
+      prev.map(char => {
+        if (char.id === charId) {
+          // Check if enemy was defeated
+          if (char.isEnemy && newHP <= 0 && char.hp > 0) {
+            generateLoot(char);
+          }
+          return { ...char, current_hp: newHP, hp: newHP };
+        }
+        return char;
+      })
     );
-    updateCharacter.mutate({ id: charId, data: { current_hp: newHP } });
+    
+    if (!charId.toString().startsWith('enemy_')) {
+      updateCharacter.mutate({ id: charId, data: { current_hp: newHP } });
+    }
+  };
+  
+  const generateLoot = (enemy) => {
+    const baseGold = Math.floor(Math.random() * 50) + 10;
+    const baseXP = Math.floor(Math.random() * 100) + 50;
+    
+    const loot = {
+      gold: baseGold,
+      xp: baseXP,
+      items: []
+    };
+    
+    // 50% chance for item drop
+    if (Math.random() > 0.5) {
+      const rarities = ['common', 'common', 'uncommon', 'uncommon', 'rare'];
+      const types = ['weapon', 'armor', 'gadget', 'utility', 'consumable'];
+      const rarity = rarities[Math.floor(Math.random() * rarities.length)];
+      const type = types[Math.floor(Math.random() * types.length)];
+      
+      const item = {
+        name: `${enemy.name}'s ${type}`,
+        type,
+        rarity,
+        description: `Looted from ${enemy.name}`,
+        value: rarity === 'common' ? 25 : rarity === 'uncommon' ? 50 : rarity === 'rare' ? 100 : 200,
+        quantity: 1
+      };
+      
+      if (rarity === 'rare' || rarity === 'epic') {
+        item.magical_properties = ['Enhanced'];
+      }
+      
+      loot.items.push(item);
+    }
+    
+    setPendingLoot(loot);
+    addLogEntry(enemy.name, 'Defeated', `Dropped loot!`);
+  };
+  
+  const handleClaimLoot = (loot) => {
+    // Distribute loot to all characters
+    characters.forEach(char => {
+      const updates = {
+        gold: (char.gold || 0) + Math.floor(loot.gold / characters.length),
+        current_xp: (char.current_xp || 0) + Math.floor(loot.xp / characters.length)
+      };
+      
+      if (loot.items.length > 0) {
+        updates.inventory = [...(char.inventory || []), ...loot.items];
+      }
+      
+      updateCharacter.mutate({ id: char.id, data: updates });
+    });
   };
   
   const handleSPChange = (charId, newSP) => {
@@ -362,5 +430,13 @@ export default function CombatTracker({ characters, campaignId }) {
         <CombatLog logs={combatLog} />
       </TabsContent>
     </Tabs>
+    
+    {pendingLoot && (
+      <LootDialog
+        loot={pendingLoot}
+        onClaim={handleClaimLoot}
+        onClose={() => setPendingLoot(null)}
+      />
+    )}
   );
 }
