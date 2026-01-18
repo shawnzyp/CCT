@@ -34,11 +34,6 @@ export default function CampaignDetail({ currentCharacter }) {
   React.useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
   }, []);
-  const [currentUser, setCurrentUser] = React.useState(null);
-  
-  React.useEffect(() => {
-    base44.auth.me().then(setCurrentUser).catch(() => {});
-  }, []);
   
   const { data: campaign, isLoading } = useQuery({
     queryKey: ['campaign', campaignId],

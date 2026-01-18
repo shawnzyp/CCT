@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Sword, Shield, Zap, Heart, Target } from "lucide-react";
-import { calculateModifier, formatModifier } from "./StatBlock";
+import { getModifier, formatModifier } from "./StatBlock";
 
 const statIcons = {
   STR: Sword,
@@ -44,7 +44,7 @@ export default function StatsVisual({ character }) {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {Object.entries(scores).map(([stat, score]) => {
             const Icon = statIcons[stat];
-            const modifier = calculateModifier(score);
+            const modifier = getModifier(score);
             const percentage = Math.min((score / 20) * 100, 100);
             
             return (
