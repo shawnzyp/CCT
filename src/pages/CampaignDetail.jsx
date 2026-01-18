@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Users, BookOpen, Globe, Swords } from "lucide-react";
+import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone } from "lucide-react";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
 import CampaignEvents from "@/components/campaign/CampaignEvents";
@@ -31,6 +31,13 @@ export default function CampaignDetail() {
     enabled: !!campaignId
   });
   
+  const updateCampaign = useMutation({
+    mutationFn: (data) => base44.entities.Campaign.update(campaignId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['campaign', campaignId] });
+    },
+  });
+  
   if (isLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Loading...</div>;
   if (!campaign) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Campaign not found</div>;
   
@@ -49,13 +56,29 @@ export default function CampaignDetail() {
           </div>
         </div>
         
-        <Tabs defaultValue="journal" className="space-y-4">
+        <Tabs defaultValue="quests" className="space-y-4">
           <TabsList className="bg-slate-800/50 border border-slate-700">
+            <TabsTrigger value="quests"><ScrollText className="h-4 w-4 mr-2" />Quests</TabsTrigger>
+            <TabsTrigger value="arcs"><Milestone className="h-4 w-4 mr-2" />Story Arcs</TabsTrigger>
             <TabsTrigger value="journal"><BookOpen className="h-4 w-4 mr-2" />Journal</TabsTrigger>
             <TabsTrigger value="characters"><Users className="h-4 w-4 mr-2" />Characters</TabsTrigger>
             <TabsTrigger value="events"><Globe className="h-4 w-4 mr-2" />Events</TabsTrigger>
             <TabsTrigger value="combat"><Swords className="h-4 w-4 mr-2" />Combat</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="quests">
+            <QuestTracker 
+              quests={campaign.quests || []} 
+              onUpdate={(quests) => updateCampaign.mutate({ quests })}
+            />
+          </TabsContent>
+          
+          <TabsContent value="arcs">
+            <StoryArcTracker 
+              storyArcs={campaign.story_arcs || []} 
+              onUpdate={(story_arcs) => updateCampaign.mutate({ story_arcs })}
+            />
+          </TabsContent>
           
           <TabsContent value="journal">
             <CampaignJournal campaign={campaign} />
