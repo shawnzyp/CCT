@@ -9,7 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { ScrollText, Plus, CheckCircle2, Clock, XCircle, ChevronDown, ChevronRight, Award } from "lucide-react";
+import { ScrollText, Plus, CheckCircle2, Clock, XCircle, ChevronDown, ChevronRight, Award, Lightbulb } from "lucide-react";
+import { base44 } from '@/api/base44Client';
 
 const STATUS_CONFIG = {
   active: { icon: Clock, color: 'text-blue-400', bg: 'bg-blue-500/20', label: 'Active' },
@@ -21,22 +22,46 @@ const STATUS_CONFIG = {
 export default function QuestTracker({ quests = [], onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [expandedQuest, setExpandedQuest] = useState(null);
+  const [showSuggestion, setShowSuggestion] = useState(null);
+  const [suggestion, setSuggestion] = useState('');
+  const [currentUser, setCurrentUser] = React.useState(null);
   const [newQuest, setNewQuest] = useState({
     title: '',
     description: '',
     status: 'active',
     objectives: [],
-    rewards: ''
+    rewards: '',
+    player_suggestions: []
   });
+  
+  React.useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
 
   const handleAddQuest = () => {
     const quest = {
       ...newQuest,
-      created_date: new Date().toISOString()
+      created_date: new Date().toISOString(),
+      player_suggestions: []
     };
     onUpdate([...quests, quest]);
-    setNewQuest({ title: '', description: '', status: 'active', objectives: [], rewards: '' });
+    setNewQuest({ title: '', description: '', status: 'active', objectives: [], rewards: '', player_suggestions: [] });
     setShowDialog(false);
+  };
+  
+  const handleAddSuggestion = (questIndex) => {
+    if (suggestion.trim()) {
+      const updated = [...quests];
+      updated[questIndex].player_suggestions = updated[questIndex].player_suggestions || [];
+      updated[questIndex].player_suggestions.push({
+        text: suggestion,
+        author: currentUser?.email || 'Unknown',
+        timestamp: new Date().toISOString()
+      });
+      onUpdate(updated);
+      setSuggestion('');
+      setShowSuggestion(null);
+    }
   };
 
   const handleToggleObjective = (questIndex, objIndex) => {
@@ -159,6 +184,27 @@ export default function QuestTracker({ quests = [], onUpdate }) {
                           <span className="text-slate-300">{quest.rewards}</span>
                         </div>
                       )}
+                      
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => setShowSuggestion(index)}
+                        className="gap-1"
+                      >
+                        <Lightbulb className="h-3 w-3" />
+                        Suggest Update
+                      </Button>
+                      
+                      {quest.player_suggestions?.length > 0 && (
+                        <div className="bg-violet-500/10 rounded-lg p-3 border border-violet-500/30 mt-2">
+                          <div className="text-xs font-semibold text-violet-400 mb-2">Player Suggestions:</div>
+                          {quest.player_suggestions.map((sug, si) => (
+                            <div key={si} className="text-xs text-slate-300 mb-1">
+                              • {sug.text} <span className="text-slate-500">- {sug.author?.split('@')[0]}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
@@ -166,6 +212,32 @@ export default function QuestTracker({ quests = [], onUpdate }) {
             );
           })}
         </div>
+      )}
+      
+      {showSuggestion !== null && (
+        <Dialog open onOpenChange={() => setShowSuggestion(null)}>
+          <DialogContent className="bg-slate-900 border-slate-700 text-white">
+            <DialogHeader>
+              <DialogTitle>Suggest: {quests[showSuggestion]?.title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Textarea
+                placeholder="Suggest objective, plot twist, or improvement..."
+                value={suggestion}
+                onChange={(e) => setSuggestion(e.target.value)}
+                className="bg-slate-800 border-slate-700 min-h-[100px]"
+              />
+              <div className="flex gap-2">
+                <Button onClick={() => handleAddSuggestion(showSuggestion)} className="flex-1 bg-violet-600 hover:bg-violet-700">
+                  Add Suggestion
+                </Button>
+                <Button onClick={() => setShowSuggestion(null)} variant="outline" className="flex-1">
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
