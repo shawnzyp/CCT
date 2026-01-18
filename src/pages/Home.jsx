@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User } from 'lucide-react';
+import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
@@ -25,31 +25,59 @@ export default function Home() {
   const features = [
     {
       icon: Users,
-      title: 'Create Characters',
-      description: 'Build unique vigilantes with custom powers and backgrounds',
-      link: 'CreateCharacter',
+      title: 'My Characters',
+      description: 'View and manage your hero roster',
+      link: 'Characters',
       color: 'from-violet-500 to-purple-600'
     },
     {
       icon: BookOpen,
-      title: 'Manage Campaigns',
-      description: 'Track quests, story arcs, and world events',
+      title: 'Campaigns',
+      description: 'Join or manage active campaigns',
       link: 'Campaigns',
       color: 'from-blue-500 to-cyan-600'
     },
     {
+      icon: Sparkles,
+      title: 'Create Character',
+      description: 'Build a new vigilante hero',
+      link: 'CreateCharacter',
+      color: 'from-purple-500 to-pink-600'
+    },
+    {
       icon: Swords,
-      title: 'Run Combat',
-      description: 'Tactical encounters with initiative and positioning',
-      link: 'Campaigns',
+      title: 'Combat Tracker',
+      description: 'Your character combat stats',
+      link: characters.length > 0 ? `CharacterSheet?id=${characters[0].id}` : 'Characters',
       color: 'from-red-500 to-orange-600'
+    },
+    {
+      icon: Dices,
+      title: 'Dice Roller',
+      description: 'Roll d20s and skill checks',
+      link: characters.length > 0 ? `CharacterSheet?id=${characters[0].id}` : 'Characters',
+      color: 'from-emerald-500 to-green-600'
     },
     {
       icon: Shield,
       title: 'DM Tools',
-      description: 'Game master utilities and controls',
+      description: 'Game master utilities',
       link: 'DMTools',
       color: 'from-amber-500 to-yellow-600'
+    },
+    {
+      icon: FileText,
+      title: 'Rules',
+      description: 'Game system reference',
+      link: 'Rules',
+      color: 'from-slate-500 to-slate-600'
+    },
+    {
+      icon: Heart,
+      title: 'Help',
+      description: 'Guides and support',
+      link: 'Help',
+      color: 'from-rose-500 to-pink-600'
     }
   ];
 
@@ -140,7 +168,7 @@ export default function Home() {
         </motion.div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
