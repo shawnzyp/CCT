@@ -10,6 +10,8 @@ import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
 import CampaignEvents from "@/components/campaign/CampaignEvents";
 import CombatTracker from "@/components/combat/CombatTracker";
+import QuestTracker from "@/components/campaign/QuestTracker";
+import StoryArcTracker from "@/components/campaign/StoryArcTracker";
 
 export default function CampaignDetail() {
   const urlParams = new URLSearchParams(window.location.search);
