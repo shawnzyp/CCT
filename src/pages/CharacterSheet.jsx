@@ -11,7 +11,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Shield, Zap, Heart, User, Swords, 
-  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package 
+  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package, FileText
 } from "lucide-react";
 
 import StatBlock, { getModifier, formatModifier } from "@/components/character/StatBlock";
@@ -27,6 +27,7 @@ import PowerUpgradeDialog from "@/components/character/PowerUpgradeDialog";
 import SkillsPanel from "@/components/character/SkillsPanel";
 import InventoryPanel from "@/components/character/InventoryPanel";
 import DowntimeActivities from "@/components/character/DowntimeActivities";
+import ImportExportCharacter from "@/components/character/ImportExportCharacter";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -166,6 +167,10 @@ export default function CharacterSheet() {
   const handleEquipFromInventory = (updates) => {
     updateMutation.mutate(updates);
   };
+
+  const handleImport = (characterData) => {
+    updateMutation.mutate(characterData);
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
@@ -175,16 +180,16 @@ export default function CharacterSheet() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </div>
       
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-6">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex flex-wrap items-center gap-3 mb-6">
           <Link to={createPageUrl('Characters')}>
             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
               {/* Portrait */}
               <div className={cn(
@@ -200,7 +205,7 @@ export default function CharacterSheet() {
               </div>
               
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">{character.name}</h1>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white truncate">{character.name}</h1>
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <Badge variant="outline" className="border-violet-500/50 text-violet-400 text-xs">
                     {CLASSIFICATION_LABELS[character.classification]}
@@ -215,6 +220,8 @@ export default function CharacterSheet() {
               </div>
             </div>
           </div>
+
+          <ImportExportCharacter character={character} onImport={handleImport} />
         </div>
         
         {/* Progression Bar */}
@@ -287,6 +294,10 @@ export default function CharacterSheet() {
             <TabsTrigger value="downtime" className="data-[state=active]:bg-violet-500/20">
               <Heart className="h-4 w-4 mr-2" />
               Downtime
+            </TabsTrigger>
+            <TabsTrigger value="notes" className="data-[state=active]:bg-violet-500/20">
+              <FileText className="h-4 w-4 mr-2" />
+              Notes
             </TabsTrigger>
           </TabsList>
           
@@ -429,6 +440,23 @@ export default function CharacterSheet() {
             />
           </TabsContent>
           
+          {/* Notes Tab */}
+          <TabsContent value="notes" className="space-y-4">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">Character Notes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <textarea
+                  value={character.backstory_notes || ''}
+                  onChange={(e) => updateMutation.mutate({ backstory_notes: e.target.value })}
+                  className="w-full min-h-[300px] bg-slate-900/50 border border-slate-700 rounded-lg p-4 text-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  placeholder="Add your character notes, backstory, or roleplay details..."
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Info Tab */}
           <TabsContent value="info" className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">

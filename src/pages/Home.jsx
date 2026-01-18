@@ -55,8 +55,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 relative overflow-hidden">
-      {/* Animated Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden">
+
         <motion.div
           className="absolute top-1/4 -left-20 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl"
           animate={{
@@ -75,7 +75,8 @@ export default function Home() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 py-20">
+      </div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
