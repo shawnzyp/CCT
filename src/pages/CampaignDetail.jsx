@@ -66,13 +66,20 @@ export default function CampaignDetail({ currentCharacter }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-start gap-4 mb-6">
           <Link to={createPageUrl('Campaigns')}>
             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <div>
+          {campaign.logo_url && (
+            <img 
+              src={campaign.logo_url} 
+              alt={campaign.name}
+              className="w-16 h-16 rounded-xl object-cover border-2 border-violet-500/50"
+            />
+          )}
+          <div className="flex-1">
             <h1 className="text-3xl font-bold text-white">{campaign.name}</h1>
             <p className="text-slate-400">{campaign.description}</p>
           </div>

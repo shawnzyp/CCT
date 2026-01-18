@@ -9,11 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Upload } from "lucide-react";
 
 export default function CreateCampaignDialog({ onClose }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('active');
+  const [logoUrl, setLogoUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   
@@ -25,12 +28,28 @@ export default function CreateCampaignDialog({ onClose }) {
     }
   });
   
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setUploading(true);
+    try {
+      const result = await base44.integrations.Core.UploadFile({ file });
+      setLogoUrl(result.file_url);
+    } catch (error) {
+      console.error('Failed to upload logo:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     createMutation.mutate({
       name,
       description,
       status,
+      logo_url: logoUrl,
       journal_entries: [],
       world_events: [],
       resources: {}
@@ -62,6 +81,39 @@ export default function CreateCampaignDialog({ onClose }) {
               placeholder="Brief overview of the campaign..."
               className="bg-slate-800 border-slate-700 text-white mt-1 h-20"
             />
+          </div>
+          <div>
+            <Label>Campaign Logo (Optional)</Label>
+            <div className="mt-1">
+              {logoUrl ? (
+                <div className="relative">
+                  <img src={logoUrl} alt="Campaign logo" className="w-32 h-32 rounded-lg object-cover border-2 border-slate-700" />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    className="absolute top-1 right-1"
+                    onClick={() => setLogoUrl('')}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex items-center justify-center gap-2 w-full p-4 border-2 border-dashed border-slate-700 rounded-lg cursor-pointer hover:border-violet-500 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                    disabled={uploading}
+                  />
+                  <Upload className="h-5 w-5 text-slate-400" />
+                  <span className="text-slate-400">
+                    {uploading ? 'Uploading...' : 'Upload Logo'}
+                  </span>
+                </label>
+              )}
+            </div>
           </div>
           <div>
             <Label>Status</Label>
