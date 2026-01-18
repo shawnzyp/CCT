@@ -4,18 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { TrendingUp, Plus, Zap, Heart, Shield, Star } from "lucide-react";
+import { TrendingUp, Plus, Zap, Heart, Shield, Star, BookOpen } from "lucide-react";
+import { SKILLS } from "@/components/character/SkillsPanel";
 
 const STATS = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 
 export default function LevelUpDialog({ character, onConfirm, onClose }) {
   const newLevel = (character.level || 1) + 1;
   const [selectedStat, setSelectedStat] = useState(null);
+  const [selectedSkill, setSelectedSkill] = useState(null);
   const [hpIncrease] = useState(Math.floor(Math.random() * 6) + 3); // 3-8 HP
+  
+  const skills = character.skills || {};
+  const availableSkills = SKILLS.filter(skill => {
+    const current = skills[skill.key] || 'none';
+    return current !== 'expert'; // Can improve if not already expert
+  });
   
   const benefits = [
     { icon: Heart, label: `+${hpIncrease} HP`, color: 'text-red-400' },
     { icon: Zap, label: '+1 Power Upgrade Point', color: 'text-violet-400' },
+    { icon: BookOpen, label: '+1 Skill Proficiency', color: 'text-green-400' },
   ];
   
   if (newLevel % 3 === 0) {
@@ -27,7 +36,10 @@ export default function LevelUpDialog({ character, onConfirm, onClose }) {
   }
   
   const handleConfirm = () => {
-    if (!selectedStat) return;
+    if (!selectedStat || !selectedSkill) return;
+    
+    const currentSkillLevel = skills[selectedSkill] || 'none';
+    const newSkillLevel = currentSkillLevel === 'none' ? 'proficient' : 'expert';
     
     const updates = {
       level: newLevel,
@@ -37,6 +49,10 @@ export default function LevelUpDialog({ character, onConfirm, onClose }) {
       ability_scores: {
         ...character.ability_scores,
         [selectedStat]: (character.ability_scores[selectedStat] || 10) + 1
+      },
+      skills: {
+        ...skills,
+        [selectedSkill]: newSkillLevel
       },
       milestones: [
         ...(character.milestones || []),
@@ -122,6 +138,40 @@ export default function LevelUpDialog({ character, onConfirm, onClose }) {
             </div>
           </div>
           
+          <Separator className="bg-slate-700" />
+          
+          {/* Skill Proficiency */}
+          <div>
+            <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-green-400" />
+              Improve Skill Proficiency
+            </h3>
+            <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+              {availableSkills.map(skill => {
+                const currentLevel = skills[skill.key] || 'none';
+                const nextLevel = currentLevel === 'none' ? 'Proficient' : 'Expert';
+                return (
+                  <button
+                    key={skill.key}
+                    onClick={() => setSelectedSkill(skill.key)}
+                    className={cn(
+                      "p-2 rounded-lg border-2 text-left transition-all",
+                      selectedSkill === skill.key
+                        ? "border-green-500 bg-green-500/20"
+                        : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
+                    )}
+                  >
+                    <div className="text-sm font-medium text-white">{skill.label}</div>
+                    <div className="text-xs text-slate-400">{skill.ability}</div>
+                    {selectedSkill === skill.key && (
+                      <Badge className="bg-green-500 text-white text-xs mt-1">→ {nextLevel}</Badge>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          
           <div className="flex gap-3 pt-2">
             <Button
               variant="outline"
@@ -132,7 +182,7 @@ export default function LevelUpDialog({ character, onConfirm, onClose }) {
             </Button>
             <Button
               onClick={handleConfirm}
-              disabled={!selectedStat}
+              disabled={!selectedStat || !selectedSkill}
               className="flex-1 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700"
             >
               Confirm Level Up

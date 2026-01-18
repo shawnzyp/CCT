@@ -24,6 +24,7 @@ import ProgressionBar from "@/components/character/ProgressionBar";
 import LevelUpDialog from "@/components/character/LevelUpDialog";
 import EquipmentManager from "@/components/character/EquipmentManager";
 import PowerUpgradeDialog from "@/components/character/PowerUpgradeDialog";
+import SkillsPanel from "@/components/character/SkillsPanel";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -152,6 +153,10 @@ export default function CharacterSheet() {
     updateMutation.mutate({ equipment });
   };
   
+  const handleSkillsUpdate = (skills) => {
+    updateMutation.mutate({ skills });
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
       {/* Ambient glow */}
@@ -270,7 +275,7 @@ export default function CharacterSheet() {
           {/* Stats Tab */}
           <TabsContent value="stats" className="space-y-4">
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 space-y-4">
                 <Card className="bg-slate-800/50 border-slate-700">
                   <CardHeader>
                     <CardTitle className="text-white text-lg">Ability Scores</CardTitle>
@@ -279,6 +284,8 @@ export default function CharacterSheet() {
                     <StatBlock scores={character.ability_scores} />
                   </CardContent>
                 </Card>
+                
+                <SkillsPanel character={character} onUpdate={handleSkillsUpdate} />
               </div>
               
               <div>
