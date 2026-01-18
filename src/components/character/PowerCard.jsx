@@ -2,7 +2,9 @@ import React from 'react';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, Clock, Shield, Focus, Flame, Link2, Tag } from "lucide-react";
+import { Zap, Target, Clock, Shield, Focus, Flame, Link2 } from "lucide-react";
+import { motion } from "framer-motion";
+import useSoundEffects from '@/components/sounds/useSoundEffects';
 
 export default function PowerCard({ 
   power, 
@@ -10,10 +12,17 @@ export default function PowerCard({
   canUse = true,
   compact = false 
 }) {
+  const { play } = useSoundEffects();
+  
   if (!power) return null;
   
   const isOnCooldown = power.current_cooldown > 0;
   const isUltimate = power.sp_cost === 5;
+  
+  const handleUse = () => {
+    play('powerUse', 0.4);
+    if (onUse) onUse(power);
+  };
   
   if (compact) {
     return (
@@ -34,14 +43,18 @@ export default function PowerCard({
   }
   
   return (
-    <div className={cn(
-      "relative rounded-xl overflow-hidden",
-      "bg-gradient-to-br from-slate-800 to-slate-900",
-      "border transition-all duration-300",
-      isUltimate ? "border-amber-500/50" : "border-slate-700/50",
-      !isOnCooldown && canUse && "hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-500/10",
-      isOnCooldown && "opacity-60"
-    )}>
+    <motion.div 
+      className={cn(
+        "relative rounded-xl overflow-hidden corner-frame",
+        "bg-gradient-to-br from-slate-800 to-slate-900",
+        "border transition-all duration-300",
+        isUltimate ? "border-amber-500/50" : "border-slate-700/50",
+        !isOnCooldown && canUse && "hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-500/10",
+        isOnCooldown && "opacity-60"
+      )}
+      whileHover={{ scale: !isOnCooldown && canUse ? 1.02 : 1 }}
+      onMouseEnter={() => !isOnCooldown && play('hover', 0.1)}
+    >
       {isUltimate && (
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500" />
       )}
@@ -58,13 +71,13 @@ export default function PowerCard({
             <div>
               <h3 className="font-bold text-white">{power.name}</h3>
               {isUltimate && (
-                <span className="text-[10px] text-amber-400 uppercase tracking-wider">Ultimate</span>
+                <span className="text-[10px] text-amber-400 uppercase tracking-wider font-mono">Ultimate</span>
               )}
             </div>
           </div>
           <Badge 
             className={cn(
-              "font-bold",
+              "font-bold font-mono",
               isUltimate ? "bg-amber-500/20 text-amber-300" : "bg-violet-500/20 text-violet-300"
             )}
           >
@@ -74,7 +87,6 @@ export default function PowerCard({
         
         <p className="text-sm text-slate-300 mb-3">{power.description || power.effect}</p>
         
-        {/* Damage Type */}
         {power.damage_type && (
           <div className="mb-2">
             <Badge variant="outline" className="border-orange-500/50 text-orange-300 text-xs">
@@ -84,7 +96,6 @@ export default function PowerCard({
           </div>
         )}
         
-        {/* Effect Tags */}
         {(power.effect_tags?.length > 0 || power.custom_effect_tags?.length > 0) && (
           <div className="mb-3 flex flex-wrap gap-1">
             {power.effect_tags?.map(tag => (
@@ -105,7 +116,7 @@ export default function PowerCard({
           </div>
         )}
         
-        <div className="flex flex-wrap gap-2 text-xs text-slate-400 mb-3">
+        <div className="flex flex-wrap gap-2 text-xs text-slate-400 mb-3 font-mono">
           {power.range && (
             <div className="flex items-center gap-1">
               <Target className="h-3 w-3" />
@@ -138,31 +149,32 @@ export default function PowerCard({
           )}
         </div>
         
-        {/* Concentration warning */}
         {power.requires_concentration && (
           <div className="bg-violet-500/10 border border-violet-500/30 rounded p-2 mb-3">
-            <p className="text-xs text-violet-300">
+            <p className="text-xs text-violet-300 font-mono">
               +1 SP per round to maintain. Breaks on damage or distraction.
             </p>
           </div>
         )}
         
         {onUse && (
-          <Button
-            onClick={() => onUse(power)}
-            disabled={isOnCooldown || !canUse}
-            className={cn(
-              "w-full",
-              isUltimate 
-                ? "bg-amber-600 hover:bg-amber-700" 
-                : "bg-violet-600 hover:bg-violet-700"
-            )}
-            size="sm"
-          >
-            {isOnCooldown ? `Cooldown: ${power.current_cooldown} turns` : "Use Power"}
-          </Button>
+          <motion.div whileTap={{ scale: isOnCooldown || !canUse ? 1 : 0.95 }}>
+            <Button
+              onClick={handleUse}
+              disabled={isOnCooldown || !canUse}
+              className={cn(
+                "w-full font-mono",
+                isUltimate 
+                  ? "bg-amber-600 hover:bg-amber-700" 
+                  : "bg-violet-600 hover:bg-violet-700"
+              )}
+              size="sm"
+            >
+              {isOnCooldown ? `Cooldown: ${power.current_cooldown} turns` : "Use Power"}
+            </Button>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
