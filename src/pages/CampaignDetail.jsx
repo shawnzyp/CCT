@@ -4,7 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map } from "lucide-react";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
@@ -20,6 +21,7 @@ export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
   const campaignId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('dashboard');
   
   const { data: campaign, isLoading } = useQuery({
     queryKey: ['campaign', campaignId],
@@ -64,18 +66,23 @@ export default function CampaignDetail({ currentCharacter }) {
           </div>
         </div>
         
-        <Tabs defaultValue="dashboard" className="space-y-4">
-          <TabsList className="bg-slate-800/50 border border-slate-700 flex-wrap h-auto">
-            <TabsTrigger value="dashboard"><LayoutDashboard className="h-4 w-4 mr-2" />Dashboard</TabsTrigger>
-            <TabsTrigger value="log"><MessageSquare className="h-4 w-4 mr-2" />Session Log</TabsTrigger>
-            <TabsTrigger value="quests"><ScrollText className="h-4 w-4 mr-2" />Quests</TabsTrigger>
-            <TabsTrigger value="arcs"><Milestone className="h-4 w-4 mr-2" />Story Arcs</TabsTrigger>
-            <TabsTrigger value="journal"><BookOpen className="h-4 w-4 mr-2" />Journal</TabsTrigger>
-            <TabsTrigger value="world"><Map className="h-4 w-4 mr-2" />World</TabsTrigger>
-            <TabsTrigger value="characters"><Users className="h-4 w-4 mr-2" />Characters</TabsTrigger>
-            <TabsTrigger value="events"><Globe className="h-4 w-4 mr-2" />Events</TabsTrigger>
-            <TabsTrigger value="combat"><Swords className="h-4 w-4 mr-2" />Combat</TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full sm:w-64">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="dashboard">📊 Dashboard</SelectItem>
+              <SelectItem value="log">💬 Session Log</SelectItem>
+              <SelectItem value="quests">📜 Quests</SelectItem>
+              <SelectItem value="arcs">🎯 Story Arcs</SelectItem>
+              <SelectItem value="journal">📖 Journal</SelectItem>
+              <SelectItem value="world">🗺️ World</SelectItem>
+              <SelectItem value="characters">👥 Characters</SelectItem>
+              <SelectItem value="events">🌍 Events</SelectItem>
+              <SelectItem value="combat">⚔️ Combat</SelectItem>
+            </SelectContent>
+          </Select>
           
           <TabsContent value="dashboard">
             <CampaignDashboard campaign={campaign} characters={characters} />
