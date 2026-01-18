@@ -26,6 +26,7 @@ import EquipmentManager from "@/components/character/EquipmentManager";
 import PowerUpgradeDialog from "@/components/character/PowerUpgradeDialog";
 import SkillsPanel from "@/components/character/SkillsPanel";
 import InventoryPanel from "@/components/character/InventoryPanel";
+import DowntimeActivities from "@/components/character/DowntimeActivities";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -283,6 +284,10 @@ export default function CharacterSheet() {
               <BookOpen className="h-4 w-4 mr-2" />
               Info
             </TabsTrigger>
+            <TabsTrigger value="downtime" className="data-[state=active]:bg-violet-500/20">
+              <Heart className="h-4 w-4 mr-2" />
+              Downtime
+            </TabsTrigger>
           </TabsList>
           
           {/* Stats Tab */}
@@ -413,6 +418,14 @@ export default function CharacterSheet() {
               character={character}
               onUpdate={handleInventoryUpdate}
               onEquip={handleEquipFromInventory}
+            />
+          </TabsContent>
+          
+          {/* Downtime Tab */}
+          <TabsContent value="downtime">
+            <DowntimeActivities 
+              character={character}
+              onUpdate={(data) => updateMutation.mutate(data)}
             />
           </TabsContent>
           

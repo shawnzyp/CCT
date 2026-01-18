@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users, Gift } from "lucide-react";
+import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users, Gift, Swords, Dices } from "lucide-react";
 import { getModifier } from "@/components/character/StatBlock";
 import ResourceBar from "@/components/character/ResourceBar";
 import ConditionManager from "@/components/combat/ConditionManager";
@@ -15,6 +15,8 @@ import EnemyGenerator from "@/components/combat/EnemyGenerator";
 import TacticalGrid from "@/components/combat/TacticalGrid";
 import CombatLog from "@/components/combat/CombatLog";
 import LootDialog from "@/components/character/LootDialog";
+import DiceRollDialog from "@/components/combat/DiceRollDialog";
+import ActionEconomy from "@/components/combat/ActionEconomy";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -26,6 +28,8 @@ export default function CombatTracker({ characters, campaignId }) {
   const [showEnemyGen, setShowEnemyGen] = useState(false);
   const [pendingLoot, setPendingLoot] = useState(null);
   const [defeatedEnemies, setDefeatedEnemies] = useState([]);
+  const [diceRollDialog, setDiceRollDialog] = useState(null);
+  const [actionTracking, setActionTracking] = useState({});
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -80,6 +84,9 @@ export default function CombatTracker({ characters, campaignId }) {
   const nextTurn = () => {
     const current = initiativeOrder[currentTurn];
     addLogEntry(current.name, 'Turn ended');
+    
+    // Reset action economy for current combatant
+    setActionTracking(prev => ({ ...prev, [current.id]: [] }));
     
     setCurrentTurn((prev) => {
       const next = (prev + 1) % initiativeOrder.length;
@@ -213,6 +220,46 @@ export default function CombatTracker({ characters, campaignId }) {
       prev.map(char => char.id === charId ? { ...char, current_sp: newSP } : char)
     );
     updateCharacter.mutate({ id: charId, data: { current_sp: newSP } });
+  };
+  
+  const handleAttackRoll = (combatant, target) => {
+    const modifier = getModifier(combatant.ability_scores?.STR || 10);
+    setDiceRollDialog({
+      title: `${combatant.name} attacks ${target?.name || 'target'}`,
+      modifier,
+      type: 'attack',
+      onRoll: (result) => {
+        if (result.isCrit) {
+          addLogEntry(combatant.name, `Critical Hit vs ${target?.name || 'target'}!`, `Rolled ${result.roll} (Total: ${result.total})`);
+        } else if (result.isFail) {
+          addLogEntry(combatant.name, 'Critical Miss!', `Rolled 1`);
+        } else {
+          addLogEntry(combatant.name, `Attacks ${target?.name || 'target'}`, `Rolled ${result.roll} (Total: ${result.total})`);
+        }
+      }
+    });
+  };
+  
+  const handleSavingThrow = (combatant, saveType) => {
+    const modifier = getModifier(combatant.ability_scores?.[saveType] || 10);
+    setDiceRollDialog({
+      title: `${combatant.name} - ${saveType} Save`,
+      modifier,
+      type: 'save',
+      onRoll: (result) => {
+        addLogEntry(combatant.name, `${saveType} Save`, `Rolled ${result.roll} (Total: ${result.total})`);
+      }
+    });
+  };
+  
+  const toggleAction = (combatantId, actionType) => {
+    setActionTracking(prev => {
+      const current = prev[combatantId] || [];
+      const newActions = current.includes(actionType)
+        ? current.filter(a => a !== actionType)
+        : [...current, actionType];
+      return { ...prev, [combatantId]: newActions };
+    });
   };
   
   if (!combatActive) {
@@ -407,11 +454,50 @@ export default function CombatTracker({ characters, campaignId }) {
                     
                     {/* Conditions */}
                     <ConditionManager character={char} onUpdate={(conditions) => {
-                      updateCharacter.mutate({
-                        id: char.id,
-                        data: { active_conditions: conditions }
-                      });
+                      setInitiativeOrder(prev => 
+                        prev.map(c => c.id === char.id ? { ...c, active_conditions: conditions } : c)
+                      );
+                      if (!char.isEnemy) {
+                        updateCharacter.mutate({
+                          id: char.id,
+                          data: { active_conditions: conditions }
+                        });
+                      }
                     }} />
+                    
+                    {/* Action Economy */}
+                    {isCurrentTurn && (
+                      <div className="mt-3">
+                        <ActionEconomy 
+                          usedActions={actionTracking[char.id] || []}
+                          onToggle={(action) => toggleAction(char.id, action)}
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Combat Actions */}
+                    {isCurrentTurn && (
+                      <div className="flex gap-2 mt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-violet-500 text-violet-400 hover:bg-violet-500/20"
+                          onClick={() => handleAttackRoll(char, null)}
+                        >
+                          <Swords className="h-3 w-3 mr-1" />
+                          Attack
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-blue-500 text-blue-400 hover:bg-blue-500/20"
+                          onClick={() => handleSavingThrow(char, 'DEX')}
+                        >
+                          <Shield className="h-3 w-3 mr-1" />
+                          Save
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -437,6 +523,14 @@ export default function CombatTracker({ characters, campaignId }) {
           loot={pendingLoot}
           onClaim={handleClaimLoot}
           onClose={() => setPendingLoot(null)}
+        />
+      )}
+      
+      {diceRollDialog && (
+        <DiceRollDialog
+          open={!!diceRollDialog}
+          onClose={() => setDiceRollDialog(null)}
+          {...diceRollDialog}
         />
       )}
     </>
