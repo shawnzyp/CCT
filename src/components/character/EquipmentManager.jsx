@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Package, Plus, Trash2, Check, Shield, Zap, Wrench, Briefcase } from "lucide-react";
+import { Package, Plus, Trash2, Check, Shield, Zap, Wrench, Briefcase, Sparkles } from "lucide-react";
 
 const EQUIPMENT_TYPES = [
   { value: 'weapon', label: 'Weapon', icon: Zap },
@@ -17,13 +17,26 @@ const EQUIPMENT_TYPES = [
   { value: 'utility', label: 'Utility', icon: Briefcase }
 ];
 
+const RARITY_OPTIONS = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+
+const RARITY_COLORS = {
+  common: 'border-slate-500',
+  uncommon: 'border-green-500',
+  rare: 'border-blue-500',
+  epic: 'border-purple-500',
+  legendary: 'border-amber-500'
+};
+
 export default function EquipmentManager({ character, onUpdate }) {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newItem, setNewItem] = useState({
     name: '',
     type: 'weapon',
+    rarity: 'common',
     description: '',
     bonus: '',
+    magical_properties: [],
+    value: 0,
     equipped: false
   });
   
@@ -34,7 +47,7 @@ export default function EquipmentManager({ character, onUpdate }) {
     if (!newItem.name.trim()) return;
     
     onUpdate([...equipment, { ...newItem }]);
-    setNewItem({ name: '', type: 'weapon', description: '', bonus: '', equipped: false });
+    setNewItem({ name: '', type: 'weapon', rarity: 'common', description: '', bonus: '', magical_properties: [], value: 0, equipped: false });
     setShowAddDialog(false);
   };
   
@@ -88,9 +101,8 @@ export default function EquipmentManager({ character, onUpdate }) {
                     key={index}
                     className={cn(
                       "p-3 rounded-lg border-2 transition-all",
-                      item.equipped
-                        ? "border-violet-500 bg-violet-500/10"
-                        : "border-slate-700 bg-slate-800/50"
+                      item.equipped && "bg-violet-500/10",
+                      item.equipped ? "border-violet-500" : (RARITY_COLORS[item.rarity] || "border-slate-700")
                     )}
                   >
                     <div className="flex items-start justify-between">
@@ -102,11 +114,14 @@ export default function EquipmentManager({ character, onUpdate }) {
                           <TypeIcon className="h-4 w-4 text-white" />
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-semibold text-white">{item.name}</h4>
                             <Badge variant="outline" className="text-xs">
                               {EQUIPMENT_TYPES.find(t => t.value === item.type)?.label}
                             </Badge>
+                            {item.rarity && (
+                              <Badge className="text-xs capitalize">{item.rarity}</Badge>
+                            )}
                             {item.equipped && (
                               <Check className="h-4 w-4 text-violet-400" />
                             )}
@@ -116,6 +131,16 @@ export default function EquipmentManager({ character, onUpdate }) {
                           )}
                           {item.bonus && (
                             <p className="text-xs text-violet-400 mt-1 font-medium">{item.bonus}</p>
+                          )}
+                          {item.magical_properties?.length > 0 && (
+                            <div className="flex items-center gap-1 mt-1 flex-wrap">
+                              <Sparkles className="h-3 w-3 text-purple-400" />
+                              {item.magical_properties.map((prop, i) => (
+                                <Badge key={i} className="bg-purple-500/20 text-purple-300 text-xs">
+                                  {prop}
+                                </Badge>
+                              ))}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -162,18 +187,33 @@ export default function EquipmentManager({ character, onUpdate }) {
                   className="bg-slate-800 border-slate-700 text-white mt-1"
                 />
               </div>
-              <div>
-                <Label className="text-slate-300">Type</Label>
-                <Select value={newItem.type} onValueChange={(v) => setNewItem({ ...newItem, type: v })}>
-                  <SelectTrigger className="bg-slate-800 border-slate-700 text-white mt-1">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {EQUIPMENT_TYPES.map(t => (
-                      <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-slate-300">Type</Label>
+                  <Select value={newItem.type} onValueChange={(v) => setNewItem({ ...newItem, type: v })}>
+                    <SelectTrigger className="bg-slate-800 border-slate-700 text-white mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {EQUIPMENT_TYPES.map(t => (
+                        <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-slate-300">Rarity</Label>
+                  <Select value={newItem.rarity} onValueChange={(v) => setNewItem({ ...newItem, rarity: v })}>
+                    <SelectTrigger className="bg-slate-800 border-slate-700 text-white mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {RARITY_OPTIONS.map(r => (
+                        <SelectItem key={r} value={r} className="capitalize">{r}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div>
                 <Label className="text-slate-300">Description</Label>
