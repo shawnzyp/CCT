@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles } from 'lucide-react';
+import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import CharacterSelector from '@/components/character/CharacterSelector';
 
 export default function Home() {
+  const [showCharacterSelector, setShowCharacterSelector] = useState(false);
+
+  const { data: characters = [] } = useQuery({
+    queryKey: ['characters'],
+    queryFn: () => base44.entities.Character.list('-created_date')
+  });
+
+  const handleCharacterSelect = (character) => {
+    localStorage.setItem('currentCharacter', JSON.stringify(character));
+    setShowCharacterSelector(false);
+    window.dispatchEvent(new CustomEvent('characterChanged', { detail: character }));
+  };
   const features = [
     {
       icon: Users,
@@ -100,16 +115,24 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="flex flex-col gap-3 items-center"
+            className="flex flex-col gap-3 items-center w-full max-w-md mx-auto"
           >
-            <Link to={createPageUrl('CreateCharacter')} className="w-full max-w-md">
+            <Button 
+              onClick={() => setShowCharacterSelector(true)}
+              variant="outline"
+              className="w-full border-violet-500 text-violet-400 hover:bg-violet-500/20 px-6 py-5 text-base"
+            >
+              <User className="h-4 w-4" />
+              Load Character
+            </Button>
+            <Link to={createPageUrl('CreateCharacter')} className="w-full">
               <Button className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 gap-2 px-6 py-5 text-base">
                 <Sparkles className="h-4 w-4" />
                 Create Character
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link to={createPageUrl('Campaigns')} className="w-full max-w-md">
+            <Link to={createPageUrl('Campaigns')} className="w-full">
               <Button variant="outline" className="w-full border-violet-500 text-violet-400 hover:bg-violet-500/20 px-6 py-5 text-base">
                 View Campaigns
               </Button>
@@ -167,6 +190,14 @@ export default function Home() {
           ))}
         </motion.div>
       </div>
+
+      {showCharacterSelector && (
+        <CharacterSelector
+          characters={characters}
+          onSelect={handleCharacterSelect}
+          onClose={() => setShowCharacterSelector(false)}
+        />
+      )}
     </div>
   );
 }

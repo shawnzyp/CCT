@@ -56,7 +56,7 @@ export default function Layout({ children }) {
   };
   
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 overflow-x-hidden">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4">
@@ -154,7 +154,7 @@ export default function Layout({ children }) {
       </header>
       
       {/* Main Content */}
-      <main className="pt-16">
+      <main className="pt-16 overflow-y-auto scroll-smooth">
         {children}
       </main>
 
