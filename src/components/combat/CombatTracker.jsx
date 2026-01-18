@@ -242,8 +242,6 @@ export default function CombatTracker({ characters, campaignId }) {
       </TabsList>
       
       <TabsContent value="tracker" className="space-y-2">
-      
-      <div className="space-y-2">
         {initiativeOrder.map((char, index) => {
           const isCurrentTurn = index === currentTurn;
           const conMod = char.ability_scores ? getModifier(char.ability_scores.CON || 10) : 0;
