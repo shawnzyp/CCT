@@ -1,6 +1,7 @@
 import Characters from './pages/Characters';
 import CreateCharacter from './pages/CreateCharacter';
 import CharacterSheet from './pages/CharacterSheet';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -12,4 +13,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Characters",
     Pages: PAGES,
+    Layout: __Layout,
 };

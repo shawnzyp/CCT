@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, Clock, Shield } from "lucide-react";
+import { Zap, Target, Clock, Shield, Focus, Flame, Link2, Tag } from "lucide-react";
 
 export default function PowerCard({ 
   power, 
@@ -74,6 +74,37 @@ export default function PowerCard({
         
         <p className="text-sm text-slate-300 mb-3">{power.description || power.effect}</p>
         
+        {/* Damage Type */}
+        {power.damage_type && (
+          <div className="mb-2">
+            <Badge variant="outline" className="border-orange-500/50 text-orange-300 text-xs">
+              <Flame className="h-3 w-3 mr-1" />
+              {power.damage_type}
+            </Badge>
+          </div>
+        )}
+        
+        {/* Effect Tags */}
+        {(power.effect_tags?.length > 0 || power.custom_effect_tags?.length > 0) && (
+          <div className="mb-3 flex flex-wrap gap-1">
+            {power.effect_tags?.map(tag => (
+              <Badge key={tag} variant="secondary" className="bg-slate-700/50 text-slate-300 text-xs">
+                {tag}
+              </Badge>
+            ))}
+            {power.custom_effect_tags?.map((tag, idx) => (
+              <Badge 
+                key={idx} 
+                variant="secondary" 
+                className="bg-violet-500/20 text-violet-300 text-xs"
+                title={tag.description}
+              >
+                {tag.name}
+              </Badge>
+            ))}
+          </div>
+        )}
+        
         <div className="flex flex-wrap gap-2 text-xs text-slate-400 mb-3">
           {power.range && (
             <div className="flex items-center gap-1">
@@ -93,7 +124,28 @@ export default function PowerCard({
               <span>{power.cooldown} turn cooldown</span>
             </div>
           )}
+          {power.requires_concentration && (
+            <div className="flex items-center gap-1">
+              <Focus className="h-3 w-3 text-violet-400" />
+              <span className="text-violet-400">Concentration ({power.concentration_duration})</span>
+            </div>
+          )}
+          {(power.linked_to_origin || power.linked_to_power_style) && (
+            <div className="flex items-center gap-1">
+              <Link2 className="h-3 w-3 text-amber-400" />
+              <span className="text-amber-400">Thematic</span>
+            </div>
+          )}
         </div>
+        
+        {/* Concentration warning */}
+        {power.requires_concentration && (
+          <div className="bg-violet-500/10 border border-violet-500/30 rounded p-2 mb-3">
+            <p className="text-xs text-violet-300">
+              +1 SP per round to maintain. Breaks on damage or distraction.
+            </p>
+          </div>
+        )}
         
         {onUse && (
           <Button

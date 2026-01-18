@@ -420,6 +420,7 @@ export default function CharacterSheet() {
       {showPowerEditor && (
         <PowerEditor
           power={editingPower !== null ? character.powers[editingPower] : null}
+          character={character}
           onSave={handleSavePower}
           onClose={() => { setShowPowerEditor(false); setEditingPower(null); }}
         />
