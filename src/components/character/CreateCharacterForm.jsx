@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Dices, ChevronRight, ChevronLeft, Check, Zap, Palette } from "lucide-react";
 import PortraitUploader from "@/components/character/PortraitUploader";
 import VisualCustomizer from "@/components/character/VisualCustomizer";
+import AISuggestions from "@/components/character/AISuggestions";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CLASSIFICATIONS = [
@@ -200,6 +201,12 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
                 placeholder="e.g., Shadow Strike, Nova, The Catalyst"
                 className="bg-slate-800 border-slate-700 text-white mt-1"
               />
+              <AISuggestions
+                type="name"
+                context={data}
+                onSelect={(name) => updateData('name', name)}
+                label="Name"
+              />
             </div>
             <div>
               <Label className="text-slate-300">Real Name (Secret Identity)</Label>
@@ -213,6 +220,12 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
             <PortraitUploader
               currentUrl={data.portrait_url}
               onUpload={(url) => updateData('portrait_url', url)}
+            />
+            <AISuggestions
+              type="portrait"
+              context={data}
+              onSelect={(url) => updateData('portrait_url', url)}
+              label="Portrait"
             />
           </div>
         );
@@ -335,27 +348,35 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
         
       case 4:
         return (
-          <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
-            {ORIGINS.map(o => (
-              <div
-                key={o.value}
-                onClick={() => updateData('origin_story', o.value)}
-                className={cn(
-                  "p-4 rounded-xl border-2 cursor-pointer transition-all",
-                  data.origin_story === o.value
-                    ? "border-violet-500 bg-violet-500/10"
-                    : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-white">{o.label}</span>
-                  {data.origin_story === o.value && (
-                    <Check className="h-5 w-5 text-violet-400" />
+          <div className="space-y-4">
+            <AISuggestions
+              type="origin"
+              context={data}
+              onSelect={(origin) => updateData('backstory_notes', origin)}
+              label="Origin Story"
+            />
+            <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
+              {ORIGINS.map(o => (
+                <div
+                  key={o.value}
+                  onClick={() => updateData('origin_story', o.value)}
+                  className={cn(
+                    "p-4 rounded-xl border-2 cursor-pointer transition-all",
+                    data.origin_story === o.value
+                      ? "border-violet-500 bg-violet-500/10"
+                      : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
                   )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-white">{o.label}</span>
+                    {data.origin_story === o.value && (
+                      <Check className="h-5 w-5 text-violet-400" />
+                    )}
+                  </div>
+                  <p className="text-sm text-slate-400 mt-1">{o.perk}</p>
                 </div>
-                <p className="text-sm text-slate-400 mt-1">{o.perk}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         );
         
@@ -455,6 +476,15 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
       case 8:
         return (
           <div className="space-y-4">
+            {data.portrait_url && (
+              <div className="flex justify-center">
+                <img 
+                  src={data.portrait_url} 
+                  alt={data.name}
+                  className="w-48 h-48 rounded-xl object-cover border-2 border-violet-500"
+                />
+              </div>
+            )}
             <div className="bg-slate-800 rounded-xl p-4 space-y-3">
               <div className="flex justify-between">
                 <span className="text-slate-400">Name</span>
@@ -488,6 +518,12 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
                 onChange={(e) => updateData('backstory_notes', e.target.value)}
                 placeholder="Add any notes about your character's backstory..."
                 className="bg-slate-800 border-slate-700 text-white mt-1 h-24"
+              />
+              <AISuggestions
+                type="backstory"
+                context={data}
+                onSelect={(backstory) => updateData('backstory_notes', backstory)}
+                label="Backstory"
               />
             </div>
           </div>
