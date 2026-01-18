@@ -11,9 +11,9 @@ export default function Layout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const navItems = [
+    { name: 'Home', path: 'Home', icon: Zap },
     { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
     { name: 'Characters', path: 'Characters', icon: Users },
-    { name: 'Create', path: 'CreateCharacter', icon: Zap },
   ];
   
   const isActive = (path) => {
@@ -27,7 +27,7 @@ export default function Layout({ children }) {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to={createPageUrl('Campaigns')} className="flex items-center gap-3">
+            <Link to={createPageUrl('Home')} className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                 <Zap className="h-5 w-5 text-white" />
               </div>
