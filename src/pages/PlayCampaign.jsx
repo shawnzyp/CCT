@@ -15,6 +15,7 @@ import WorldEventsReadOnly from "@/components/campaign/WorldEventsReadOnly";
 import SharedResources from "@/components/campaign/SharedResources";
 import CombatTracker from "@/components/combat/CombatTracker";
 import CollaborativeNotes from "@/components/campaign/CollaborativeNotes";
+import CampaignChat from "@/components/campaign/CampaignChat";
 
 export default function PlayCampaign({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -118,6 +119,7 @@ export default function PlayCampaign({ currentCharacter }) {
               <SelectItem value="events">🌍 World Events</SelectItem>
               <SelectItem value="world">🗺️ World Info</SelectItem>
               <SelectItem value="resources">📦 Shared Resources</SelectItem>
+              <SelectItem value="chat">💬 Chat</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
             </SelectContent>
           </Select>
@@ -219,6 +221,17 @@ export default function PlayCampaign({ currentCharacter }) {
           <TabsContent value="resources">
             <SharedResources 
               campaign={campaign}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
+          </TabsContent>
+          
+          <TabsContent value="chat">
+            <CampaignChat 
+              campaign={campaign}
+              currentUser={currentUser}
+              myCharacter={myCharacter}
+              characters={characters}
+              isDM={false}
               onUpdate={(data) => updateCampaign.mutate(data)}
             />
           </TabsContent>

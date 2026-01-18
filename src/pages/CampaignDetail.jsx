@@ -197,6 +197,17 @@ export default function CampaignDetail({ currentCharacter }) {
             />
           </TabsContent>
           
+          <TabsContent value="chat">
+            <CampaignChat 
+              campaign={campaign}
+              currentUser={currentUser}
+              myCharacter={characters.find(c => c.created_by === currentUser?.email)}
+              characters={characters}
+              isDM={true}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
+          </TabsContent>
+          
           <TabsContent value="combat">
             <CombatTracker characters={characters} campaignId={campaignId} />
           </TabsContent>

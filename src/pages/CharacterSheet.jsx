@@ -28,6 +28,8 @@ import SkillsPanel from "@/components/character/SkillsPanel";
 import InventoryPanel from "@/components/character/InventoryPanel";
 import DowntimeActivities from "@/components/character/DowntimeActivities";
 import ImportExportCharacter from "@/components/character/ImportExportCharacter";
+import StatsVisual from "@/components/character/StatsVisual";
+import ActiveEffects from "@/components/character/ActiveEffects";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -305,16 +307,14 @@ export default function CharacterSheet() {
           <TabsContent value="stats" className="space-y-4">
             <div className="grid md:grid-cols-3 gap-4">
               <div className="md:col-span-2 space-y-4">
-                <Card className="bg-slate-800/50 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="text-white text-lg">Ability Scores</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <StatBlock scores={character.ability_scores} />
-                  </CardContent>
-                </Card>
+                <StatsVisual character={character} />
                 
                 <SkillsPanel character={character} onUpdate={handleSkillsUpdate} />
+                
+                <ActiveEffects 
+                  character={character} 
+                  onUpdate={(data) => updateMutation.mutate(data)} 
+                />
               </div>
               
               <div>
