@@ -30,6 +30,7 @@ import DowntimeActivities from "@/components/character/DowntimeActivities";
 import ImportExportCharacter from "@/components/character/ImportExportCharacter";
 import StatsVisual from "@/components/character/StatsVisual";
 import ActiveEffects from "@/components/character/ActiveEffects";
+import CombatStatsPanel from "@/components/character/CombatStatsPanel";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -302,6 +303,11 @@ export default function CharacterSheet() {
               Notes
             </TabsTrigger>
           </TabsList>
+          
+          {/* Combat Tab */}
+          <TabsContent value="combat" className="space-y-4">
+            <CombatStatsPanel character={character} />
+          </TabsContent>
           
           {/* Stats Tab */}
           <TabsContent value="stats" className="space-y-4">
