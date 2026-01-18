@@ -21,12 +21,19 @@ import WorldBuilder from "@/components/campaign/WorldBuilder";
 import WorldEventsManager from "@/components/campaign/WorldEventsManager";
 import CollaborativeJournal from "@/components/campaign/CollaborativeJournal";
 import SharedResources from "@/components/campaign/SharedResources";
+import CampaignChat from "@/components/campaign/CampaignChat";
+import { Badge } from "@/components/ui/badge";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
   const campaignId = urlParams.get('id');
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [currentUser, setCurrentUser] = React.useState(null);
+  
+  React.useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
   const [currentUser, setCurrentUser] = React.useState(null);
   
   React.useEffect(() => {
@@ -91,6 +98,7 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="characters">👥 Characters</SelectItem>
               <SelectItem value="events">🌍 World Events</SelectItem>
               <SelectItem value="resources">📦 Shared Resources</SelectItem>
+              <SelectItem value="chat">💬 Chat</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
             </SelectContent>
           </Select>
