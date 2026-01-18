@@ -96,7 +96,7 @@ export default function CampaignDetail({ currentCharacter }) {
           </Select>
           
           <TabsContent value="dashboard">
-            <CampaignDashboard campaign={campaign} characters={characters} />
+            <CampaignDashboard campaign={campaign} characters={characters} campaignId={campaignId} />
           </TabsContent>
           
           <TabsContent value="world">

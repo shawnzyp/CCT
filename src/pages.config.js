@@ -7,6 +7,7 @@ import DMTools from './pages/DMTools';
 import Help from './pages/Help';
 import Home from './pages/Home';
 import Rules from './pages/Rules';
+import PlayCampaign from './pages/PlayCampaign';
 import __Layout from './Layout.jsx';
 
 
@@ -20,6 +21,7 @@ export const PAGES = {
     "Help": Help,
     "Home": Home,
     "Rules": Rules,
+    "PlayCampaign": PlayCampaign,
 }
 
 export const pagesConfig = {
