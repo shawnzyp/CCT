@@ -100,17 +100,17 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="flex gap-4 justify-center"
+            className="flex flex-col gap-3 items-center"
           >
-            <Link to={createPageUrl('CreateCharacter')}>
-              <Button className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 gap-2 px-8 py-6 text-lg">
-                <Sparkles className="h-5 w-5" />
+            <Link to={createPageUrl('CreateCharacter')} className="w-full max-w-md">
+              <Button className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 gap-2 px-6 py-5 text-base">
+                <Sparkles className="h-4 w-4" />
                 Create Character
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link to={createPageUrl('Campaigns')}>
-              <Button variant="outline" className="border-violet-500 text-violet-400 hover:bg-violet-500/20 px-8 py-6 text-lg">
+            <Link to={createPageUrl('Campaigns')} className="w-full max-w-md">
+              <Button variant="outline" className="w-full border-violet-500 text-violet-400 hover:bg-violet-500/20 px-6 py-5 text-base">
                 View Campaigns
               </Button>
             </Link>
@@ -118,23 +118,23 @@ export default function Home() {
         </motion.div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
             >
               <Link to={createPageUrl(feature.link)}>
                 <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all h-full group cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                      <feature.icon className="h-6 w-6 text-white" />
+                  <CardContent className="p-4">
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                      <feature.icon className="h-5 w-5 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                    <p className="text-sm text-slate-400">{feature.description}</p>
+                    <h3 className="text-sm font-semibold text-white mb-1">{feature.title}</h3>
+                    <p className="text-xs text-slate-400 line-clamp-2">{feature.description}</p>
                   </CardContent>
                 </Card>
               </Link>

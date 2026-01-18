@@ -5,6 +5,8 @@ import Characters from './pages/Characters';
 import CreateCharacter from './pages/CreateCharacter';
 import Home from './pages/Home';
 import DMTools from './pages/DMTools';
+import Rules from './pages/Rules';
+import Help from './pages/Help';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +18,8 @@ export const PAGES = {
     "CreateCharacter": CreateCharacter,
     "Home": Home,
     "DMTools": DMTools,
+    "Rules": Rules,
+    "Help": Help,
 }
 
 export const pagesConfig = {
