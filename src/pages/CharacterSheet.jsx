@@ -272,10 +272,14 @@ export default function CharacterSheet() {
         </div>
         
         {/* Main Content */}
-        <Tabs defaultValue="stats" className="space-y-4">
-          <TabsList className="bg-slate-800/50 border border-slate-700">
-            <TabsTrigger value="stats" className="data-[state=active]:bg-violet-500/20">
+        <Tabs defaultValue="combat" className="space-y-4">
+          <TabsList className="bg-slate-800/50 border border-slate-700 overflow-x-auto flex-wrap">
+            <TabsTrigger value="combat" className="data-[state=active]:bg-violet-500/20">
               <Swords className="h-4 w-4 mr-2" />
+              Combat
+            </TabsTrigger>
+            <TabsTrigger value="stats" className="data-[state=active]:bg-violet-500/20">
+              <TrendingUp className="h-4 w-4 mr-2" />
               Stats
             </TabsTrigger>
             <TabsTrigger value="powers" className="data-[state=active]:bg-violet-500/20">
