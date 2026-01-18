@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare } from "lucide-react";
+import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map } from "lucide-react";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
 import CampaignEvents from "@/components/campaign/CampaignEvents";
@@ -13,6 +13,8 @@ import CombatTracker from "@/components/combat/CombatTracker";
 import QuestTracker from "@/components/campaign/QuestTracker";
 import StoryArcTracker from "@/components/campaign/StoryArcTracker";
 import SessionLog from "@/components/campaign/SessionLog";
+import CampaignDashboard from "@/components/campaign/CampaignDashboard";
+import WorldBuilder from "@/components/campaign/WorldBuilder";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -62,16 +64,29 @@ export default function CampaignDetail({ currentCharacter }) {
           </div>
         </div>
         
-        <Tabs defaultValue="log" className="space-y-4">
-          <TabsList className="bg-slate-800/50 border border-slate-700">
+        <Tabs defaultValue="dashboard" className="space-y-4">
+          <TabsList className="bg-slate-800/50 border border-slate-700 flex-wrap h-auto">
+            <TabsTrigger value="dashboard"><LayoutDashboard className="h-4 w-4 mr-2" />Dashboard</TabsTrigger>
             <TabsTrigger value="log"><MessageSquare className="h-4 w-4 mr-2" />Session Log</TabsTrigger>
             <TabsTrigger value="quests"><ScrollText className="h-4 w-4 mr-2" />Quests</TabsTrigger>
             <TabsTrigger value="arcs"><Milestone className="h-4 w-4 mr-2" />Story Arcs</TabsTrigger>
             <TabsTrigger value="journal"><BookOpen className="h-4 w-4 mr-2" />Journal</TabsTrigger>
+            <TabsTrigger value="world"><Map className="h-4 w-4 mr-2" />World</TabsTrigger>
             <TabsTrigger value="characters"><Users className="h-4 w-4 mr-2" />Characters</TabsTrigger>
             <TabsTrigger value="events"><Globe className="h-4 w-4 mr-2" />Events</TabsTrigger>
             <TabsTrigger value="combat"><Swords className="h-4 w-4 mr-2" />Combat</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="dashboard">
+            <CampaignDashboard campaign={campaign} characters={characters} />
+          </TabsContent>
+          
+          <TabsContent value="world">
+            <WorldBuilder 
+              campaign={campaign}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
+          </TabsContent>
           
           <TabsContent value="log">
             <SessionLog 

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users, Gift, Swords, Dices } from "lucide-react";
+import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users, Gift, Swords, Dices, Bot } from "lucide-react";
 import { getModifier } from "@/components/character/StatBlock";
 import ResourceBar from "@/components/character/ResourceBar";
 import ConditionManager from "@/components/combat/ConditionManager";
@@ -17,6 +17,9 @@ import CombatLog from "@/components/combat/CombatLog";
 import LootDialog from "@/components/character/LootDialog";
 import DiceRollDialog from "@/components/combat/DiceRollDialog";
 import ActionEconomy from "@/components/combat/ActionEconomy";
+import { executeEnemyAI } from "@/components/combat/EnemyAI";
+import RandomEncounterGenerator from "@/components/combat/RandomEncounterGenerator";
+import { AttackEffect, HitEffect } from "@/components/combat/CombatVisualEffects";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -30,6 +33,8 @@ export default function CombatTracker({ characters, campaignId }) {
   const [defeatedEnemies, setDefeatedEnemies] = useState([]);
   const [diceRollDialog, setDiceRollDialog] = useState(null);
   const [actionTracking, setActionTracking] = useState({});
+  const [showRandomEncounter, setShowRandomEncounter] = useState(false);
+  const [visualEffect, setVisualEffect] = useState(null);
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -83,7 +88,35 @@ export default function CombatTracker({ characters, campaignId }) {
   
   const nextTurn = () => {
     const current = initiativeOrder[currentTurn];
-    addLogEntry(current.name, 'Turn ended');
+    
+    // If it's an enemy's turn, execute AI
+    if (current.isEnemy) {
+      const targets = initiativeOrder.filter(c => !c.isEnemy && (c.current_hp || c.max_hp) > 0);
+      const aiResult = executeEnemyAI(current, targets, null);
+      
+      // Apply AI actions
+      if (aiResult.action === 'attack' && aiResult.target) {
+        const damage = aiResult.damage || 0;
+        setVisualEffect({ type: 'attack', combatantId: current.id, effectType: 'physical' });
+        setTimeout(() => {
+          if (aiResult.attackRoll.total >= aiResult.target.toughness_class) {
+            handleHPChange(aiResult.target.id, Math.max(0, (aiResult.target.current_hp || aiResult.target.max_hp) - damage));
+            addLogEntry(current.name, aiResult.description, `Hit! ${damage} damage dealt`);
+            setVisualEffect({ type: 'hit', combatantId: aiResult.target.id, damage });
+          } else {
+            addLogEntry(current.name, aiResult.description, 'Miss!');
+          }
+          setTimeout(() => setVisualEffect(null), 1000);
+        }, 800);
+      } else if (aiResult.action === 'move') {
+        handlePositionChange(current.id, aiResult.position);
+        addLogEntry(current.name, aiResult.description);
+      } else {
+        addLogEntry(current.name, aiResult.description);
+      }
+    } else {
+      addLogEntry(current.name, 'Turn ended');
+    }
     
     // Reset action economy for current combatant
     setActionTracking(prev => ({ ...prev, [current.id]: [] }));
@@ -135,6 +168,11 @@ export default function CombatTracker({ characters, campaignId }) {
   
   const handleEnemiesGenerated = (newEnemies) => {
     setEnemies(newEnemies);
+  };
+  
+  const handleEncounterGenerated = ({ enemies, name, description }) => {
+    setEnemies(enemies);
+    addLogEntry('System', `Random encounter: ${name}`, description);
   };
   
   const handlePositionChange = (combatantId, position) => {
@@ -267,14 +305,23 @@ export default function CombatTracker({ characters, campaignId }) {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">Combat Setup</h2>
-          <Button 
-            onClick={() => setShowEnemyGen(true)}
-            className="gap-2"
-            variant="outline"
-          >
-            <Sparkles className="h-4 w-4" />
-            Generate Enemies
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => setShowRandomEncounter(true)}
+              className="gap-2 bg-violet-600 hover:bg-violet-700"
+            >
+              <Dices className="h-4 w-4" />
+              Random Encounter
+            </Button>
+            <Button 
+              onClick={() => setShowEnemyGen(true)}
+              className="gap-2"
+              variant="outline"
+            >
+              <Sparkles className="h-4 w-4" />
+              Custom Enemies
+            </Button>
+          </div>
         </div>
         
         {enemies.length > 0 && (
@@ -325,6 +372,14 @@ export default function CombatTracker({ characters, campaignId }) {
             onClose={() => setShowEnemyGen(false)}
           />
         )}
+        
+        {showRandomEncounter && (
+          <RandomEncounterGenerator
+            characters={characters}
+            onGenerate={handleEncounterGenerated}
+            onClose={() => setShowRandomEncounter(false)}
+          />
+        )}
       </div>
     );
   }
@@ -367,12 +422,18 @@ export default function CombatTracker({ characters, campaignId }) {
             <Card 
               key={char.id} 
               className={cn(
-                "bg-slate-800/50 border-2 transition-all",
+                "bg-slate-800/50 border-2 transition-all relative",
                 isCurrentTurn 
                   ? "border-violet-500 shadow-lg shadow-violet-500/20" 
                   : "border-slate-700"
               )}
             >
+              {visualEffect?.combatantId === char.id && visualEffect.type === 'attack' && (
+                <AttackEffect type={visualEffect.effectType} onComplete={() => setVisualEffect(null)} />
+              )}
+              {visualEffect?.combatantId === char.id && visualEffect.type === 'hit' && (
+                <HitEffect damage={visualEffect.damage} onComplete={() => setVisualEffect(null)} />
+              )}
               <CardContent className="p-4">
                 <div className="flex items-center gap-4">
                   {/* Initiative & Turn Marker */}
@@ -476,7 +537,7 @@ export default function CombatTracker({ characters, campaignId }) {
                     )}
                     
                     {/* Combat Actions */}
-                    {isCurrentTurn && (
+                    {isCurrentTurn && !char.isEnemy && (
                       <div className="flex gap-2 mt-3">
                         <Button
                           size="sm"
@@ -496,6 +557,14 @@ export default function CombatTracker({ characters, campaignId }) {
                           <Shield className="h-3 w-3 mr-1" />
                           Save
                         </Button>
+                      </div>
+                    )}
+                    {isCurrentTurn && char.isEnemy && (
+                      <div className="mt-3">
+                        <Badge className="bg-amber-500/20 text-amber-400 border-amber-500">
+                          <Bot className="h-3 w-3 mr-1" />
+                          AI Controlled - Click "Next Turn"
+                        </Badge>
                       </div>
                     )}
                   </div>
