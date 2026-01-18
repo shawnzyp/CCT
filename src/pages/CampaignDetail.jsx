@@ -5,15 +5,16 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone } from "lucide-react";
+import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare } from "lucide-react";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
 import CampaignEvents from "@/components/campaign/CampaignEvents";
 import CombatTracker from "@/components/combat/CombatTracker";
 import QuestTracker from "@/components/campaign/QuestTracker";
 import StoryArcTracker from "@/components/campaign/StoryArcTracker";
+import SessionLog from "@/components/campaign/SessionLog";
 
-export default function CampaignDetail() {
+export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
   const campaignId = urlParams.get('id');
   const queryClient = useQueryClient();
@@ -38,6 +39,11 @@ export default function CampaignDetail() {
     },
   });
   
+  const handleAddSessionMessage = (message) => {
+    const sessionLog = [...(campaign.session_log || []), message];
+    updateCampaign.mutate({ session_log: sessionLog });
+  };
+  
   if (isLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Loading...</div>;
   if (!campaign) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Campaign not found</div>;
   
@@ -56,8 +62,9 @@ export default function CampaignDetail() {
           </div>
         </div>
         
-        <Tabs defaultValue="quests" className="space-y-4">
+        <Tabs defaultValue="log" className="space-y-4">
           <TabsList className="bg-slate-800/50 border border-slate-700">
+            <TabsTrigger value="log"><MessageSquare className="h-4 w-4 mr-2" />Session Log</TabsTrigger>
             <TabsTrigger value="quests"><ScrollText className="h-4 w-4 mr-2" />Quests</TabsTrigger>
             <TabsTrigger value="arcs"><Milestone className="h-4 w-4 mr-2" />Story Arcs</TabsTrigger>
             <TabsTrigger value="journal"><BookOpen className="h-4 w-4 mr-2" />Journal</TabsTrigger>
@@ -65,6 +72,14 @@ export default function CampaignDetail() {
             <TabsTrigger value="events"><Globe className="h-4 w-4 mr-2" />Events</TabsTrigger>
             <TabsTrigger value="combat"><Swords className="h-4 w-4 mr-2" />Combat</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="log">
+            <SessionLog 
+              sessionLog={campaign.session_log || []} 
+              onAddMessage={handleAddSessionMessage}
+              currentCharacter={currentCharacter}
+            />
+          </TabsContent>
           
           <TabsContent value="quests">
             <QuestTracker 

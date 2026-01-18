@@ -2,13 +2,46 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
-import { Users, Zap, BookOpen, Menu, X } from 'lucide-react';
+import { Users, Zap, BookOpen, Menu, X, User, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import CharacterSelector from '@/components/character/CharacterSelector';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentCharacter, setCurrentCharacter] = useState(null);
+  const [showCharacterSelector, setShowCharacterSelector] = useState(false);
+
+  const { data: characters = [] } = useQuery({
+    queryKey: ['characters'],
+    queryFn: () => base44.entities.Character.list('-created_date')
+  });
+
+  useEffect(() => {
+    const stored = localStorage.getItem('currentCharacter');
+    if (stored) {
+      try {
+        setCurrentCharacter(JSON.parse(stored));
+      } catch (e) {
+        localStorage.removeItem('currentCharacter');
+      }
+    }
+  }, []);
+
+  const handleCharacterSelect = (character) => {
+    setCurrentCharacter(character);
+    localStorage.setItem('currentCharacter', JSON.stringify(character));
+    setShowCharacterSelector(false);
+    window.dispatchEvent(new CustomEvent('characterChanged', { detail: character }));
+  };
+
+  const handleCharacterSwitch = () => {
+    setShowCharacterSelector(true);
+  };
   
   const navItems = [
     { name: 'Home', path: 'Home', icon: Zap },
@@ -54,7 +87,31 @@ export default function Layout({ children }) {
                 </Link>
               ))}
             </nav>
-            
+
+            {/* Current Character */}
+            <div className="hidden md:flex items-center gap-2">
+              {currentCharacter ? (
+                <Button
+                  variant="ghost"
+                  onClick={handleCharacterSwitch}
+                  className="gap-2 text-slate-400 hover:text-white"
+                >
+                  <User className="h-4 w-4" />
+                  {currentCharacter.name}
+                  <RefreshCw className="h-3 w-3" />
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCharacterSelector(true)}
+                  className="gap-2 border-violet-500 text-violet-400 hover:bg-violet-500/20"
+                >
+                  <User className="h-4 w-4" />
+                  Select Character
+                </Button>
+              )}
+            </div>
+
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
@@ -96,8 +153,16 @@ export default function Layout({ children }) {
       
       {/* Main Content */}
       <main className="pt-16">
-        {children}
+        {React.cloneElement(children, { currentCharacter })}
       </main>
-    </div>
-  );
-}
+
+      {showCharacterSelector && (
+        <CharacterSelector
+          characters={characters}
+          onSelect={handleCharacterSelect}
+          onClose={() => setShowCharacterSelector(false)}
+        />
+      )}
+      </div>
+      );
+      }
