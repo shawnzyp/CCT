@@ -81,8 +81,11 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
     campaign_id: campaignId || ''
   });
   
+  const [showVisualCustomizer, setShowVisualCustomizer] = useState(false);
+  
   const steps = [
     { title: 'Identity', subtitle: 'Who is your vigilante?' },
+    { title: 'Appearance', subtitle: 'Visual customization' },
     { title: 'Classification', subtitle: 'How did you receive your powers?' },
     { title: 'Power Style', subtitle: 'What are your superpowers?' },
     { title: 'Origin', subtitle: 'What shaped you?' },
@@ -171,12 +174,13 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
   const canProceed = () => {
     switch (step) {
       case 0: return data.name?.trim();
-      case 1: return data.classification;
-      case 2: return data.power_styles?.length > 0 && data.primary_power_style;
-      case 3: return data.origin_story;
-      case 4: return Object.values(data.ability_scores).every(v => v > 0);
-      case 5: return data.tier !== undefined;
-      case 6: return data.alignment;
+      case 1: return true; // Appearance is optional
+      case 2: return data.classification;
+      case 3: return data.power_styles?.length > 0 && data.primary_power_style;
+      case 4: return data.origin_story;
+      case 5: return Object.values(data.ability_scores).every(v => v > 0);
+      case 6: return data.tier !== undefined;
+      case 7: return data.alignment;
       default: return true;
     }
   };
@@ -204,10 +208,55 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
                 className="bg-slate-800 border-slate-700 text-white mt-1"
               />
             </div>
+            <PortraitUploader
+              currentUrl={data.portrait_url}
+              onUpload={(url) => updateData('portrait_url', url)}
+            />
           </div>
         );
         
       case 1:
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Palette className="h-5 w-5 text-violet-400" />
+                  <span className="font-medium text-white">Visual Customization</span>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => setShowVisualCustomizer(true)}
+                  className="bg-violet-600 hover:bg-violet-700"
+                >
+                  Customize
+                </Button>
+              </div>
+              {data.visual_customization && (
+                <div className="text-sm text-slate-400 space-y-1">
+                  {data.visual_customization.costume_primary_color && (
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded"
+                        style={{ backgroundColor: data.visual_customization.costume_primary_color }}
+                      />
+                      <span>Primary: {data.visual_customization.costume_primary_color}</span>
+                    </div>
+                  )}
+                  {data.visual_customization.costume_style && (
+                    <div>Style: {data.visual_customization.costume_style}</div>
+                  )}
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-slate-500 text-center">
+              This is optional - you can customize your character's appearance later
+            </p>
+          </div>
+        );
+        
+      case 2:
         return (
           <div className="grid gap-3">
             {CLASSIFICATIONS.map(c => (

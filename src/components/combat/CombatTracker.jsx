@@ -5,16 +5,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight } from "lucide-react";
+import { Play, SkipForward, RotateCcw, Heart, Zap, Shield, ChevronRight, Sparkles, Users } from "lucide-react";
 import { getModifier } from "@/components/character/StatBlock";
 import ResourceBar from "@/components/character/ResourceBar";
 import ConditionManager from "@/components/combat/ConditionManager";
+import EnemyGenerator from "@/components/combat/EnemyGenerator";
+import TacticalGrid from "@/components/combat/TacticalGrid";
+import CombatLog from "@/components/combat/CombatLog";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
   const [initiativeOrder, setInitiativeOrder] = useState([]);
   const [currentTurn, setCurrentTurn] = useState(0);
+  const [enemies, setEnemies] = useState([]);
+  const [combatLog, setCombatLog] = useState([]);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [showEnemyGen, setShowEnemyGen] = useState(false);
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -24,8 +32,18 @@ export default function CombatTracker({ characters, campaignId }) {
     }
   });
   
+  const addLogEntry = (actor, action, result = '') => {
+    setCombatLog(prev => [...prev, {
+      round: currentRound,
+      actor,
+      action,
+      result,
+      timestamp: new Date().toISOString()
+    }]);
+  };
+  
   const rollInitiative = () => {
-    const withInitiative = characters.map(char => {
+    const heroes = characters.map(char => {
       const dexMod = getModifier(char.ability_scores?.DEX || 10);
       const roll = Math.floor(Math.random() * 20) + 1;
       const conMod = getModifier(char.ability_scores?.CON || 10);
@@ -34,37 +52,85 @@ export default function CombatTracker({ characters, campaignId }) {
         initiative_roll: roll + dexMod,
         initiative_modifier: dexMod,
         current_sp: 5 + conMod,
-        current_hp: char.current_hp || char.max_hp
+        current_hp: char.current_hp || char.max_hp,
+        isEnemy: false
       };
     });
     
-    withInitiative.sort((a, b) => b.initiative_roll - a.initiative_roll);
-    setInitiativeOrder(withInitiative);
+    const enemiesWithInit = enemies.map(enemy => ({
+      ...enemy,
+      initiative_roll: Math.floor(Math.random() * 20) + 1 + enemy.initiative_modifier,
+      isEnemy: true,
+      id: `enemy_${Math.random()}`
+    }));
+    
+    const all = [...heroes, ...enemiesWithInit].sort((a, b) => b.initiative_roll - a.initiative_roll);
+    setInitiativeOrder(all);
     setCombatActive(true);
     setCurrentTurn(0);
+    setCurrentRound(1);
+    setCombatLog([]);
+    
+    addLogEntry('Combat', `Combat started with ${heroes.length} heroes vs ${enemiesWithInit.length} enemies`);
   };
   
   const nextTurn = () => {
+    const current = initiativeOrder[currentTurn];
+    addLogEntry(current.name, 'Turn ended');
+    
     setCurrentTurn((prev) => {
       const next = (prev + 1) % initiativeOrder.length;
-      // Refresh SP at start of each round (when we cycle back to first character)
+      
+      // New round starts
       if (next === 0) {
-        initiativeOrder.forEach(char => {
-          const conMod = getModifier(char.ability_scores?.CON || 10);
-          updateCharacter.mutate({
-            id: char.id,
-            data: { current_sp: 5 + conMod }
-          });
-        });
+        setCurrentRound(r => r + 1);
+        addLogEntry('System', `Round ${currentRound + 1} begins`);
+        
+        // Refresh SP and tick down conditions
+        setInitiativeOrder(prev => prev.map(combatant => {
+          const updates = { ...combatant };
+          
+          // Refresh SP for heroes
+          if (!combatant.isEnemy && combatant.ability_scores) {
+            const conMod = getModifier(combatant.ability_scores.CON || 10);
+            updates.current_sp = 5 + conMod;
+            updateCharacter.mutate({
+              id: combatant.id,
+              data: { current_sp: 5 + conMod }
+            });
+          }
+          
+          // Tick down conditions
+          if (combatant.active_conditions?.length > 0) {
+            updates.active_conditions = combatant.active_conditions
+              .map(c => ({ ...c, duration: c.duration - 1 }))
+              .filter(c => c.duration > 0);
+          }
+          
+          return updates;
+        }));
       }
+      
       return next;
     });
   };
   
   const endCombat = () => {
+    addLogEntry('Combat', 'Combat ended');
     setCombatActive(false);
     setInitiativeOrder([]);
     setCurrentTurn(0);
+    setEnemies([]);
+  };
+  
+  const handleEnemiesGenerated = (newEnemies) => {
+    setEnemies(newEnemies);
+  };
+  
+  const handlePositionChange = (combatantId, position) => {
+    setInitiativeOrder(prev => 
+      prev.map(c => c.id === combatantId ? { ...c, position } : c)
+    );
   };
   
   const handleHPChange = (charId, newHP) => {
@@ -83,30 +149,79 @@ export default function CombatTracker({ characters, campaignId }) {
   
   if (!combatActive) {
     return (
-      <div className="text-center py-12">
-        <div className="w-20 h-20 rounded-2xl bg-slate-800/50 flex items-center justify-center mx-auto mb-4">
-          <Play className="h-10 w-10 text-slate-600" />
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold text-white">Combat Setup</h2>
+          <Button 
+            onClick={() => setShowEnemyGen(true)}
+            className="gap-2"
+            variant="outline"
+          >
+            <Sparkles className="h-4 w-4" />
+            Generate Enemies
+          </Button>
         </div>
-        <h2 className="text-xl font-semibold text-white mb-2">No Active Combat</h2>
-        <p className="text-slate-400 mb-6">Roll initiative to begin combat tracking</p>
-        <Button 
-          onClick={rollInitiative} 
-          disabled={characters.length === 0}
-          className="bg-violet-600 hover:bg-violet-700 gap-2"
-        >
-          <Play className="h-4 w-4" />
-          Start Combat
-        </Button>
+        
+        {enemies.length > 0 && (
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Users className="h-5 w-5 text-red-400" />
+                Enemies Ready ({enemies.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {enemies.map((enemy, i) => (
+                  <div key={i} className="flex items-center justify-between bg-slate-700/50 rounded p-2">
+                    <span className="text-white font-medium">{enemy.name}</span>
+                    <div className="flex gap-3 text-xs text-slate-400">
+                      <span>HP: {enemy.max_hp}</span>
+                      <span>TC: {enemy.tc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        <div className="text-center py-12">
+          <div className="w-20 h-20 rounded-2xl bg-slate-800/50 flex items-center justify-center mx-auto mb-4">
+            <Play className="h-10 w-10 text-slate-600" />
+          </div>
+          <h2 className="text-xl font-semibold text-white mb-2">Ready to Start?</h2>
+          <p className="text-slate-400 mb-6">
+            {characters.length} heroes vs {enemies.length} enemies
+          </p>
+          <Button 
+            onClick={rollInitiative} 
+            disabled={characters.length === 0}
+            className="bg-violet-600 hover:bg-violet-700 gap-2"
+          >
+            <Play className="h-4 w-4" />
+            Roll Initiative & Start
+          </Button>
+        </div>
+        
+        {showEnemyGen && (
+          <EnemyGenerator
+            onGenerate={handleEnemiesGenerated}
+            onClose={() => setShowEnemyGen(false)}
+          />
+        )}
       </div>
     );
   }
   
   return (
-    <div className="space-y-4">
+    <Tabs defaultValue="tracker" className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-white">Combat Tracker</h2>
-          <p className="text-sm text-slate-400">Round {Math.floor(currentTurn / initiativeOrder.length) + 1}</p>
+          <h2 className="text-xl font-bold text-white">Combat - Round {currentRound}</h2>
+          <p className="text-sm text-slate-400">
+            {initiativeOrder[currentTurn]?.name}'s turn
+          </p>
         </div>
         <div className="flex gap-2">
           <Button onClick={nextTurn} className="gap-2">
@@ -120,11 +235,19 @@ export default function CombatTracker({ characters, campaignId }) {
         </div>
       </div>
       
+      <TabsList className="bg-slate-800/50 border border-slate-700">
+        <TabsTrigger value="tracker">Initiative</TabsTrigger>
+        <TabsTrigger value="grid">Grid</TabsTrigger>
+        <TabsTrigger value="log">Combat Log</TabsTrigger>
+      </TabsList>
+      
+      <TabsContent value="tracker" className="space-y-2">
+      
       <div className="space-y-2">
         {initiativeOrder.map((char, index) => {
           const isCurrentTurn = index === currentTurn;
-          const conMod = getModifier(char.ability_scores?.CON || 10);
-          const maxSP = 5 + conMod;
+          const conMod = char.ability_scores ? getModifier(char.ability_scores.CON || 10) : 0;
+          const maxSP = char.isEnemy ? 0 : 5 + conMod;
           
           return (
             <Card 
@@ -161,34 +284,59 @@ export default function CombatTracker({ characters, campaignId }) {
                   {/* Character Info */}
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-white text-lg">{char.name}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-white text-lg">{char.name}</h3>
+                        {char.isEnemy && (
+                          <Badge variant="destructive" className="text-xs">Enemy</Badge>
+                        )}
+                      </div>
                       <div className="flex items-center gap-3 text-xs text-slate-400">
                         <div className="flex items-center gap-1">
                           <Shield className="h-3 w-3" />
-                          TC {char.toughness_class}
+                          TC {char.toughness_class || char.tc}
                         </div>
                       </div>
                     </div>
                     
                     {/* HP & SP */}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className={cn("grid gap-3", char.isEnemy ? "grid-cols-1" : "grid-cols-2")}>
                       <ResourceBar
                         label="HP"
-                        current={char.current_hp || char.max_hp}
+                        current={char.hp || char.current_hp || char.max_hp}
                         max={char.max_hp}
                         color="red"
-                        onChange={(newHP) => handleHPChange(char.id, newHP)}
+                        onChange={(newHP) => {
+                          if (char.isEnemy) {
+                            setInitiativeOrder(prev => 
+                              prev.map(c => c.id === char.id ? { ...c, hp: newHP } : c)
+                            );
+                          } else {
+                            handleHPChange(char.id, newHP);
+                          }
+                        }}
                         size="sm"
                       />
-                      <ResourceBar
-                        label="SP"
-                        current={char.current_sp || maxSP}
-                        max={maxSP}
-                        color="violet"
-                        onChange={(newSP) => handleSPChange(char.id, newSP)}
-                        size="sm"
-                      />
+                      {!char.isEnemy && (
+                        <ResourceBar
+                          label="SP"
+                          current={char.current_sp || maxSP}
+                          max={maxSP}
+                          color="violet"
+                          onChange={(newSP) => handleSPChange(char.id, newSP)}
+                          size="sm"
+                        />
+                      )}
                     </div>
+                    
+                    {/* Enemy Abilities */}
+                    {char.isEnemy && char.abilities?.length > 0 && (
+                      <div className="text-xs text-slate-400">
+                        <div className="font-medium mb-1">Abilities:</div>
+                        {char.abilities.map((ability, i) => (
+                          <div key={i}>• {ability}</div>
+                        ))}
+                      </div>
+                    )}
                     
                     {/* Conditions */}
                     <ConditionManager character={char} onUpdate={(conditions) => {
@@ -203,7 +351,18 @@ export default function CombatTracker({ characters, campaignId }) {
             </Card>
           );
         })}
-      </div>
-    </div>
+      </TabsContent>
+      
+      <TabsContent value="grid">
+        <TacticalGrid 
+          combatants={initiativeOrder}
+          onPositionChange={handlePositionChange}
+        />
+      </TabsContent>
+      
+      <TabsContent value="log">
+        <CombatLog logs={combatLog} />
+      </TabsContent>
+    </Tabs>
   );
 }
