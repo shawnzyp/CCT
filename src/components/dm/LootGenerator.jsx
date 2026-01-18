@@ -28,25 +28,41 @@ export default function LootGenerator() {
   const handleGenerate = async () => {
     setGenerating(true);
     
-    const prompt = `Generate ${params.count} loot items for a Catalyst Core superhero TTRPG.
+    const tierPriceRanges = {
+      common: 'T5: 1,250-20,000 Cr',
+      uncommon: 'T4: 25,000-100,000 Cr',
+      rare: 'T3: 125,000-375,000 Cr',
+      epic: 'T2: 400,000-1,000,000 Cr',
+      legendary: 'T1: 1,250,000-3,000,000 Cr'
+    };
+    
+    const prompt = `Generate ${params.count} loot items for Catalyst Core TTRPG following the official equipment catalog structure.
 
-Tier: ${tiers[params.tier]}
+Tier: ${tiers[params.tier]} (${tierPriceRanges[params.tier]})
 ${params.context ? `Context: ${params.context}` : ''}
 
-Create items that fit the superhero vigilante theme:
-- Gadgets and tech devices
-- Advanced equipment
-- Prototype weapons
-- Utility items
-- Consumables
+Guidelines from Catalyst Core Master Equipment Book:
+- Currency: Credits (Cr)
+- Item categories: Useful Items, Gear (Armor/Shield/Weapon/Utility), Catalyst Items
+- Attunement: T5-T4 optional (10min+3SP), T3 required (30min+3SP), T2-T0 required (1hr+5SP)
+- Equipment slots: 1 armor, 1 shield, 2 utilities, 1 main weapon, 1 sidearm, 2 implants
 
-For each item include:
-- Name
-- Type (weapon/armor/gadget/utility/consumable)
-- Rarity (${params.tier})
-- Description (what it does)
-- Game effect or bonus
-- Value in gold`;
+Generate items that could include:
+- Medical kits and healing items
+- Tech gadgets (drones, grappling hooks, cloaking devices)
+- Combat gear (weapons, armor, shields)
+- Stealth/infiltration tools
+- Catalytic items (powered by shards/resonance)
+- Environmental protection gear
+
+Each item must have:
+- Name (thematic, tech-focused)
+- Type (weapon/armor/shield/utility/consumable/catalyst)
+- Rarity tier matching request
+- Description (2-3 sentences)
+- Game effect/perk (specific mechanical benefit)
+- Price in Credits within tier range
+- Attunement requirement (based on tier)`;
 
     try {
       const result = await base44.integrations.Core.InvokeLLM({
@@ -63,8 +79,11 @@ For each item include:
                   type: { type: "string" },
                   rarity: { type: "string" },
                   description: { type: "string" },
+                  perk: { type: "string" },
                   effect: { type: "string" },
-                  value: { type: "number" }
+                  price_cr: { type: "number" },
+                  attunement: { type: "string" },
+                  how_it_works: { type: "string" }
                 }
               }
             }
@@ -189,19 +208,35 @@ For each item include:
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h4 className="text-lg font-semibold text-white">{item.name}</h4>
-                      <div className="flex gap-2 mt-1">
+                      <div className="flex gap-2 mt-1 flex-wrap">
                         <Badge variant="outline" className="text-xs capitalize">{item.type}</Badge>
                         <Badge className={`text-xs ${colorClass}`}>{item.rarity}</Badge>
+                        {item.attunement && (
+                          <Badge variant="outline" className="text-xs text-violet-400">
+                            {item.attunement}
+                          </Badge>
+                        )}
                       </div>
                     </div>
-                    <div className="text-amber-400 font-bold text-lg">{item.value} gold</div>
+                    <div className="text-amber-400 font-bold text-lg">
+                      {item.price_cr || item.value} Cr
+                    </div>
                   </div>
                   
                   <p className="text-sm text-slate-300 mb-2">{item.description}</p>
                   
-                  <div className="bg-slate-900/50 rounded p-2 mt-2">
-                    <div className="text-xs font-semibold text-violet-400 uppercase mb-1">Effect</div>
-                    <p className="text-sm text-slate-300">{item.effect}</p>
+                  {item.perk && (
+                    <div className="bg-violet-500/10 rounded p-2 mb-2 border border-violet-500/30">
+                      <div className="text-xs font-semibold text-violet-400 uppercase mb-1">Perk</div>
+                      <p className="text-sm text-slate-300">{item.perk}</p>
+                    </div>
+                  )}
+                  
+                  <div className="bg-slate-900/50 rounded p-2">
+                    <div className="text-xs font-semibold text-slate-400 uppercase mb-1">
+                      {item.how_it_works ? 'How It Works' : 'Effect'}
+                    </div>
+                    <p className="text-sm text-slate-300">{item.how_it_works || item.effect}</p>
                   </div>
                 </CardContent>
               </Card>
