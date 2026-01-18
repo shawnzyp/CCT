@@ -7,12 +7,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, MapPin, User, Book, Pencil, Trash2 } from "lucide-react";
+import CollaborativeNotes from "./CollaborativeNotes";
 
 export default function WorldBuilder({ campaign, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [dialogType, setDialogType] = useState('location');
   const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({});
+  const [currentUser, setCurrentUser] = React.useState(null);
+  
+  React.useEffect(() => {
+    const getUser = async () => {
+      try {
+        const user = await base44.auth.me();
+        setCurrentUser(user);
+      } catch (e) {}
+    };
+    getUser();
+  }, []);
   
   const worldData = {
     locations: campaign.world_locations || [],
@@ -113,6 +125,15 @@ export default function WorldBuilder({ campaign, onUpdate }) {
                         </div>
                       </div>
                       <p className="text-sm text-slate-400">{loc.description}</p>
+                      <CollaborativeNotes 
+                        notes={loc.notes || []}
+                        currentUser={currentUser}
+                        onUpdate={(notes) => {
+                          const newData = [...worldData.locations];
+                          newData[i] = { ...loc, notes };
+                          onUpdate({ world_locations: newData });
+                        }}
+                      />
                     </div>
                   ))}
                 </div>
@@ -163,6 +184,15 @@ export default function WorldBuilder({ campaign, onUpdate }) {
                       {npc.relationship && (
                         <p className="text-xs text-slate-500 mt-2">Relationship: {npc.relationship}</p>
                       )}
+                      <CollaborativeNotes 
+                        notes={npc.notes || []}
+                        currentUser={currentUser}
+                        onUpdate={(notes) => {
+                          const newData = [...worldData.npcs];
+                          newData[i] = { ...npc, notes };
+                          onUpdate({ world_npcs: newData });
+                        }}
+                      />
                     </div>
                   ))}
                 </div>

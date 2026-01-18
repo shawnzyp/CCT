@@ -16,12 +16,20 @@ import StoryArcTracker from "@/components/campaign/StoryArcTracker";
 import SessionLog from "@/components/campaign/SessionLog";
 import CampaignDashboard from "@/components/campaign/CampaignDashboard";
 import WorldBuilder from "@/components/campaign/WorldBuilder";
+import WorldEventsManager from "@/components/campaign/WorldEventsManager";
+import CollaborativeJournal from "@/components/campaign/CollaborativeJournal";
+import SharedResources from "@/components/campaign/SharedResources";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
   const campaignId = urlParams.get('id');
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [currentUser, setCurrentUser] = React.useState(null);
+  
+  React.useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
   
   const { data: campaign, isLoading } = useQuery({
     queryKey: ['campaign', campaignId],
@@ -79,7 +87,8 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="journal">📖 Journal</SelectItem>
               <SelectItem value="world">🗺️ World</SelectItem>
               <SelectItem value="characters">👥 Characters</SelectItem>
-              <SelectItem value="events">🌍 Events</SelectItem>
+              <SelectItem value="events">🌍 World Events</SelectItem>
+              <SelectItem value="resources">📦 Shared Resources</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
             </SelectContent>
           </Select>
@@ -118,7 +127,11 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="journal">
-            <CampaignJournal campaign={campaign} />
+            <CollaborativeJournal 
+              campaign={campaign}
+              currentUser={currentUser}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
           </TabsContent>
           
           <TabsContent value="characters">
@@ -126,7 +139,17 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="events">
-            <CampaignEvents campaign={campaign} />
+            <WorldEventsManager 
+              campaign={campaign}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
+          </TabsContent>
+          
+          <TabsContent value="resources">
+            <SharedResources 
+              campaign={campaign}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
           </TabsContent>
           
           <TabsContent value="combat">
