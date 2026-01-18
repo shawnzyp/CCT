@@ -9,13 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Lock, Unlock, Dices, Users, Scroll, Zap, Eye, ScrollText, Milestone, Globe, Map } from 'lucide-react';
+import { Shield, Lock, Unlock, Dices, Users, Scroll, Zap, Eye, ScrollText, Milestone, Globe, Map, Settings } from 'lucide-react';
 import QuestTracker from '@/components/campaign/QuestTracker';
 import StoryArcTracker from '@/components/campaign/StoryArcTracker';
 import WorldEventsManager from '@/components/campaign/WorldEventsManager';
 import WorldBuilder from '@/components/campaign/WorldBuilder';
-
-const DEFAULT_PIN = '1234'; // In production, this should be stored securely
+import NPCGenerator from '@/components/dm/NPCGenerator';
+import LootGenerator from '@/components/dm/LootGenerator';
+import PINSettings from '@/components/dm/PINSettings';
 
 export default function DMTools() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,6 +24,8 @@ export default function DMTools() {
   const [error, setError] = useState('');
   const [rollResult, setRollResult] = useState(null);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [currentPIN, setCurrentPIN] = useState(() => localStorage.getItem('dm_pin') || '1234');
+  const [showPINSettings, setShowPINSettings] = useState(false);
   const queryClient = useQueryClient();
   
   const { data: campaigns = [] } = useQuery({
@@ -47,7 +50,7 @@ export default function DMTools() {
 
   const handlePinSubmit = (e) => {
     e.preventDefault();
-    if (pin === DEFAULT_PIN) {
+    if (pin === currentPIN) {
       setIsAuthenticated(true);
       setError('');
       setPin('');
@@ -55,6 +58,11 @@ export default function DMTools() {
       setError('Invalid PIN. Try again.');
       setPin('');
     }
+  };
+
+  const handlePINChange = (newPIN) => {
+    setCurrentPIN(newPIN);
+    localStorage.setItem('dm_pin', newPIN);
   };
 
   const rollDice = (sides, count = 1) => {
@@ -148,10 +156,21 @@ export default function DMTools() {
               <p className="text-slate-400">Game master utilities</p>
             </div>
           </div>
-          <Badge className="bg-green-500/20 text-green-400 border-green-500">
-            <Eye className="h-3 w-3 mr-1" />
-            Authenticated
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge className="bg-green-500/20 text-green-400 border-green-500">
+              <Eye className="h-3 w-3 mr-1" />
+              Authenticated
+            </Badge>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={() => setShowPINSettings(true)}
+              className="gap-2"
+            >
+              <Settings className="h-3 w-3" />
+              Change PIN
+            </Button>
+          </div>
         </motion.div>
 
         {/* Campaign Selector */}
@@ -322,23 +341,20 @@ export default function DMTools() {
           </TabsContent>
 
           <TabsContent value="npc">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="py-12 text-center">
-                <Users className="h-12 w-12 mx-auto mb-3 text-slate-600" />
-                <p className="text-slate-400">NPC Generator - Coming Soon</p>
-              </CardContent>
-            </Card>
+            <NPCGenerator />
           </TabsContent>
 
           <TabsContent value="loot">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="py-12 text-center">
-                <Scroll className="h-12 w-12 mx-auto mb-3 text-slate-600" />
-                <p className="text-slate-400">Loot Generator - Coming Soon</p>
-              </CardContent>
-            </Card>
+            <LootGenerator />
           </TabsContent>
         </Tabs>
+
+        <PINSettings 
+          currentPIN={currentPIN}
+          onPINChange={handlePINChange}
+          open={showPINSettings}
+          onOpenChange={setShowPINSettings}
+        />
       </div>
     </div>
   );
