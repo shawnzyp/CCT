@@ -70,11 +70,17 @@ export default function CharacterCard({ character, onClick, selected = false }) 
         {/* Header */}
         <div className="flex gap-3 mb-3">
           {/* Portrait */}
-          <div className={cn(
-            "w-16 h-16 rounded-xl overflow-hidden flex-shrink-0",
-            "bg-gradient-to-br from-violet-600 to-purple-700",
-            "flex items-center justify-center"
-          )}>
+          <div 
+            className={cn(
+              "w-16 h-16 rounded-xl overflow-hidden flex-shrink-0",
+              "flex items-center justify-center relative"
+            )}
+            style={{
+              background: character.visual_customization?.costume_primary_color 
+                ? `linear-gradient(135deg, ${character.visual_customization.costume_primary_color}, ${character.visual_customization.costume_secondary_color || character.visual_customization.costume_primary_color})`
+                : 'linear-gradient(135deg, rgb(124, 58, 237), rgb(168, 85, 247))'
+            }}
+          >
             {character.portrait_url ? (
               <img 
                 src={character.portrait_url} 

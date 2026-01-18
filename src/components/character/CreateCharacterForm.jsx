@@ -7,7 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Dices, ChevronRight, ChevronLeft, Check, Zap } from "lucide-react";
+import { Dices, ChevronRight, ChevronLeft, Check, Zap, Palette } from "lucide-react";
+import PortraitUploader from "@/components/character/PortraitUploader";
+import VisualCustomizer from "@/components/character/VisualCustomizer";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CLASSIFICATIONS = [
@@ -282,7 +284,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
           </div>
         );
         
-      case 2:
+      case 3:
         return (
           <div className="space-y-4">
             <p className="text-sm text-slate-400">Select up to 2 power styles. The primary one grants its perk.</p>
@@ -331,7 +333,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
           </div>
         );
         
-      case 3:
+      case 4:
         return (
           <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
             {ORIGINS.map(o => (
@@ -357,7 +359,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
           </div>
         );
         
-      case 4:
+      case 5:
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -394,7 +396,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
           </div>
         );
         
-      case 5:
+      case 6:
         return (
           <div className="space-y-4">
             <div>
@@ -424,7 +426,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
           </div>
         );
         
-      case 6:
+      case 7:
         return (
           <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
             {ALIGNMENTS.map(a => (
@@ -450,7 +452,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
           </div>
         );
         
-      case 7:
+      case 8:
         return (
           <div className="space-y-4">
             <div className="bg-slate-800 rounded-xl p-4 space-y-3">
