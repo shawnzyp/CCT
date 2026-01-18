@@ -155,7 +155,7 @@ export default function Layout({ children }) {
       
       {/* Main Content */}
       <main className="pt-16">
-        {React.cloneElement(children, { currentCharacter })}
+        {children}
       </main>
 
       {showCharacterSelector && (
