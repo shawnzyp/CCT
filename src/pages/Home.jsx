@@ -102,7 +102,7 @@ export default function Home() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 pb-24">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
