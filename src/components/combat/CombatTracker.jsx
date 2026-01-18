@@ -283,8 +283,9 @@ export default function CombatTracker({ characters, campaignId }) {
   }
   
   return (
-    <Tabs defaultValue="tracker" className="space-y-4">
-      <div className="flex justify-between items-center">
+    <>
+      <Tabs defaultValue="tracker" className="space-y-4">
+        <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-white">Combat - Round {currentRound}</h2>
           <p className="text-sm text-slate-400">
@@ -426,17 +427,18 @@ export default function CombatTracker({ characters, campaignId }) {
         />
       </TabsContent>
       
-      <TabsContent value="log">
-        <CombatLog logs={combatLog} />
-      </TabsContent>
-    </Tabs>
-    
-    {pendingLoot && (
-      <LootDialog
-        loot={pendingLoot}
-        onClaim={handleClaimLoot}
-        onClose={() => setPendingLoot(null)}
-      />
-    )}
+        <TabsContent value="log">
+          <CombatLog logs={combatLog} />
+        </TabsContent>
+      </Tabs>
+      
+      {pendingLoot && (
+        <LootDialog
+          loot={pendingLoot}
+          onClaim={handleClaimLoot}
+          onClose={() => setPendingLoot(null)}
+        />
+      )}
+    </>
   );
 }
