@@ -22,7 +22,7 @@ const INTERVENTION_TIERS = [
   { level: 5, name: 'Black', color: 'red', description: 'Off-ledger operations. Severe risk.' }
 ];
 
-export default function AegisInterface({ campaignId, combatState }) {
+export default function AegisInterface({ campaignId = null, combatState = null }) {
   const [analyzing, setAnalyzing] = useState(false);
   const [analysis, setAnalysis] = useState(null);
   const [incidentInput, setIncidentInput] = useState('');
