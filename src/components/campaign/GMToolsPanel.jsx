@@ -13,6 +13,7 @@ import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Za
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import ShardsOfManyFates from './ShardsOfManyFates';
 
 export default function GMToolsPanel({ campaign, onUpdate }) {
   const [npcs, setNpcs] = useState(campaign.gm_npcs || []);
@@ -248,7 +249,7 @@ Generated: ${new Date().toLocaleString()}
   return (
     <div className="space-y-4">
       <Tabs defaultValue="npcs" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-3 w-full">
+        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-4 w-full">
           <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Users className="h-4 w-4 mr-2" />
             NPCs
@@ -256,6 +257,10 @@ Generated: ${new Date().toLocaleString()}
           <TabsTrigger value="encounters" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Swords className="h-4 w-4 mr-2" />
             Encounters
+          </TabsTrigger>
+          <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
+            <Sparkles className="h-4 w-4 mr-2" />
+            Shards
           </TabsTrigger>
           <TabsTrigger value="notes" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <FileText className="h-4 w-4 mr-2" />
@@ -441,6 +446,15 @@ Generated: ${new Date().toLocaleString()}
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Shards Tab */}
+        <TabsContent value="shards" className="space-y-3">
+          <ShardsOfManyFates 
+            campaign={campaign}
+            onUpdate={onUpdate}
+            characterName="GM"
+          />
         </TabsContent>
 
         {/* GM Notes Tab */}
