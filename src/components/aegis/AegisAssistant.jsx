@@ -147,13 +147,13 @@ export default function AegisAssistant() {
             exit={{ opacity: 0, x: -20 }}
             className="fixed bottom-24 left-6 z-50 max-w-xs"
           >
-            <div className="relative bg-slate-900 border-2 border-violet-500/50 rounded-xl p-4 shadow-xl shadow-violet-500/20">
+            <div className="relative bg-slate-800 border-2 border-violet-500 rounded-xl p-4 shadow-xl shadow-violet-500/30">
               {/* Close button */}
               <button
                 onClick={() => setShowEncouragement(false)}
-                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-800 border border-violet-500/50 flex items-center justify-center hover:bg-slate-700"
+                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-700 border-2 border-violet-500 flex items-center justify-center hover:bg-slate-600"
               >
-                <X className="h-3 w-3 text-violet-400" />
+                <X className="h-3 w-3 text-white" />
               </button>
               
               {/* Header */}
@@ -170,7 +170,7 @@ export default function AegisAssistant() {
               </p>
               
               {/* Speech bubble arrow */}
-              <div className="absolute -bottom-2 left-8 w-4 h-4 bg-slate-900 border-r-2 border-b-2 border-violet-500/50 transform rotate-45" />
+              <div className="absolute -bottom-2 left-8 w-4 h-4 bg-slate-800 border-r-2 border-b-2 border-violet-500 transform rotate-45" />
             </div>
           </motion.div>
         )}
@@ -185,21 +185,21 @@ export default function AegisAssistant() {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed bottom-28 left-6 z-50 w-96 max-h-[600px]"
           >
-            <div className="bg-slate-900 border-2 border-violet-500/50 rounded-xl shadow-2xl shadow-violet-500/20 overflow-hidden">
+            <div className="bg-slate-900 border-2 border-violet-500 rounded-xl shadow-2xl shadow-violet-500/30 overflow-hidden">
               {/* Header */}
-              <div className="bg-gradient-to-r from-violet-600 to-purple-600 p-4 flex items-center justify-between">
+              <div className="bg-gradient-to-r from-violet-600 to-purple-600 p-4 flex items-center justify-between border-b-2 border-violet-400">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center border-2 border-white/50">
                     <Radio className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <div className="text-white font-bold font-mono">A.E.G.I.S.</div>
-                    <div className="text-xs text-violet-200 font-mono">Adaptive Executive Governance & Intelligence System</div>
+                    <div className="text-xs text-violet-100 font-mono">Adaptive Executive Governance & Intelligence System</div>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsExpanded(false)}
-                  className="text-white hover:text-violet-200"
+                  className="bg-white/20 hover:bg-white/30 text-white rounded-lg p-1 border-2 border-white/30"
                 >
                   <X className="h-5 w-5" />
                 </button>
