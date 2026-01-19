@@ -81,8 +81,33 @@ export default function CharacterSheet() {
     mutationFn: (data) => base44.entities.Character.update(characterId, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['character', characterId]);
+      setLastSaved(new Date());
+      setIsSaving(false);
     }
   });
+
+  // Auto-save based on settings
+  useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem('catalystCoreSettings') || '{"autoSave": true, "autoSaveInterval": 3}');
+    
+    if (!settings.autoSave) return;
+
+    const intervalMs = settings.autoSaveInterval * 60000;
+    const autoSaveInterval = setInterval(() => {
+      if (character) {
+        setIsSaving(true);
+        updateMutation.mutate(character);
+      }
+    }, intervalMs);
+
+    return () => clearInterval(autoSaveInterval);
+  }, [character]);
+
+  const handleManualSave = () => {
+    setIsSaving(true);
+    updateMutation.mutate(character);
+    toast.success('Character saved!');
+  };
   
   if (isLoading) {
     return (
