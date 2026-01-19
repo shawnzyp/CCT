@@ -8,6 +8,7 @@ import Help from './pages/Help';
 import Home from './pages/Home';
 import PlayCampaign from './pages/PlayCampaign';
 import Rules from './pages/Rules';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +23,7 @@ export const PAGES = {
     "Home": Home,
     "PlayCampaign": PlayCampaign,
     "Rules": Rules,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

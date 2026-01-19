@@ -454,6 +454,7 @@ Generated: ${new Date().toLocaleString()}
             campaign={campaign}
             onUpdate={onUpdate}
             characterName="GM"
+            isGM={true}
           />
         </TabsContent>
 

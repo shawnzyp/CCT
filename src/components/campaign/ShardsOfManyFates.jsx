@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, AlertTriangle, Flame, ShieldOff, Lock, Minus, Clock, Crown, EyeOff, Zap, Eye, Shuffle } from "lucide-react";
+import { Sparkles, AlertTriangle, Flame, ShieldOff, Lock, Minus, Clock, Crown, EyeOff, Zap, Eye, Shuffle, Power } from "lucide-react";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import { toast } from "sonner";
 
@@ -183,12 +183,32 @@ const SHARD_CATEGORIES = [
   }
 ];
 
-export default function ShardsOfManyFates({ campaign, onUpdate, characterName }) {
+export default function ShardsOfManyFates({ campaign, onUpdate, characterName, isGM = false }) {
   const [selectedShard, setSelectedShard] = useState(null);
   const [drawnShards, setDrawnShards] = useState(campaign.drawn_shards || []);
   const [shuffling, setShuffling] = useState(false);
   const [showDrawConfirm, setShowDrawConfirm] = useState(false);
+  const [shardsEnabled, setShardsEnabled] = useState(campaign.shards_enabled || false);
   const { play } = useSoundEffects();
+
+  const toggleShardsEnabled = () => {
+    const newValue = !shardsEnabled;
+    setShardsEnabled(newValue);
+    onUpdate({ shards_enabled: newValue });
+    toast.success(newValue ? 'Shards of Many Fates enabled' : 'Shards of Many Fates disabled');
+  };
+
+  if (!isGM && !shardsEnabled) {
+    return (
+      <Card className="bg-slate-800 border-slate-700">
+        <CardContent className="py-12 text-center">
+          <Lock className="h-16 w-16 mx-auto text-slate-600 mb-4" />
+          <p className="text-slate-400">The Shards of Many Fates system is not available</p>
+          <p className="text-slate-500 text-sm mt-2">Your GM has not enabled this feature</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const drawShard = () => {
     setShuffling(true);
@@ -270,6 +290,23 @@ export default function ShardsOfManyFates({ campaign, onUpdate, characterName })
               Once drawn, the effect must resolve. No retcons.
             </p>
           </div>
+
+          {isGM && (
+            <div className="flex items-center justify-between p-3 bg-slate-800 rounded-lg border border-slate-700">
+              <div className="flex items-center gap-2">
+                <Power className={shardsEnabled ? "h-4 w-4 text-green-400" : "h-4 w-4 text-slate-500"} />
+                <span className="text-sm text-slate-300">Enable for Players</span>
+              </div>
+              <Button
+                onClick={toggleShardsEnabled}
+                size="sm"
+                variant={shardsEnabled ? "default" : "outline"}
+                className={shardsEnabled ? "bg-green-600 hover:bg-green-700" : ""}
+              >
+                {shardsEnabled ? "Enabled" : "Disabled"}
+              </Button>
+            </div>
+          )}
 
           <Button
             onClick={() => setShowDrawConfirm(true)}

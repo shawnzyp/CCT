@@ -53,6 +53,7 @@ export default function Layout({ children }) {
     { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
     { name: 'Characters', path: 'Characters', icon: Users },
     { name: 'Rules', path: 'Rules', icon: Book },
+    { name: 'Settings', path: 'Settings', icon: User },
     { name: 'Help', path: 'Help', icon: HelpCircle },
   ];
   

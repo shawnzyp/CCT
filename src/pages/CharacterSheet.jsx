@@ -59,6 +59,8 @@ export default function CharacterSheet() {
   const urlParams = new URLSearchParams(window.location.search);
   const characterId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
   
   const [showPowerEditor, setShowPowerEditor] = useState(false);
   const [editingPower, setEditingPower] = useState(null);
