@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Shield, Zap, Swords, Users, AlertCircle } from "lucide-react";
+import GlossaryOfTerms from "@/components/rules/GlossaryOfTerms";
 
 export default function Rules() {
   return (
@@ -25,6 +26,7 @@ export default function Rules() {
             <TabsTrigger value="powers">Powers & SP</TabsTrigger>
             <TabsTrigger value="elements">Elements</TabsTrigger>
             <TabsTrigger value="downtime">Downtime</TabsTrigger>
+            <TabsTrigger value="glossary">Glossary</TabsTrigger>
           </TabsList>
 
           <TabsContent value="creation" className="space-y-4">
@@ -464,6 +466,10 @@ export default function Rules() {
                 </ul>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="glossary">
+            <GlossaryOfTerms />
           </TabsContent>
         </Tabs>
       </div>
