@@ -173,20 +173,20 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
   return (
     <div className="space-y-4">
       <Tabs defaultValue="brief" className="w-full">
-        <TabsList className="bg-slate-800 border-slate-700">
-          <TabsTrigger value="brief" className="data-[state=active]:bg-violet-600">
+        <TabsList className="bg-slate-800 border border-slate-700">
+          <TabsTrigger value="brief" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <FileText className="h-3 w-3 mr-2" />
             Brief
           </TabsTrigger>
-          <TabsTrigger value="tactical" className="data-[state=active]:bg-violet-600">
+          <TabsTrigger value="tactical" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Target className="h-3 w-3 mr-2" />
             Tactical
           </TabsTrigger>
-          <TabsTrigger value="clocks" className="data-[state=active]:bg-violet-600">
+          <TabsTrigger value="clocks" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Clock className="h-3 w-3 mr-2" />
             Clocks
           </TabsTrigger>
-          <TabsTrigger value="ledger" className="data-[state=active]:bg-violet-600">
+          <TabsTrigger value="ledger" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Shield className="h-3 w-3 mr-2" />
             Ledger
           </TabsTrigger>
@@ -194,7 +194,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
         
         {/* BRIEF TAB */}
         <TabsContent value="brief" className="space-y-3">
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-slate-800 border-2 border-slate-700">
             <CardHeader>
               <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400 flex items-center gap-2">
                 <Radio className="h-4 w-4" />
@@ -206,12 +206,12 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
                 placeholder="Describe incident, threat, or tactical situation..."
                 value={incidentInput}
                 onChange={(e) => setIncidentInput(e.target.value)}
-                className="bg-slate-900 border-slate-700 text-white font-mono text-sm h-24"
+                className="bg-slate-900 border-2 border-slate-600 text-white font-mono text-sm h-24 placeholder:text-slate-500"
               />
               <Button
                 onClick={analyzeIncident}
                 disabled={analyzing || !incidentInput.trim()}
-                className="w-full bg-violet-600 hover:bg-violet-700"
+                className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold"
               >
                 {analyzing ? (
                   <>
@@ -235,7 +235,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
               className="space-y-3"
             >
               {/* Threat Assessment */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-slate-800 border-2 border-slate-700">
                 <CardHeader>
                   <CardTitle className="text-sm font-mono uppercase tracking-wider text-white flex items-center justify-between">
                     <span className="flex items-center gap-2">
@@ -279,7 +279,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
               </Card>
               
               {/* Player Brief */}
-              <Card className="bg-gradient-to-br from-violet-900/20 to-purple-900/20 border-violet-500/50">
+              <Card className="bg-gradient-to-br from-violet-900/40 to-purple-900/40 border-2 border-violet-500">
                 <CardHeader>
                   <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400">
                     Operational Brief
@@ -294,7 +294,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
               
               {/* Intervention Tier */}
               {analysis.intervention_tier && (
-                <Card className="bg-slate-800/50 border-slate-700">
+                <Card className="bg-slate-800 border-2 border-slate-700">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono uppercase tracking-wider text-white">
                       Recommended Response: Tier {analysis.intervention_tier.recommended}
@@ -314,7 +314,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
           {analysis?.tactical_options?.length > 0 ? (
             <div className="space-y-2">
               {analysis.tactical_options.map((option, i) => (
-                <Card key={i} className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-colors">
+                <Card key={i} className="bg-slate-800 border-2 border-slate-700 hover:border-violet-500 transition-colors">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono text-white flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-xs">
@@ -351,10 +351,10 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
               ))}
             </div>
           ) : (
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-slate-800 border-2 border-slate-700">
               <CardContent className="py-8 text-center">
-                <Target className="h-12 w-12 mx-auto text-slate-600 mb-2" />
-                <p className="text-slate-500 text-sm">Request analysis to generate tactical options</p>
+                <Target className="h-12 w-12 mx-auto text-slate-500 mb-2" />
+                <p className="text-slate-400 text-sm">Request analysis to generate tactical options</p>
               </CardContent>
             </Card>
           )}
@@ -365,7 +365,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
           {activeClocks.length > 0 ? (
             <div className="space-y-2">
               {activeClocks.map((clock) => (
-                <Card key={clock.id} className="bg-slate-800/50 border-slate-700">
+                <Card key={clock.id} className="bg-slate-800 border-2 border-slate-700">
                   <CardHeader>
                     <CardTitle className="text-sm font-mono text-white flex items-center justify-between">
                       <span className="flex items-center gap-2">
@@ -407,26 +407,24 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        variant="outline"
                         onClick={() => {
                           tickClock(clock.id, 1);
                           play('error', 0.2);
                         }}
                         disabled={clock.current >= clock.max}
-                        className="flex-1"
+                        className="flex-1 bg-orange-600 hover:bg-orange-700 text-white border-2 border-orange-500"
                       >
                         <ChevronRight className="h-3 w-3 mr-1" />
                         Tick
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
                         onClick={() => {
                           tickClock(clock.id, -1);
                           play('click', 0.1);
                         }}
                         disabled={clock.current <= 0}
-                        className="flex-1"
+                        className="flex-1 bg-slate-600 hover:bg-slate-700 text-white border-2 border-slate-500"
                       >
                         Reset
                       </Button>
@@ -436,10 +434,10 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
               ))}
             </div>
           ) : (
-            <Card className="bg-slate-800/50 border-slate-700">
+            <Card className="bg-slate-800 border-2 border-slate-700">
               <CardContent className="py-8 text-center">
-                <Clock className="h-12 w-12 mx-auto text-slate-600 mb-2" />
-                <p className="text-slate-500 text-sm">No active countdown clocks</p>
+                <Clock className="h-12 w-12 mx-auto text-slate-500 mb-2" />
+                <p className="text-slate-400 text-sm">No active countdown clocks</p>
               </CardContent>
             </Card>
           )}
@@ -447,7 +445,7 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
         
         {/* LEDGER TAB */}
         <TabsContent value="ledger" className="space-y-3">
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-slate-800 border-2 border-slate-700">
             <CardHeader>
               <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400">
                 Evidence & Provenance

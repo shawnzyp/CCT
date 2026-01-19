@@ -92,19 +92,18 @@ FORMAT AS JSON:`,
   }, [round]);
   
   return (
-    <Card className="bg-gradient-to-br from-violet-900/20 to-purple-900/20 border-violet-500/50">
+    <Card className="bg-gradient-to-br from-violet-900/40 to-purple-900/40 border-2 border-violet-500">
       <CardHeader>
-        <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400 flex items-center justify-between">
+        <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-300 flex items-center justify-between">
           <span className="flex items-center gap-2">
             <Radio className="h-4 w-4" />
             A.E.G.I.S. Combat Advisor
           </span>
           <Button
             size="sm"
-            variant="outline"
             onClick={analyzeTurn}
             disabled={analyzing}
-            className="text-xs border-violet-500/50"
+            className="text-xs bg-violet-600 hover:bg-violet-700 text-white border-2 border-violet-500"
           >
             {analyzing ? (
               <Loader2 className="h-3 w-3 animate-spin" />
