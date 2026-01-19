@@ -233,7 +233,9 @@ export default function Layout({ children }) {
       )}
 
       <AegisAssistant />
+      <TutorialOverlay />
       </div>
       </AegisProvider>
+      </TutorialProvider>
       );
       }
