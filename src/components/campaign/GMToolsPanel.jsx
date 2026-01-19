@@ -9,13 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Zap, Swords } from "lucide-react";
+import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Zap, Swords, Heart } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import ShardsOfManyFates from './ShardsOfManyFates';
+import NPCRelationshipManager from './NPCRelationshipManager';
 
-export default function GMToolsPanel({ campaign, onUpdate }) {
+export default function GMToolsPanel({ campaign, characters, onUpdate }) {
   const [npcs, setNpcs] = useState(campaign.gm_npcs || []);
   const [gmNotes, setGmNotes] = useState(campaign.gm_notes || '');
   const [showNPCDialog, setShowNPCDialog] = useState(false);
@@ -249,10 +250,14 @@ Generated: ${new Date().toLocaleString()}
   return (
     <div className="space-y-4">
       <Tabs defaultValue="npcs" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-4 w-full">
+        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-5 w-full">
           <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Users className="h-4 w-4 mr-2" />
             NPCs
+          </TabsTrigger>
+          <TabsTrigger value="relationships" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
+            <Heart className="h-4 w-4 mr-2" />
+            Relations
           </TabsTrigger>
           <TabsTrigger value="encounters" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Swords className="h-4 w-4 mr-2" />
@@ -413,6 +418,15 @@ Generated: ${new Date().toLocaleString()}
               </Card>
             )}
           </ScrollArea>
+        </TabsContent>
+
+        {/* Relationships Tab */}
+        <TabsContent value="relationships" className="space-y-3">
+          <NPCRelationshipManager
+            campaign={campaign}
+            characters={characters}
+            onUpdate={onUpdate}
+          />
         </TabsContent>
 
         {/* Encounters Tab */}
