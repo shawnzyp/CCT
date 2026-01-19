@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
-import { Users, Zap, BookOpen, Menu, X, User, RefreshCw, Book, HelpCircle, Radio } from 'lucide-react';
+import { Users, Zap, BookOpen, Menu, X, User, RefreshCw, Book, HelpCircle, Radio, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
@@ -53,7 +53,7 @@ export default function Layout({ children }) {
     { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
     { name: 'Characters', path: 'Characters', icon: Users },
     { name: 'Rules', path: 'Rules', icon: Book },
-    { name: 'Settings', path: 'Settings', icon: User },
+    { name: 'Settings', path: 'Settings', icon: Settings },
     { name: 'Help', path: 'Help', icon: HelpCircle },
   ];
   
