@@ -13,6 +13,8 @@ import { motion } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisAssistant from '@/components/aegis/AegisAssistant';
 import { AegisProvider } from '@/components/aegis/AegisContext';
+import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
+import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -62,8 +64,9 @@ export default function Layout({ children }) {
   };
   
   return (
-    <AegisProvider>
-    <div className="min-h-screen bg-slate-950 overflow-x-hidden relative">
+    <TutorialProvider>
+      <AegisProvider>
+        <div className="min-h-screen bg-slate-950 overflow-x-hidden relative">
       {/* Scanline effect */}
       <div className="scanline" />
       
@@ -232,10 +235,10 @@ export default function Layout({ children }) {
         />
       )}
 
-      <AegisAssistant />
-      <TutorialOverlay />
+        <AegisAssistant />
+        <TutorialOverlay />
       </div>
-      </AegisProvider>
-      </TutorialProvider>
-      );
-      }
+    </AegisProvider>
+    </TutorialProvider>
+  );
+}
