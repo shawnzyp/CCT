@@ -83,9 +83,9 @@ export default function CombatStatsPanel({ character }) {
           <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
             {Object.entries(character.ability_scores || {}).map(([stat, score]) => (
               <div key={stat} className="text-center bg-slate-700/50 rounded-lg p-3">
-                <div className="text-xs text-slate-400 font-medium mb-1">{stat}</div>
+                <div className="text-xs text-slate-300 font-medium mb-1">{stat}</div>
                 <div className="text-xl font-bold text-white">{score}</div>
-                <div className="text-sm text-violet-400 mt-1">
+                <div className="text-sm font-bold text-violet-300 mt-1">
                   {formatModifier(getModifier(score))}
                 </div>
               </div>
@@ -102,53 +102,53 @@ export default function CombatStatsPanel({ character }) {
         <CardContent>
           <div className="grid md:grid-cols-2 gap-3">
             <div className="space-y-2">
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Athletics (STR)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Athletics (STR)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('athletics', 'STR'))}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Acrobatics (DEX)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Acrobatics (DEX)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('acrobatics', 'DEX'))}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Stealth (DEX)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Stealth (DEX)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('stealth', 'DEX'))}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Perception (WIS)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Perception (WIS)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('perception', 'WIS'))}
                 </Badge>
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Investigation (INT)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Investigation (INT)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('investigation', 'INT'))}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Insight (WIS)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Insight (WIS)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('insight', 'WIS'))}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Intimidation (CHA)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Intimidation (CHA)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(getSkillBonus('intimidation', 'CHA'))}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-2 bg-slate-700/30 rounded">
-                <span className="text-slate-300 text-sm">Initiative (DEX)</span>
-                <Badge variant="outline" className="font-mono">
+              <div className="flex justify-between items-center p-2 bg-slate-700/50 rounded">
+                <span className="text-slate-200 text-sm font-medium">Initiative (DEX)</span>
+                <Badge variant="outline" className="font-mono bg-slate-800 text-white border-slate-600">
                   {formatModifier(character.initiative_modifier || getModifier(character.ability_scores?.DEX || 10))}
                 </Badge>
               </div>

@@ -87,21 +87,21 @@ export default function SkillsPanel({ character, onUpdate }) {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-white">{skill.label}</span>
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs bg-slate-700 text-slate-200 border-slate-600">
                             {skill.ability}
                           </Badge>
                           {proficiency === 'expert' && (
-                            <Badge className="bg-amber-500 text-white text-xs">Expert</Badge>
+                            <Badge className="bg-amber-500 text-white text-xs border-2 border-amber-400">Expert</Badge>
                           )}
                         </div>
-                        <p className="text-xs text-slate-400 mt-0.5">{skill.description}</p>
+                        <p className="text-xs text-slate-300 mt-0.5">{skill.description}</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-2">
                       <div className={cn(
                         "text-lg font-bold min-w-[3rem] text-right",
-                        bonus >= 0 ? "text-emerald-400" : "text-red-400"
+                        bonus >= 0 ? "text-emerald-300" : "text-red-300"
                       )}>
                         {formatModifier(bonus)}
                       </div>

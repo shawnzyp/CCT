@@ -50,15 +50,15 @@ export default function StatBlock({ scores, compact = false }) {
               "border border-slate-700/50 hover:border-violet-500/50 transition-colors"
             )}
           >
-            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{stat}</div>
+            <div className="text-xs text-slate-300 uppercase tracking-wider mb-1">{stat}</div>
             <div className="text-2xl font-bold text-white">{score}</div>
             <div className={cn(
-              "text-sm font-medium mt-1 px-2 py-0.5 rounded-full inline-block",
-              mod >= 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+              "text-sm font-bold mt-1 px-2 py-0.5 rounded-full inline-block",
+              mod >= 0 ? "bg-emerald-500/30 text-emerald-300" : "bg-red-500/30 text-red-300"
             )}>
               {formatModifier(mod)}
             </div>
-            <div className="text-[10px] text-slate-500 mt-1">{STAT_NAMES[stat]}</div>
+            <div className="text-[10px] text-slate-400 mt-1">{STAT_NAMES[stat]}</div>
           </div>
         );
       })}
