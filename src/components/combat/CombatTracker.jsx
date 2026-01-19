@@ -21,6 +21,9 @@ import { executeEnemyAI } from "@/components/combat/EnemyAI";
 import RandomEncounterGenerator from "@/components/combat/RandomEncounterGenerator";
 import { AttackEffect, HitEffect } from "@/components/combat/CombatVisualEffects";
 import AegisCombatAdvisor from "@/components/aegis/AegisCombatAdvisor";
+import EnvironmentalEffects from "@/components/combat/EnvironmentalEffects";
+import InitiativeTracker from "@/components/combat/InitiativeTracker";
+import CombatActionPanel from "@/components/combat/CombatActionPanel";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -36,6 +39,8 @@ export default function CombatTracker({ characters, campaignId }) {
   const [actionTracking, setActionTracking] = useState({});
   const [showRandomEncounter, setShowRandomEncounter] = useState(false);
   const [visualEffect, setVisualEffect] = useState(null);
+  const [environmentalEffects, setEnvironmentalEffects] = useState([]);
+  const [selectedCombatant, setSelectedCombatant] = useState(null);
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -409,12 +414,64 @@ export default function CombatTracker({ characters, campaignId }) {
       
       <TabsList className="bg-slate-800/50 border border-slate-700">
         <TabsTrigger value="tracker">Initiative</TabsTrigger>
+        <TabsTrigger value="actions">Actions</TabsTrigger>
         <TabsTrigger value="grid">Grid</TabsTrigger>
+        <TabsTrigger value="environment">Environment</TabsTrigger>
         <TabsTrigger value="log">Combat Log</TabsTrigger>
         <TabsTrigger value="aegis">A.E.G.I.S.</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="tracker" className="space-y-2">
+      <TabsContent value="tracker" className="space-y-4">
+        <InitiativeTracker
+          initiativeOrder={initiativeOrder}
+          currentTurn={currentTurn}
+          currentRound={currentRound}
+          onSelectCombatant={setSelectedCombatant}
+        />
+      </TabsContent>
+
+      <TabsContent value="actions" className="space-y-4">
+        {initiativeOrder[currentTurn] && !initiativeOrder[currentTurn].isEnemy ? (
+          <CombatActionPanel
+            character={initiativeOrder[currentTurn]}
+            targets={initiativeOrder.filter(c => c.isEnemy && c.hp > 0)}
+            usedActions={actionTracking[initiativeOrder[currentTurn].id] || []}
+            onToggleAction={(action) => toggleAction(initiativeOrder[currentTurn].id, action)}
+            onAttack={(target, type) => handleAttackRoll(initiativeOrder[currentTurn], target)}
+            onSave={(saveType) => handleSavingThrow(initiativeOrder[currentTurn], saveType)}
+            onUsePower={(power) => {
+              addLogEntry(initiativeOrder[currentTurn].name, `Uses ${power.name}`, power.effect);
+              if (power.sp_cost) {
+                const newSP = Math.max(0, (initiativeOrder[currentTurn].current_sp || 0) - power.sp_cost);
+                handleSPChange(initiativeOrder[currentTurn].id, newSP);
+              }
+            }}
+            onMove={() => {
+              addLogEntry(initiativeOrder[currentTurn].name, 'Moved on grid');
+            }}
+          />
+        ) : (
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent className="p-8 text-center">
+              <p className="text-slate-400">
+                {initiativeOrder[currentTurn]?.isEnemy 
+                  ? "Enemy turn - AI controlled. Click 'Next Turn' to continue."
+                  : "Select this tab during your turn to see available actions"
+                }
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </TabsContent>
+
+      <TabsContent value="environment" className="space-y-4">
+        <EnvironmentalEffects
+          effects={environmentalEffects}
+          onUpdate={setEnvironmentalEffects}
+        />
+      </TabsContent>
+
+      <TabsContent value="tracker-old" className="space-y-2">
         {initiativeOrder.map((char, index) => {
           const isCurrentTurn = index === currentTurn;
           const conMod = char.ability_scores ? getModifier(char.ability_scores.CON || 10) : 0;
@@ -576,7 +633,7 @@ export default function CombatTracker({ characters, campaignId }) {
           );
         })}
       </TabsContent>
-      
+
       <TabsContent value="grid">
         <TacticalGrid 
           combatants={initiativeOrder}
