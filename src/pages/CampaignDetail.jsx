@@ -66,8 +66,8 @@ export default function CampaignDetail({ currentCharacter }) {
   if (!campaign) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Campaign not found</div>;
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 pb-20">
+      <div className="max-w-7xl mx-auto px-4 py-8 pb-20">
         <div className="flex items-start gap-4 mb-6">
           <Link to={createPageUrl('Campaigns')}>
             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
