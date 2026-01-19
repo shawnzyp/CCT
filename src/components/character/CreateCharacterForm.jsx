@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { Dices, ChevronRight, ChevronLeft, Check, Zap, Palette } from "lucide-react";
 import PortraitUploader from "@/components/character/PortraitUploader";
 import VisualCustomizer from "@/components/character/VisualCustomizer";
-import AISuggestions from "@/components/character/AISuggestions";
+import AegisSuggestions from "@/components/aegis/AegisSuggestions";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CLASSIFICATIONS = [
@@ -201,7 +201,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
                 placeholder="e.g., Shadow Strike, Nova, The Catalyst"
                 className="bg-slate-800 border-slate-700 text-white mt-1"
               />
-              <AISuggestions
+              <AegisSuggestions
                 type="name"
                 context={data}
                 onSelect={(name) => updateData('name', name)}
@@ -221,7 +221,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
               currentUrl={data.portrait_url}
               onUpload={(url) => updateData('portrait_url', url)}
             />
-            <AISuggestions
+            <AegisSuggestions
               type="portrait"
               context={data}
               onSelect={(url) => updateData('portrait_url', url)}
@@ -349,7 +349,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
       case 4:
         return (
           <div className="space-y-4">
-            <AISuggestions
+            <AegisSuggestions
               type="origin"
               context={data}
               onSelect={(origin) => updateData('backstory_notes', origin)}
@@ -519,7 +519,7 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
                 placeholder="Add any notes about your character's backstory..."
                 className="bg-slate-800 border-slate-700 text-white mt-1 h-24"
               />
-              <AISuggestions
+              <AegisSuggestions
                 type="backstory"
                 context={data}
                 onSelect={(backstory) => updateData('backstory_notes', backstory)}

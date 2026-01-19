@@ -11,6 +11,8 @@ import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
 import { motion } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import AegisAssistant from '@/components/aegis/AegisAssistant';
+import { AegisProvider } from '@/components/aegis/AegisContext';
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -59,6 +61,7 @@ export default function Layout({ children }) {
   };
   
   return (
+    <AegisProvider>
     <div className="min-h-screen bg-slate-950 overflow-x-hidden relative">
       {/* Scanline effect */}
       <div className="scanline" />
@@ -227,6 +230,9 @@ export default function Layout({ children }) {
           onClose={() => setShowCharacterSelector(false)}
         />
       )}
+
+      <AegisAssistant />
       </div>
+      </AegisProvider>
       );
       }
