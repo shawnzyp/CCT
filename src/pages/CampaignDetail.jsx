@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import AegisInterface from "@/components/aegis/AegisInterface";
 import GMToolsPanel from "@/components/campaign/GMToolsPanel";
 import DeckOfFatesPlayer from "@/components/campaign/DeckOfFatesPlayer";
+import AdventureModulePlayer from "@/components/campaign/AdventureModulePlayer";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -105,6 +106,7 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="resources">📦 Shared Resources</SelectItem>
               <SelectItem value="chat">💬 Chat</SelectItem>
               <SelectItem value="aegis">🤖 A.E.G.I.S.</SelectItem>
+              <SelectItem value="adventure">📖 Adventure</SelectItem>
               <SelectItem value="deck">🃏 Deck of Fates</SelectItem>
               <SelectItem value="gm-tools">🎲 GM Tools</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
@@ -228,6 +230,14 @@ export default function CampaignDetail({ currentCharacter }) {
             <AegisInterface campaignId={campaignId} />
           </TabsContent>
           
+          <TabsContent value="adventure">
+            <AdventureModulePlayer 
+              campaign={campaign}
+              currentCharacter={currentCharacter}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
+          </TabsContent>
+
           <TabsContent value="deck">
             <DeckOfFatesPlayer 
               campaign={campaign}

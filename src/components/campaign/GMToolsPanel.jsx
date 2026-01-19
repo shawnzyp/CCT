@@ -9,12 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Zap, Swords, Heart } from "lucide-react";
+import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Zap, Swords, Heart, BookOpen } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import DeckOfFatesDeployment from './DeckOfFatesDeployment';
 import NPCRelationshipManager from './NPCRelationshipManager';
+import AdventureModuleDeployment from './AdventureModuleDeployment';
 
 export default function GMToolsPanel({ campaign, characters, onUpdate }) {
   const [npcs, setNpcs] = useState(campaign.gm_npcs || []);
@@ -250,7 +251,7 @@ Generated: ${new Date().toLocaleString()}
   return (
     <div className="space-y-4">
       <Tabs defaultValue="npcs" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-5 w-full">
+        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-6 w-full">
           <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Users className="h-4 w-4 mr-2" />
             NPCs
@@ -262,6 +263,10 @@ Generated: ${new Date().toLocaleString()}
           <TabsTrigger value="encounters" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Swords className="h-4 w-4 mr-2" />
             Encounters
+          </TabsTrigger>
+          <TabsTrigger value="adventures" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
+            <BookOpen className="h-4 w-4 mr-2" />
+            Adventures
           </TabsTrigger>
           <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Sparkles className="h-4 w-4 mr-2" />
@@ -425,6 +430,14 @@ Generated: ${new Date().toLocaleString()}
           <NPCRelationshipManager
             campaign={campaign}
             characters={characters}
+            onUpdate={onUpdate}
+          />
+        </TabsContent>
+
+        {/* Adventures Tab */}
+        <TabsContent value="adventures" className="space-y-3">
+          <AdventureModuleDeployment 
+            campaign={campaign}
             onUpdate={onUpdate}
           />
         </TabsContent>
