@@ -25,6 +25,9 @@ import EnvironmentalEffects from "@/components/combat/EnvironmentalEffects";
 import InitiativeTracker from "@/components/combat/InitiativeTracker";
 import CombatActionPanel from "@/components/combat/CombatActionPanel";
 import ActiveBonusDisplay from "@/components/combat/ActiveBonusDisplay";
+import DeathSaveRoller from "@/components/combat/DeathSaveRoller";
+import { ScreenFlash, CriticalHitEffect, DeathEffect } from "@/components/combat/CombatVisualFeedback";
+import { toast } from "sonner";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -42,6 +45,9 @@ export default function CombatTracker({ characters, campaignId }) {
   const [visualEffect, setVisualEffect] = useState(null);
   const [environmentalEffects, setEnvironmentalEffects] = useState([]);
   const [selectedCombatant, setSelectedCombatant] = useState(null);
+  const [flashEffect, setFlashEffect] = useState(null);
+  const [showCritEffect, setShowCritEffect] = useState(false);
+  const [showDeathEffect, setShowDeathEffect] = useState(false);
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -189,12 +195,37 @@ export default function CombatTracker({ characters, campaignId }) {
   };
   
   const handleHPChange = (charId, newHP) => {
+    const oldChar = initiativeOrder.find(c => c.id === charId);
+    const oldHP = oldChar?.current_hp || oldChar?.hp || oldChar?.max_hp;
+    const damage = oldHP - newHP;
+
+    // Visual feedback
+    if (damage > 0) {
+      setFlashEffect('damage');
+      setTimeout(() => setFlashEffect(null), 300);
+      toast.error(`${oldChar?.name} takes ${damage} damage!`);
+    } else if (damage < 0) {
+      setFlashEffect('heal');
+      setTimeout(() => setFlashEffect(null), 300);
+      toast.success(`${oldChar?.name} heals ${Math.abs(damage)} HP!`);
+    }
+
+    // Check for death
+    if (newHP <= 0 && oldHP > 0 && !oldChar?.isEnemy) {
+      setShowDeathEffect(true);
+      setTimeout(() => setShowDeathEffect(false), 2000);
+      toast.error("Knocked Unconscious!", {
+        description: `${oldChar?.name} has fallen to 0 HP. Roll death saves!`
+      });
+    }
+
     setInitiativeOrder(prev => 
       prev.map(char => {
         if (char.id === charId) {
           // Check if enemy was defeated
           if (char.isEnemy && newHP <= 0 && char.hp > 0) {
             generateLoot(char);
+            toast.success("Enemy Defeated!", { description: `${char.name} has been defeated!` });
           }
           return { ...char, current_hp: newHP, hp: newHP };
         }
@@ -261,6 +292,19 @@ export default function CombatTracker({ characters, campaignId }) {
   };
   
   const handleSPChange = (charId, newSP) => {
+    if (newSP < 0) {
+      toast.error("Insufficient SP", { description: "Cannot go below 0 SP!" });
+      return;
+    }
+
+    const char = initiativeOrder.find(c => c.id === charId);
+    const maxSP = char ? 5 + getModifier(char.ability_scores?.CON || 10) : 5;
+
+    if (newSP > maxSP) {
+      toast.warning("SP Limit", { description: `Maximum SP is ${maxSP}` });
+      newSP = maxSP;
+    }
+
     setInitiativeOrder(prev => 
       prev.map(char => char.id === charId ? { ...char, current_sp: newSP } : char)
     );
@@ -275,8 +319,12 @@ export default function CombatTracker({ characters, campaignId }) {
       type: 'attack',
       onRoll: (result) => {
         if (result.isCrit) {
+          setShowCritEffect(true);
+          setTimeout(() => setShowCritEffect(false), 2000);
+          toast.success("CRITICAL HIT!", { description: "Natural 20! Roll damage twice!" });
           addLogEntry(combatant.name, `Critical Hit vs ${target?.name || 'target'}!`, `Rolled ${result.roll} (Total: ${result.total})`);
         } else if (result.isFail) {
+          toast.error("Critical Miss!", { description: "Natural 1 - automatic miss!" });
           addLogEntry(combatant.name, 'Critical Miss!', `Rolled 1`);
         } else {
           addLogEntry(combatant.name, `Attacks ${target?.name || 'target'}`, `Rolled ${result.roll} (Total: ${result.total})`);
@@ -393,6 +441,11 @@ export default function CombatTracker({ characters, campaignId }) {
   
   return (
     <>
+      {/* Visual Effects */}
+      <ScreenFlash type={flashEffect} show={!!flashEffect} />
+      <CriticalHitEffect show={showCritEffect} />
+      <DeathEffect show={showDeathEffect} />
+
       <Tabs defaultValue="tracker" className="space-y-4">
         <div className="flex justify-between items-center">
         <div>
@@ -433,10 +486,43 @@ export default function CombatTracker({ characters, campaignId }) {
 
       <TabsContent value="actions" className="space-y-4">
         {initiativeOrder[currentTurn] && !initiativeOrder[currentTurn].isEnemy && (
-          <ActiveBonusDisplay character={initiativeOrder[currentTurn]} />
+          <>
+            {(initiativeOrder[currentTurn].current_hp || 0) <= 0 ? (
+              <DeathSaveRoller
+                character={initiativeOrder[currentTurn]}
+                onStabilize={() => {
+                  toast.success("Stabilized!", { 
+                    description: `${initiativeOrder[currentTurn].name} is stable but unconscious.` 
+                  });
+                  updateCharacter.mutate({
+                    id: initiativeOrder[currentTurn].id,
+                    data: { 
+                      death_save_successes: 0,
+                      death_save_failures: 0 
+                    }
+                  });
+                }}
+                onDie={() => {
+                  setShowDeathEffect(true);
+                  setTimeout(() => setShowDeathEffect(false), 3000);
+                  toast.error("Death", {
+                    description: `${initiativeOrder[currentTurn].name} has died...`
+                  });
+                }}
+                onUpdate={(saves) => {
+                  updateCharacter.mutate({
+                    id: initiativeOrder[currentTurn].id,
+                    data: saves
+                  });
+                }}
+              />
+            ) : (
+              <ActiveBonusDisplay character={initiativeOrder[currentTurn]} />
+            )}
+          </>
         )}
         
-        {initiativeOrder[currentTurn] && !initiativeOrder[currentTurn].isEnemy ? (
+        {initiativeOrder[currentTurn] && !initiativeOrder[currentTurn].isEnemy && (initiativeOrder[currentTurn].current_hp || 0) > 0 ? (
           <CombatActionPanel
             character={initiativeOrder[currentTurn]}
             targets={initiativeOrder.filter(c => c.isEnemy && c.hp > 0)}
@@ -445,11 +531,20 @@ export default function CombatTracker({ characters, campaignId }) {
             onAttack={(target, type) => handleAttackRoll(initiativeOrder[currentTurn], target)}
             onSave={(saveType) => handleSavingThrow(initiativeOrder[currentTurn], saveType)}
             onUsePower={(power) => {
-              addLogEntry(initiativeOrder[currentTurn].name, `Uses ${power.name}`, power.effect);
-              if (power.sp_cost) {
-                const newSP = Math.max(0, (initiativeOrder[currentTurn].current_sp || 0) - power.sp_cost);
-                handleSPChange(initiativeOrder[currentTurn].id, newSP);
+              const char = initiativeOrder[currentTurn];
+              const currentSP = char.current_sp || 0;
+              
+              if (currentSP < power.sp_cost) {
+                toast.error("Insufficient SP", {
+                  description: `Need ${power.sp_cost} SP but only have ${currentSP}.`
+                });
+                return;
               }
+
+              addLogEntry(char.name, `Uses ${power.name}`, power.effect);
+              const newSP = currentSP - power.sp_cost;
+              handleSPChange(char.id, newSP);
+              toast.success(`${power.name} activated!`, { description: `${power.sp_cost} SP spent` });
             }}
             onMove={() => {
               addLogEntry(initiativeOrder[currentTurn].name, 'Moved on grid');

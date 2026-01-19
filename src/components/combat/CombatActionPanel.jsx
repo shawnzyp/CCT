@@ -9,6 +9,9 @@ import PowerCard from "@/components/character/PowerCard";
 import ActionEconomy from "./ActionEconomy";
 import { getModifier } from "@/components/character/StatBlock";
 import { getActiveToHitBonus, getActiveDamageBonus } from "@/components/character/BonusCalculator";
+import { validatePowerUse, validateAction, getActionAvailability } from "@/components/combat/CombatValidation";
+import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function CombatActionPanel({ 
   character, 
@@ -31,9 +34,31 @@ export default function CombatActionPanel({
   const dexMod = getModifier(character.ability_scores?.DEX || 10);
   const toHitBonus = getActiveToHitBonus(character);
   const damageBonus = getActiveDamageBonus(character);
+  const availability = getActionAvailability(character, usedActions);
+
+  const handlePowerUse = (power) => {
+    if (!validatePowerUse(character, power)) return;
+    onUsePower?.(power);
+  };
+
+  const handleAttackAction = (target, type) => {
+    if (!validateAction(character)) return;
+    if (!hasAction) {
+      toast.warning("No Action Available", {
+        description: "You've already used your action this turn."
+      });
+      return;
+    }
+    onAttack?.(target, type);
+    onToggleAction?.('action');
+  };
 
   return (
-    <div className="space-y-4">
+    <motion.div 
+      className="space-y-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
       {/* Action Economy Status */}
       <ActionEconomy 
         usedActions={usedActions}
@@ -82,31 +107,29 @@ export default function CombatActionPanel({
               )}
 
               <div className="space-y-2">
-                <Button
-                  onClick={() => {
-                    onAttack?.(selectedTarget, 'melee');
-                    onToggleAction?.('action');
-                  }}
-                  disabled={!hasAction}
-                  className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50"
-                >
-                  <Swords className="h-4 w-4 mr-2" />
-                  Melee Attack {strMod + toHitBonus >= 0 ? `+${strMod + toHitBonus}` : strMod + toHitBonus}
-                  {damageBonus > 0 && <span className="text-xs ml-1">(+{damageBonus} dmg)</span>}
-                </Button>
+                <motion.div whileTap={{ scale: availability.canAct && hasAction ? 0.95 : 1 }}>
+                  <Button
+                    onClick={() => handleAttackAction(selectedTarget, 'melee')}
+                    disabled={!availability.canAct || !hasAction}
+                    className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50"
+                  >
+                    <Swords className="h-4 w-4 mr-2" />
+                    Melee Attack {strMod + toHitBonus >= 0 ? `+${strMod + toHitBonus}` : strMod + toHitBonus}
+                    {damageBonus > 0 && <span className="text-xs ml-1">(+{damageBonus} dmg)</span>}
+                  </Button>
+                </motion.div>
 
-                <Button
-                  onClick={() => {
-                    onAttack?.(selectedTarget, 'ranged');
-                    onToggleAction?.('action');
-                  }}
-                  disabled={!hasAction}
-                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
-                >
-                  <Swords className="h-4 w-4 mr-2" />
-                  Ranged Attack {dexMod + toHitBonus >= 0 ? `+${dexMod + toHitBonus}` : dexMod + toHitBonus}
-                  {damageBonus > 0 && <span className="text-xs ml-1">(+{damageBonus} dmg)</span>}
-                </Button>
+                <motion.div whileTap={{ scale: availability.canAct && hasAction ? 0.95 : 1 }}>
+                  <Button
+                    onClick={() => handleAttackAction(selectedTarget, 'ranged')}
+                    disabled={!availability.canAct || !hasAction}
+                    className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+                  >
+                    <Swords className="h-4 w-4 mr-2" />
+                    Ranged Attack {dexMod + toHitBonus >= 0 ? `+${dexMod + toHitBonus}` : dexMod + toHitBonus}
+                    {damageBonus > 0 && <span className="text-xs ml-1">(+{damageBonus} dmg)</span>}
+                  </Button>
+                </motion.div>
               </div>
             </TabsContent>
 
@@ -114,17 +137,18 @@ export default function CombatActionPanel({
               {character.powers?.length > 0 ? (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {character.powers.map((power, idx) => (
-                    <div key={idx} className="relative">
+                    <motion.div 
+                      key={idx} 
+                      className="relative"
+                      whileTap={{ scale: availability.canAct && hasAction ? 0.98 : 1 }}
+                    >
                       <PowerCard 
                         power={power} 
-                        onUse={() => {
-                          onUsePower?.(power);
-                          onToggleAction?.('action');
-                        }}
-                        canUse={hasAction && (power.current_cooldown || 0) === 0}
+                        onUse={() => handlePowerUse(power)}
+                        canUse={availability.canAct && hasAction && (power.current_cooldown || 0) === 0}
                         compact
                       />
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               ) : (
@@ -170,17 +194,27 @@ export default function CombatActionPanel({
                 <div className="text-xl font-bold text-white">{character.speed || 30} ft</div>
               </div>
 
-              <Button
-                onClick={() => {
-                  onMove?.();
-                  onToggleAction?.('movement');
-                }}
-                disabled={!hasMovement}
-                className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50"
-              >
-                <Move className="h-4 w-4 mr-2" />
-                Move on Grid
-              </Button>
+              <motion.div whileTap={{ scale: availability.canMove && hasMovement ? 0.95 : 1 }}>
+                <Button
+                  onClick={() => {
+                    if (!availability.canMove) {
+                      toast.error("Cannot Move", { description: "You are restrained or incapacitated." });
+                      return;
+                    }
+                    if (!hasMovement) {
+                      toast.warning("No Movement", { description: "You've already used your movement." });
+                      return;
+                    }
+                    onMove?.();
+                    onToggleAction?.('movement');
+                  }}
+                  disabled={!availability.canMove || !hasMovement}
+                  className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50"
+                >
+                  <Move className="h-4 w-4 mr-2" />
+                  Move on Grid
+                </Button>
+              </motion.div>
 
               <div className="text-xs text-slate-500 mt-2">
                 • Standard: Move up to {character.speed || 30} ft<br />
@@ -191,6 +225,18 @@ export default function CombatActionPanel({
           </Tabs>
         </CardContent>
       </Card>
-    </div>
+
+      {/* Death State Warning */}
+      {availability.isDead && (
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-red-900/50 border-2 border-red-500 rounded-lg p-4 text-center"
+        >
+          <p className="text-red-200 font-bold">⚠️ You are at 0 HP!</p>
+          <p className="text-red-300 text-sm mt-1">Roll death saves or receive healing to survive.</p>
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
