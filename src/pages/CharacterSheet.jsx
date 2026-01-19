@@ -31,6 +31,8 @@ import ImportExportCharacter from "@/components/character/ImportExportCharacter"
 import StatsVisual from "@/components/character/StatsVisual";
 import ActiveEffects from "@/components/character/ActiveEffects";
 import CombatStatsPanel from "@/components/character/CombatStatsPanel";
+import CharacterEditor from "@/components/character/CharacterEditor";
+import ItemsReference from "@/components/character/ItemsReference";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -66,6 +68,7 @@ export default function CharacterSheet() {
   const [editingPower, setEditingPower] = useState(null);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [upgradingPower, setUpgradingPower] = useState(null);
+  const [showCharacterEditor, setShowCharacterEditor] = useState(false);
   
   const { data: character, isLoading } = useQuery({
     queryKey: ['character', characterId],
@@ -226,7 +229,18 @@ export default function CharacterSheet() {
             </div>
           </div>
 
-          <ImportExportCharacter character={character} onImport={handleImport} />
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setShowCharacterEditor(true)}
+              variant="outline"
+              size="sm"
+              className="border-violet-500 text-violet-400 hover:bg-violet-500/20"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Edit Character
+            </Button>
+            <ImportExportCharacter character={character} onImport={handleImport} />
+          </div>
         </div>
         
         {/* Progression Bar */}
@@ -307,6 +321,10 @@ export default function CharacterSheet() {
             <TabsTrigger value="notes" className="data-[state=active]:bg-violet-500/20">
               <FileText className="h-4 w-4 mr-2" />
               Notes
+            </TabsTrigger>
+            <TabsTrigger value="items" className="data-[state=active]:bg-violet-500/20">
+              <Package className="h-4 w-4 mr-2" />
+              Items Reference
             </TabsTrigger>
           </TabsList>
           
@@ -469,6 +487,11 @@ export default function CharacterSheet() {
             </Card>
           </TabsContent>
 
+          {/* Items Reference Tab */}
+          <TabsContent value="items">
+            <ItemsReference />
+          </TabsContent>
+
           {/* Info Tab */}
           <TabsContent value="info" className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
@@ -573,6 +596,18 @@ export default function CharacterSheet() {
           power={upgradingPower}
           onUpgrade={handlePowerUpgrade}
           onClose={() => setUpgradingPower(null)}
+        />
+      )}
+
+      {showCharacterEditor && (
+        <CharacterEditor
+          character={character}
+          isOpen={showCharacterEditor}
+          onClose={() => setShowCharacterEditor(false)}
+          onSave={(data) => {
+            updateMutation.mutate(data);
+            setShowCharacterEditor(false);
+          }}
         />
       )}
     </div>
