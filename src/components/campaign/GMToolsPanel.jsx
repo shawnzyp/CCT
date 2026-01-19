@@ -13,7 +13,7 @@ import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Za
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
-import ShardsOfManyFates from './ShardsOfManyFates';
+import DeckOfFatesDeployment from './DeckOfFatesDeployment';
 import NPCRelationshipManager from './NPCRelationshipManager';
 
 export default function GMToolsPanel({ campaign, characters, onUpdate }) {
@@ -265,7 +265,7 @@ Generated: ${new Date().toLocaleString()}
           </TabsTrigger>
           <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Sparkles className="h-4 w-4 mr-2" />
-            Shards
+            Deck of Fates
           </TabsTrigger>
           <TabsTrigger value="notes" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <FileText className="h-4 w-4 mr-2" />
@@ -464,11 +464,10 @@ Generated: ${new Date().toLocaleString()}
 
         {/* Shards Tab */}
         <TabsContent value="shards" className="space-y-3">
-          <ShardsOfManyFates 
+          <DeckOfFatesDeployment 
             campaign={campaign}
+            characters={characters}
             onUpdate={onUpdate}
-            characterName="GM"
-            isGM={true}
           />
         </TabsContent>
 
