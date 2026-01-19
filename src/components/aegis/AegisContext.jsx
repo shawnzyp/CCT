@@ -15,6 +15,7 @@ export function AegisProvider({ children }) {
   const [threatLevel, setThreatLevel] = useState(0);
   const [activeClocks, setActiveClocks] = useState([]);
   const [clearanceLevel, setClearanceLevel] = useState('field_operative');
+  const [echoEvents, setEchoEvents] = useState([]);
   
   const analyzeThreat = async (operationalFrame) => {
     // Future: API call to A.E.G.I.S. backend
@@ -45,17 +46,35 @@ export function AegisProvider({ children }) {
     );
   };
   
+  const addEchoEvent = (event) => {
+    setEchoEvents(prev => [...prev, event]);
+  };
+  
+  const updateEchoEvent = (eventId, updates) => {
+    setEchoEvents(prev =>
+      prev.map(e => e.id === eventId ? { ...e, ...updates } : e)
+    );
+  };
+  
+  const removeEchoEvent = (eventId) => {
+    setEchoEvents(prev => prev.filter(e => e.id !== eventId));
+  };
+  
   const value = {
     missionState,
     threatLevel,
     activeClocks,
     clearanceLevel,
+    echoEvents,
     analyzeThreat,
     updateMissionState,
     addClock,
     tickClock,
     setThreatLevel,
-    setClearanceLevel
+    setClearanceLevel,
+    addEchoEvent,
+    updateEchoEvent,
+    removeEchoEvent
   };
   
   return (

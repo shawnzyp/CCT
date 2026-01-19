@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { base44 } from '@/api/base44Client';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import { useAegis } from './AegisContext';
+import EchoEventManager from './EchoEventManager';
 
 const INTERVENTION_TIERS = [
   { level: 0, name: 'Observe', color: 'slate', description: 'No direct action. Collect telemetry.' },
@@ -189,6 +190,10 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
           <TabsTrigger value="ledger" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Shield className="h-3 w-3 mr-2" />
             Ledger
+          </TabsTrigger>
+          <TabsTrigger value="echo" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
+            <Radio className="h-3 w-3 mr-2" />
+            Echo Events
           </TabsTrigger>
         </TabsList>
         
@@ -441,6 +446,11 @@ FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+        
+        {/* ECHO EVENTS TAB */}
+        <TabsContent value="echo" className="space-y-3">
+          <EchoEventManager campaignId={campaignId} isGM={true} />
         </TabsContent>
         
         {/* LEDGER TAB */}
