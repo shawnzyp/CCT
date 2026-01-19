@@ -123,7 +123,8 @@ export default function PowerEditor({ power, onSave, onClose, character }) {
     requires_concentration: false,
     concentration_duration: '1 turn',
     linked_to_origin: false,
-    linked_to_power_style: ''
+    linked_to_power_style: '',
+    is_signature_move: false
   });
   
   const [customTagName, setCustomTagName] = useState('');
@@ -492,12 +493,34 @@ export default function PowerEditor({ power, onSave, onClose, character }) {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <Link2 className="h-4 w-4 text-violet-400" />
-                  <Label className="text-slate-300">Thematic Links</Label>
+                  <Label className="text-slate-300">Thematic Links & Designation</Label>
                 </div>
                 <p className="text-xs text-slate-500 mb-4">
                   Link this power to your character's origin or power style for thematic consistency
                 </p>
               </div>
+
+              {/* Signature Move */}
+              <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-3 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox 
+                    id="signature-move"
+                    checked={data.is_signature_move}
+                    onCheckedChange={(checked) => updateData('is_signature_move', checked)}
+                  />
+                  <Label htmlFor="signature-move" className="text-amber-300 cursor-pointer flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Mark as Signature Move
+                  </Label>
+                </div>
+                {data.is_signature_move && (
+                  <p className="text-xs text-amber-400 ml-6">
+                    This is your most iconic power - typically a 2-3 SP move that defines your combat style
+                  </p>
+                )}
+              </div>
+
+              <Separator className="bg-slate-700" />
               
               {/* Link to Origin */}
               <div className="space-y-2">

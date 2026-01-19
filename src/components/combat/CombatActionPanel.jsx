@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import PowerCard from "@/components/character/PowerCard";
 import ActionEconomy from "./ActionEconomy";
 import { getModifier } from "@/components/character/StatBlock";
+import { getActiveToHitBonus, getActiveDamageBonus } from "@/components/character/BonusCalculator";
 
 export default function CombatActionPanel({ 
   character, 
@@ -28,6 +29,8 @@ export default function CombatActionPanel({
 
   const strMod = getModifier(character.ability_scores?.STR || 10);
   const dexMod = getModifier(character.ability_scores?.DEX || 10);
+  const toHitBonus = getActiveToHitBonus(character);
+  const damageBonus = getActiveDamageBonus(character);
 
   return (
     <div className="space-y-4">
@@ -88,7 +91,8 @@ export default function CombatActionPanel({
                   className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50"
                 >
                   <Swords className="h-4 w-4 mr-2" />
-                  Melee Attack {strMod >= 0 ? `+${strMod}` : strMod}
+                  Melee Attack {strMod + toHitBonus >= 0 ? `+${strMod + toHitBonus}` : strMod + toHitBonus}
+                  {damageBonus > 0 && <span className="text-xs ml-1">(+{damageBonus} dmg)</span>}
                 </Button>
 
                 <Button
@@ -100,7 +104,8 @@ export default function CombatActionPanel({
                   className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
                 >
                   <Swords className="h-4 w-4 mr-2" />
-                  Ranged Attack {dexMod >= 0 ? `+${dexMod}` : dexMod}
+                  Ranged Attack {dexMod + toHitBonus >= 0 ? `+${dexMod + toHitBonus}` : dexMod + toHitBonus}
+                  {damageBonus > 0 && <span className="text-xs ml-1">(+{damageBonus} dmg)</span>}
                 </Button>
               </div>
             </TabsContent>

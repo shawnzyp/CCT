@@ -24,6 +24,7 @@ import AegisCombatAdvisor from "@/components/aegis/AegisCombatAdvisor";
 import EnvironmentalEffects from "@/components/combat/EnvironmentalEffects";
 import InitiativeTracker from "@/components/combat/InitiativeTracker";
 import CombatActionPanel from "@/components/combat/CombatActionPanel";
+import ActiveBonusDisplay from "@/components/combat/ActiveBonusDisplay";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -431,6 +432,10 @@ export default function CombatTracker({ characters, campaignId }) {
       </TabsContent>
 
       <TabsContent value="actions" className="space-y-4">
+        {initiativeOrder[currentTurn] && !initiativeOrder[currentTurn].isEnemy && (
+          <ActiveBonusDisplay character={initiativeOrder[currentTurn]} />
+        )}
+        
         {initiativeOrder[currentTurn] && !initiativeOrder[currentTurn].isEnemy ? (
           <CombatActionPanel
             character={initiativeOrder[currentTurn]}

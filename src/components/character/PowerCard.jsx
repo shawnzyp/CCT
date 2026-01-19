@@ -18,6 +18,7 @@ export default function PowerCard({
   
   const isOnCooldown = power.current_cooldown > 0;
   const isUltimate = power.sp_cost === 5;
+  const isSignature = power.is_signature_move;
   
   const handleUse = () => {
     play('powerUse', 0.4);
@@ -58,6 +59,9 @@ export default function PowerCard({
       {isUltimate && (
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500" />
       )}
+      {isSignature && !isUltimate && (
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 via-purple-500 to-violet-500" />
+      )}
       
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
@@ -70,9 +74,14 @@ export default function PowerCard({
             </div>
             <div>
               <h3 className="font-bold text-white">{power.name}</h3>
-              {isUltimate && (
-                <span className="text-[10px] text-amber-400 uppercase tracking-wider font-mono">Ultimate</span>
-              )}
+              <div className="flex items-center gap-2">
+                {isUltimate && (
+                  <span className="text-[10px] text-amber-400 uppercase tracking-wider font-mono">Ultimate</span>
+                )}
+                {isSignature && !isUltimate && (
+                  <span className="text-[10px] text-violet-400 uppercase tracking-wider font-mono">Signature</span>
+                )}
+              </div>
             </div>
           </div>
           <Badge 

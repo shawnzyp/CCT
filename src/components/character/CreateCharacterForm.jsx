@@ -165,12 +165,43 @@ export default function CreateCharacterForm({ onSubmit, initialData, isLoading, 
   const handleSubmit = () => {
     const hp = calculateHP();
     const tc = calculateTC();
+    const conMod = Math.floor((data.ability_scores.CON - 10) / 2);
+    const dexMod = Math.floor((data.ability_scores.DEX - 10) / 2);
+
+    // Get perks from selections
+    const classificationPerk = CLASSIFICATIONS.find(c => c.value === data.classification)?.perk;
+    const primaryStylePerk = POWER_STYLES.find(p => p.value === data.primary_power_style)?.perk;
+    const originPerk = ORIGINS.find(o => o.value === data.origin_story)?.perk;
+    const alignmentPerk = ALIGNMENTS.find(a => a.value === data.alignment)?.perk;
+
     onSubmit({
       ...data,
       max_hp: hp,
       current_hp: hp,
+      max_sp: 5 + conMod,
+      current_sp: 5 + conMod,
       toughness_class: tc,
-      powers: []
+      initiative_modifier: dexMod,
+      passive_perception: 10 + Math.floor((data.ability_scores.WIS - 10) / 2),
+      classification_perk: classificationPerk,
+      primary_power_style_perk: primaryStylePerk,
+      origin_perk: originPerk,
+      alignment_perk: alignmentPerk,
+      powers: [],
+      skills: {
+        athletics: 'none',
+        acrobatics: 'none',
+        stealth: 'none',
+        investigation: 'none',
+        perception: 'none',
+        insight: 'none',
+        persuasion: 'none',
+        deception: 'none',
+        intimidation: 'none',
+        technology: 'none',
+        medicine: 'none',
+        survival: 'none'
+      }
     });
   };
   
