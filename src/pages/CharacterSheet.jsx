@@ -4,7 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -64,6 +65,7 @@ export default function CharacterSheet() {
   const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [activeTab, setActiveTab] = useState('combat');
   
   const [showPowerEditor, setShowPowerEditor] = useState(false);
   const [editingPower, setEditingPower] = useState(null);
@@ -314,53 +316,28 @@ export default function CharacterSheet() {
         </div>
         
         {/* Main Content */}
-        <Tabs defaultValue="combat" className="space-y-4">
-          <TabsList className="bg-slate-800/50 border border-slate-700 overflow-x-auto flex-wrap">
-            <TabsTrigger value="combat" className="data-[state=active]:bg-violet-500/20">
-              <Swords className="h-4 w-4 mr-2" />
-              Combat
-            </TabsTrigger>
-            <TabsTrigger value="stats" className="data-[state=active]:bg-violet-500/20">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Stats
-            </TabsTrigger>
-            <TabsTrigger value="powers" className="data-[state=active]:bg-violet-500/20">
-              <Zap className="h-4 w-4 mr-2" />
-              Powers
-            </TabsTrigger>
-            <TabsTrigger value="equipment" className="data-[state=active]:bg-violet-500/20">
-              <Shield className="h-4 w-4 mr-2" />
-              Equipment
-            </TabsTrigger>
-            <TabsTrigger value="inventory" className="data-[state=active]:bg-violet-500/20">
-              <Package className="h-4 w-4 mr-2" />
-              Inventory
-            </TabsTrigger>
-            <TabsTrigger value="info" className="data-[state=active]:bg-violet-500/20">
-              <BookOpen className="h-4 w-4 mr-2" />
-              Info
-            </TabsTrigger>
-            <TabsTrigger value="downtime" className="data-[state=active]:bg-violet-500/20">
-              <Heart className="h-4 w-4 mr-2" />
-              Downtime
-            </TabsTrigger>
-            <TabsTrigger value="notes" className="data-[state=active]:bg-violet-500/20">
-              <FileText className="h-4 w-4 mr-2" />
-              Notes
-            </TabsTrigger>
-            <TabsTrigger value="items" className="data-[state=active]:bg-violet-500/20">
-              <Package className="h-4 w-4 mr-2" />
-              Items Reference
-            </TabsTrigger>
-            <TabsTrigger value="questionnaire" className="data-[state=active]:bg-violet-500/20">
-              <BookOpen className="h-4 w-4 mr-2" />
-              Questionnaire
-            </TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="combat">⚔️ Combat</SelectItem>
+              <SelectItem value="stats">📊 Stats</SelectItem>
+              <SelectItem value="powers">⚡ Powers</SelectItem>
+              <SelectItem value="equipment">🛡️ Equipment</SelectItem>
+              <SelectItem value="inventory">📦 Inventory</SelectItem>
+              <SelectItem value="info">📖 Info</SelectItem>
+              <SelectItem value="downtime">💙 Downtime</SelectItem>
+              <SelectItem value="notes">📝 Notes</SelectItem>
+              <SelectItem value="items">📦 Items Reference</SelectItem>
+              <SelectItem value="questionnaire">📖 Questionnaire</SelectItem>
+            </SelectContent>
+          </Select>
           
           {/* Combat Tab */}
           <TabsContent value="combat" className="space-y-4">
-            <EnhancedCombatPanel character={character} onUpdate={handleUpdate} />
+            <EnhancedCombatPanel character={character} onUpdate={(data) => updateMutation.mutate(data)} />
           </TabsContent>
           
           {/* Stats Tab */}
