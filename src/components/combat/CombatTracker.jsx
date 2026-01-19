@@ -20,6 +20,7 @@ import ActionEconomy from "@/components/combat/ActionEconomy";
 import { executeEnemyAI } from "@/components/combat/EnemyAI";
 import RandomEncounterGenerator from "@/components/combat/RandomEncounterGenerator";
 import { AttackEffect, HitEffect } from "@/components/combat/CombatVisualEffects";
+import AegisCombatAdvisor from "@/components/aegis/AegisCombatAdvisor";
 
 export default function CombatTracker({ characters, campaignId }) {
   const [combatActive, setCombatActive] = useState(false);
@@ -410,6 +411,7 @@ export default function CombatTracker({ characters, campaignId }) {
         <TabsTrigger value="tracker">Initiative</TabsTrigger>
         <TabsTrigger value="grid">Grid</TabsTrigger>
         <TabsTrigger value="log">Combat Log</TabsTrigger>
+        <TabsTrigger value="aegis">A.E.G.I.S.</TabsTrigger>
       </TabsList>
       
       <TabsContent value="tracker" className="space-y-2">
@@ -584,6 +586,14 @@ export default function CombatTracker({ characters, campaignId }) {
       
         <TabsContent value="log">
           <CombatLog logs={combatLog} />
+        </TabsContent>
+        
+        <TabsContent value="aegis">
+          <AegisCombatAdvisor
+            character={initiativeOrder[currentTurn]}
+            enemies={initiativeOrder.filter(c => c.isEnemy)}
+            round={currentRound}
+          />
         </TabsContent>
       </Tabs>
       

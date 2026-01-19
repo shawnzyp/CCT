@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, X, Sparkles, Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import AegisInterface from './AegisInterface';
 
 const ENCOURAGEMENTS = [
   "Threat assessment: manageable. You've got this, operative.",
@@ -205,16 +206,8 @@ export default function AegisAssistant() {
               </div>
               
               {/* Content */}
-              <div className="p-4 space-y-4 max-h-[500px] overflow-y-auto">
-                <div className="text-center py-8">
-                  <Radio className="h-12 w-12 text-violet-400 mx-auto mb-4" />
-                  <p className="text-sm text-slate-400 font-mono">
-                    System online. Ready for mission support.
-                  </p>
-                  <p className="text-xs text-slate-600 mt-2 font-mono">
-                    Full interface coming soon...
-                  </p>
-                </div>
+              <div className="p-0 max-h-[600px] overflow-hidden">
+                <AegisInterface />
               </div>
             </div>
           </motion.div>
