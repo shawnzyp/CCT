@@ -227,7 +227,11 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="gm-tools">
-            <GMToolsPanel campaign={campaign} onUpdate={(data) => updateCampaign.mutate(data)} />
+            <GMToolsPanel 
+              campaign={campaign} 
+              characters={characters}
+              onUpdate={(data) => updateCampaign.mutate(data)} 
+            />
           </TabsContent>
           
           <TabsContent value="combat">
