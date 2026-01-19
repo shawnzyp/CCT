@@ -25,6 +25,7 @@ export default function Rules() {
             <TabsTrigger value="powers">Powers & SP</TabsTrigger>
             <TabsTrigger value="elements">Elements</TabsTrigger>
             <TabsTrigger value="downtime">Downtime</TabsTrigger>
+            <TabsTrigger value="glossary">Glossary</TabsTrigger>
           </TabsList>
 
           <TabsContent value="creation" className="space-y-4">
@@ -462,6 +463,90 @@ export default function Rules() {
                     Redirect damage or rescue an ally at the last second
                   </li>
                 </ul>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="glossary" className="space-y-4">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Game Mechanics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="space-y-2">
+                  <div className="bg-slate-700/50 rounded-lg p-3">
+                    <div className="font-semibold text-white mb-1">SP (Stamina Points)</div>
+                    <div className="text-sm text-slate-400">A resource used to fuel powers and abilities. Regenerates fully at the start of each combat round. SP = 5 + your Constitution modifier.</div>
+                  </div>
+                  <div className="bg-slate-700/50 rounded-lg p-3">
+                    <div className="font-semibold text-white mb-1">SP Cost</div>
+                    <div className="text-sm text-slate-400">The number of SP required to use a power. Ranges from 1 (basic attack) to 5 (ultimate power).</div>
+                  </div>
+                  <div className="bg-slate-700/50 rounded-lg p-3">
+                    <div className="font-semibold text-white mb-1">Combat Encounter</div>
+                    <div className="text-sm text-slate-400">A structured battle or skirmish where turn order and power use is tracked.</div>
+                  </div>
+                  <div className="bg-slate-700/50 rounded-lg p-3">
+                    <div className="font-semibold text-white mb-1">Per Session / Per Long Rest</div>
+                    <div className="text-sm text-slate-400">An ability or perk that may be used once during a full play session (not per combat).</div>
+                  </div>
+                  <div className="bg-slate-700/50 rounded-lg p-3">
+                    <div className="font-semibold text-white mb-1">Cooldown</div>
+                    <div className="text-sm text-slate-400">The number of rounds that must pass before a specific power can be used again (e.g., 10-turn cooldown for 5 SP powers).</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Combat Terms</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Reaction</div>
+                  <div className="text-sm text-slate-400">An action taken outside your turn, usually in response to a trigger (e.g., being hit).</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Initiative</div>
+                  <div className="text-sm text-slate-400">The order of turns in combat, determined by rolling 1d20 + DEX modifier.</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Critical Hit</div>
+                  <div className="text-sm text-slate-400">Roll a natural 20 on an attack. Double the damage dice.</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Area of Effect (AoE)</div>
+                  <div className="text-sm text-slate-400">A power that targets multiple enemies in a specific area (cone, line, radius).</div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Power Mechanics</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Effect Tags</div>
+                  <div className="text-sm text-slate-400">Descriptive mechanics attached to powers (e.g., Burn, Stun, Push). Usually require a saving throw.</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Saving Throw (Save)</div>
+                  <div className="text-sm text-slate-400">A roll (1d20 + modifier) to resist a harmful power or effect. E.g., "WIS Save DC 14" = Roll d20 + WIS modifier and beat 14 to avoid the effect.</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Boost Roll</div>
+                  <div className="text-sm text-slate-400">Spend 1 SP to add +1d4 to any roll.</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Concentration</div>
+                  <div className="text-sm text-slate-400">Some powers require ongoing focus. These cost an extra +1 SP per round and usually require avoiding damage or distractions.</div>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3">
+                  <div className="font-semibold text-white mb-1">Skill Move (Lost Time Origin)</div>
+                  <div className="text-sm text-slate-400">A power used freely (no SP cost) with +1d6 bonus effect. Treated like a cinematic, adrenaline-fueled moment.</div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

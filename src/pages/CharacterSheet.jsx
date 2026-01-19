@@ -33,6 +33,7 @@ import ActiveEffects from "@/components/character/ActiveEffects";
 import CombatStatsPanel from "@/components/character/CombatStatsPanel";
 import CharacterEditor from "@/components/character/CharacterEditor";
 import ItemsReference from "@/components/character/ItemsReference";
+import CharacterQuestionnaire from "@/components/character/CharacterQuestionnaire";
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
@@ -351,6 +352,10 @@ export default function CharacterSheet() {
               <Package className="h-4 w-4 mr-2" />
               Items Reference
             </TabsTrigger>
+            <TabsTrigger value="questionnaire" className="data-[state=active]:bg-violet-500/20">
+              <BookOpen className="h-4 w-4 mr-2" />
+              Questionnaire
+            </TabsTrigger>
           </TabsList>
           
           {/* Combat Tab */}
@@ -515,6 +520,14 @@ export default function CharacterSheet() {
           {/* Items Reference Tab */}
           <TabsContent value="items">
             <ItemsReference />
+          </TabsContent>
+
+          {/* Questionnaire Tab */}
+          <TabsContent value="questionnaire">
+            <CharacterQuestionnaire 
+              character={character}
+              onUpdate={(data) => updateMutation.mutate(data)}
+            />
           </TabsContent>
 
           {/* Info Tab */}

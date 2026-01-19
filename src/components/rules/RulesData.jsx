@@ -4,27 +4,37 @@ export const CLASSIFICATIONS = {
   mutant: {
     label: 'Mutant',
     description: 'Born with or developed powers through genetic mutation',
-    perk: 'Reroll one failed saving throw per long rest'
+    perk: 'Reroll one failed saving throw per long rest',
+    resistant: 'Radiation, Psychic',
+    vulnerable: 'Necrotic, Force'
   },
   enhanced_human: {
     label: 'Enhanced Human',
     description: 'Augmented through science, training, or technology',
-    perk: 'Advantage on all Technology-related checks'
+    perk: 'Advantage on all Technology-related checks',
+    resistant: 'Piercing, Fire',
+    vulnerable: 'Psychic, Radiation'
   },
   magic_user: {
     label: 'Magic User',
     description: 'Wielder of mystical forces and arcane power',
-    perk: 'Cast one minor magical effect (prestidigitation) per long rest'
+    perk: 'Cast one minor magical effect (prestidigitation) per long rest',
+    resistant: 'Force, Necrotic',
+    vulnerable: 'Confusion, Radiation'
   },
   alien: {
     label: 'Alien/Extraterrestrial',
     description: 'Being from another world or dimension',
-    perk: 'Immune to environmental hazards and no penalty to movement in rough terrain'
+    perk: 'Immune to environmental hazards and no penalty to movement in rough terrain',
+    resistant: 'Cold, Acid, Lightning',
+    vulnerable: 'Radiant, Emotion'
   },
   mystical_being: {
     label: 'Mystical Being',
     description: 'Entity of pure magical or divine essence',
-    perk: '+2 to Persuasion or Intimidation checks'
+    perk: '+2 to Persuasion or Intimidation checks',
+    resistant: 'Radiant, Psychic',
+    vulnerable: 'Corruption, Radiation'
   }
 };
 
@@ -125,37 +135,43 @@ export const ALIGNMENTS = {
     label: 'Paragon',
     moral: 'light',
     discipline: 'lawful',
-    perk: 'Auto-succeed 1 CHA check with civilians/allies per session'
+    description: 'A beacon of order and morality, upholds law and virtue at all costs',
+    perk: 'Once per session, auto-succeed a Charisma check with civilians or allies'
   },
   guardian: {
     label: 'Guardian',
     moral: 'light',
     discipline: 'neutral',
-    perk: 'Bonus action: restore 1d6 HP or 1 SP to an ally once per session'
+    description: 'Fights for good, but flexible on rules and tactics',
+    perk: 'Once per session, restore 1d6 HP or 1 SP to an ally as a bonus action'
   },
   vigilante: {
     label: 'Vigilante',
     moral: 'light',
     discipline: 'chaotic',
-    perk: 'Ignore opportunity attacks when moving toward a threat'
+    description: 'Pursues justice on their own terms, breaks rules to save lives',
+    perk: 'Ignore opportunity attacks when moving toward a threat or hostage'
   },
   // Neutral alignments
   sentinel: {
     label: 'Sentinel',
     moral: 'neutral',
     discipline: 'lawful',
-    perk: '+1 to all saves while following orders/protocols'
+    description: 'Loyal to institutions, systems, or a code, even without emotional drive',
+    perk: '+1 to all saving throws when acting on orders or directives'
   },
   outsider: {
     label: 'Outsider',
     moral: 'neutral',
     discipline: 'neutral',
-    perk: 'Once per session, reroll any one roll or remove 1 condition from yourself'
+    description: 'Keeps balance, avoids attachments to either law or chaos',
+    perk: 'Once per session, reroll any roll OR remove one condition from yourself'
   },
   wildcard: {
     label: 'Wildcard',
     moral: 'neutral',
     discipline: 'chaotic',
+    description: 'Acts on instinct, freedom, or self-interest - unpredictable but not evil',
     perk: 'Advantage on Initiative and Deception once per combat'
   },
   // Shadow alignments
@@ -163,19 +179,22 @@ export const ALIGNMENTS = {
     label: 'Inquisitor',
     moral: 'shadow',
     discipline: 'lawful',
-    perk: 'Deal max damage to a criminal once per session'
+    description: 'Uses control, fear, and authority to impose brutal justice',
+    perk: 'Once per session, deal maximum damage to enemies labeled "criminal" by GM'
   },
   anti_hero: {
     label: 'Anti-Hero',
     moral: 'shadow',
     discipline: 'neutral',
-    perk: 'Heal 1d6 HP when you defeat an enemy with no allies adjacent'
+    description: 'Walks the line between savior and destroyer, does what must be done',
+    perk: 'Heal 1d6 HP when defeating an enemy while no allies are within 10 ft'
   },
   renegade: {
     label: 'Renegade',
     moral: 'shadow',
     discipline: 'chaotic',
-    perk: '+1d6 damage on an attack from stealth or surprise (once per combat)'
+    description: 'Operates from impulse, vengeance, or desire - morally gray or villainous',
+    perk: 'Once per combat, add +1d6 damage when attacking from stealth or surprise'
   }
 };
 
@@ -187,41 +206,36 @@ export const SP_COSTS = {
     examples: ['Spark a light', 'Minor hologram', 'Ping a sensor']
   },
   1: {
-    label: 'Action (sometimes Bonus)',
-    scope: 'Minor effect, single target',
-    buys: 'Basic damage or small rider',
-    saveDC: '12-13',
-    examples: ['Energy bolt', 'Short dash + strike', 'Boost (+1d4 to any roll)']
+    label: 'Basic Attack',
+    type: 'Basic attack, minor effect',
+    examples: 'Energy blast, melee strike, shove, trip'
   },
   2: {
-    label: 'Action',
-    scope: 'Signature move, single target plus rider',
-    buys: 'Damage plus condition or mobility/buff',
-    saveDC: '13-14',
-    examples: ['Burning strike (Burn)', 'Pull/push 10-20 ft', 'Mark/taunt']
+    label: 'Signature Power',
+    type: 'Core ability or status effect',
+    examples: 'Firebolt + Burn, Ice Slash + Slow, Force Push'
   },
   3: {
-    label: 'Action',
-    scope: 'Area or enhanced action',
-    buys: 'Small/medium AoE or strong ally buff/shield',
-    saveDC: '14-15',
-    examples: ['15-ft cone blast', 'Party barrier', 'Group cleanse']
+    label: 'AoE or Status Power',
+    type: 'Area of Effect (AoE), enhanced status, heal',
+    examples: 'Cone of Lightning, Stun Wave, Group Buff'
   },
   4: {
-    label: 'Action (often Concentration)',
-    scope: 'Strong control or field warp',
-    buys: 'Lockdown, terrain change, hard control',
-    saveDC: '15-16',
-    examples: ['Stun wave', 'Gravity well', 'Wall/zone creation']
+    label: 'Strong Control',
+    type: 'Strong AoE, hard crowd control',
+    examples: 'Paralyze Zone, Mind Trap, Gravity Crush'
   },
   5: {
-    label: 'Action + cooldown',
-    scope: 'Ultimate (once per big scene)',
-    buys: 'Fight-defining effect, huge AoE or multi-rider',
-    saveDC: '16-17',
-    limiter: '10-turn cooldown',
-    examples: ['Meteor storm', 'Mass time-stop pulse', 'Team-wide overcharge']
+    label: 'Ultimate Power',
+    type: 'Ultimate ability (10-round cooldown)',
+    examples: 'Meteor Storm, Time Freeze, Rebirth, Mass Heal',
+    cooldown: 10
   }
+};
+
+export const SPECIAL_SP_COSTS = {
+  boost_roll: { cost: 1, effect: 'Add +1d4 to any roll' },
+  concentrate: { cost: '+1 SP/round', effect: 'Maintain mental powers' }
 };
 
 export const XP_THRESHOLDS = {
@@ -231,19 +245,34 @@ export const XP_THRESHOLDS = {
   apocalyptic: { xp: 5000, description: 'Apocalyptic threat or multiphase boss', range: '5,000+' }
 };
 
-export const IDENTITY_QUESTIONS = [
+export const DEEP_CHARACTER_QUESTIONS = [
   'Who are you behind the mask?',
   'What does justice mean to you?',
   'What is your biggest fear or unresolved trauma?',
-  'What legacy do you want to leave behind?'
+  'What legacy do you want to leave behind?',
+  'What moment first defined your sense of power - was it thrilling, terrifying, or tragic?',
+  'What does your Origin Story mean to you now?',
+  'What was your life like before you had powers or before you remembered having them?',
+  'What is one way your powers scare even you?',
+  'What is your signature move or ability, and how does it reflect who you are?',
+  'What happens to your powers when you are emotionally compromised?',
+  'What line will you never cross even if the world burns around you?',
+  'Which Alignment do you identify with, and which do you fear becoming?',
+  'Whose opinion matters more to you - civilians, teammates, or your faction superiors? Why?',
+  'What drives you to fight - justice, guilt, revenge, legacy, redemption, or something else?',
+  'What would make you walk away from this life for good?',
+  'What is one major secret you are keeping from the rest of the team?',
+  'What situation leaves you the most vulnerable - physically, emotionally, or strategically?',
+  'Which teammate do you admire the most and what do they have that you lack?',
+  'If you lost your powers tomorrow, who would you still be?'
 ];
 
 export const ACTION_ECONOMY = {
   perTurn: [
     { name: '1 Action', description: 'Attack, power use, or major action' },
     { name: '1 Movement', description: 'Move up to your speed' },
-    { name: '1 Reaction', description: 'Per round, not per turn' },
-    { name: '1 Bonus Action', description: 'Only if an ability explicitly grants one' }
+    { name: '1 Reaction', description: 'Per round, not per turn - triggered by events' },
+    { name: '1 Bonus Action', description: 'Ready attack/power for next turn (only 1 per turn)' }
   ],
   cinematicPoints: {
     perSession: 1,
@@ -260,7 +289,57 @@ export const HP_DEATH_SAVES = {
   atZeroHP: {
     saves: 3,
     dc: 13,
-    twoSucceed: 'Remain conscious and stabilize at 1 HP, prone and critical. Must be healed before continuing to fight.',
+    twoSucceed: 'Remain conscious and stabilize at 1 HP, remaining prone and in critical condition. Must be healed before continuing to fight.',
     twoFail: 'Fall unconscious and must be healed before fight ends or remain in critical condition and possibly die.'
   }
+};
+
+export const DOWNTIME_ACTIVITIES = [
+  { name: 'Media Control', modifier: 'CHA', benefit: 'Improve or damage public trust' },
+  { name: 'Research', modifier: 'INT/WIS', benefit: 'Discover weaknesses in next threat' },
+  { name: 'Train or Tinker', modifier: 'STR/INT', benefit: 'Next session +1 SP or minor upgrade' },
+  { name: 'Gather Intel', modifier: 'CHA/WIS', benefit: 'Learn secrets or avoid traps' },
+  { name: 'Personal Time', modifier: 'WIS/CHA', benefit: 'Refresh mind; reroll one save next session' }
+];
+
+export const GLOSSARY = {
+  gameMechanics: [
+    { term: 'SP (Stamina Points)', definition: 'A resource used to fuel powers and abilities. Regenerates fully at the start of each combat round. SP = 5 + your Constitution modifier.' },
+    { term: 'SP Cost', definition: 'The number of SP required to use a power. Ranges from 1 (basic attack) to 5 (ultimate power).' },
+    { term: 'Combat Encounter', definition: 'A structured battle or skirmish where turn order and power use is tracked.' },
+    { term: 'Per Session', definition: 'An ability or perk that may be used once during a full play session (not per combat).' },
+    { term: 'Per Combat Encounter', definition: 'An ability or effect that resets or can be used again with each new combat.' },
+    { term: 'Per Long Rest', definition: 'Equivalent to "per session" unless your GM uses longer campaigns with actual rest mechanics.' },
+    { term: 'Cooldown', definition: 'The number of rounds that must pass before a specific power can be used again (e.g., 10-turn cooldown).' }
+  ],
+  characterCreation: [
+    { term: 'Classification', definition: 'A character\'s origin or power source (e.g., Mutant, Magic User). Equivalent to race/species.' },
+    { term: 'Power Style', definition: 'Your character\'s "class" or core combat role (e.g., Energy Manipulator, Speedster).' },
+    { term: 'Origin Story', definition: 'A narrative-based background that grants a unique perk and defines how you gained your powers.' },
+    { term: 'Signature Move', definition: 'Your character\'s most iconic power or combat action. Often a 2–3 SP custom power.' },
+    { term: 'Skill Move', definition: '(in context of Lost Time Origin) A thematic term indicating a power used freely (no SP cost) with bonus effect. Treated like a cinematic, adrenaline-fueled moment.' }
+  ],
+  powerMechanics: [
+    { term: 'Effect Tags', definition: 'Descriptive mechanics attached to powers (e.g., Burn, Stun, Push). Usually require a saving throw.' },
+    { term: 'Saving Throw (Save)', definition: 'A roll (1d20 + modifier) to resist a harmful power or effect. E.g., "WIS Save DC 14" = Roll d20 + WIS modifier and beat 14 to avoid the effect.' },
+    { term: 'Condition', definition: 'A lasting negative effect (e.g., Blinded, Charmed, Stunned) that alters combat behavior or stats.' },
+    { term: 'Boost Roll', definition: 'Spend 1 SP to add +1d4 to any roll.' },
+    { term: 'Concentration', definition: 'Some powers require ongoing focus. These cost an extra +1 SP per round and usually require the character to avoid taking damage or distractions.' }
+  ],
+  combatTerms: [
+    { term: 'Action Economy', definition: 'Each turn in combat allows 1 Action, 1 Movement, and 1 Reaction. Some abilities may be used as Bonus Actions.' },
+    { term: 'Reaction', definition: 'An action taken outside your turn, usually in response to a trigger (e.g., being hit).' },
+    { term: 'Initiative', definition: 'The order of turns in combat, determined by rolling 1d20 + DEX modifier.' },
+    { term: 'Attack Roll', definition: '1d20 + relevant modifiers used to determine if a power or weapon hits.' },
+    { term: 'Critical Hit', definition: 'Roll a natural 20 on an attack. Double the damage dice.' },
+    { term: 'Area of Effect (AoE)', definition: 'A power that targets multiple enemies in a specific area (cone, line, radius).' }
+  ],
+  narrative: [
+    { term: 'Alignment', definition: 'Your moral and ethical stance. In Catalyst Core, defined by a Moral Axis (Light, Neutral, Shadow) and a Discipline Axis (Lawful, Neutral, Chaotic).' },
+    { term: 'Faction Reputation', definition: 'A measure of how much your character is trusted or feared by major organizations.' },
+    { term: 'Downtime Activity', definition: 'Non-combat scenes between missions where players pursue personal or strategic goals.' },
+    { term: 'Cinematic Action Point', definition: 'A once-per-session narrative mechanic that allows a player to auto-succeed, flashback, interrupt initiative, or rescue an ally at the last second.' },
+    { term: 'Narrative Trigger', definition: 'An event that influences public opinion, civilian behavior, or faction outcomes (e.g., saving a civilian, causing collateral damage).' },
+    { term: 'Public Trust', definition: 'The team\'s reputation with the general population. Impacts story options, media coverage, and faction support.' }
+  ]
 };
