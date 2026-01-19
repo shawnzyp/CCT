@@ -101,21 +101,18 @@ export default function Layout({ children }) {
             </Link>
             
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navItems.map(item => (
-                <Link key={item.path} to={createPageUrl(item.path)}>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      "gap-2 text-slate-400 hover:text-white hover:bg-violet-500/10 border border-transparent hover:border-violet-500/30 transition-all",
-                      isActive(item.path) && "text-white bg-violet-500/20 border-violet-500/50"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
+            <nav className="hidden md:block">
+              <select
+                value={location.pathname.split('/').pop() || 'Home'}
+                onChange={(e) => window.location.href = createPageUrl(e.target.value)}
+                className="bg-slate-800 border border-violet-500/30 text-white rounded-md px-4 py-2 text-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              >
+                {navItems.map(item => (
+                  <option key={item.path} value={item.path}>
                     {item.name}
-                  </Button>
-                </Link>
-              ))}
+                  </option>
+                ))}
+              </select>
             </nav>
 
             {/* Current Character */}

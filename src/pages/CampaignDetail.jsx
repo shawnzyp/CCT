@@ -91,7 +91,7 @@ export default function CampaignDetail({ currentCharacter }) {
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full sm:w-64">
+            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
