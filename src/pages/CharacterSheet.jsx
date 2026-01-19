@@ -360,7 +360,7 @@ export default function CharacterSheet() {
           
           {/* Combat Tab */}
           <TabsContent value="combat" className="space-y-4">
-            <CombatStatsPanel character={character} />
+            <EnhancedCombatPanel character={character} onUpdate={handleUpdate} />
           </TabsContent>
           
           {/* Stats Tab */}
