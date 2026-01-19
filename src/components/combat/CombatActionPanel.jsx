@@ -136,20 +136,34 @@ export default function CombatActionPanel({
             <TabsContent value="powers" className="space-y-2 mt-3">
               {character.powers?.length > 0 ? (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
-                  {character.powers.map((power, idx) => (
-                    <motion.div 
-                      key={idx} 
-                      className="relative"
-                      whileTap={{ scale: availability.canAct && hasAction ? 0.98 : 1 }}
-                    >
-                      <PowerCard 
-                        power={power} 
-                        onUse={() => handlePowerUse(power)}
-                        canUse={availability.canAct && hasAction && (power.current_cooldown || 0) === 0}
-                        compact
-                      />
-                    </motion.div>
-                  ))}
+                  {character.powers.map((power, idx) => {
+                    const currentSP = character.current_sp || 0;
+                    const canAfford = currentSP >= power.sp_cost;
+                    const onCooldown = (power.current_cooldown || 0) > 0;
+                    
+                    return (
+                      <motion.div 
+                        key={idx} 
+                        className="relative"
+                        whileTap={{ scale: availability.canAct && hasAction && canAfford && !onCooldown ? 0.98 : 1 }}
+                      >
+                        <PowerCard 
+                          power={power} 
+                          onUse={() => {
+                            handlePowerUse(power);
+                            onToggleAction?.('action');
+                          }}
+                          canUse={availability.canAct && hasAction && canAfford && !onCooldown}
+                          compact
+                        />
+                        {!canAfford && (
+                          <div className="absolute inset-0 bg-red-900/20 rounded-lg border border-red-500/50 flex items-center justify-center">
+                            <span className="text-red-400 text-xs font-bold">Need {power.sp_cost} SP</span>
+                          </div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-6 text-slate-500 text-sm">
