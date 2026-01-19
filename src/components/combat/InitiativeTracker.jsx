@@ -65,7 +65,7 @@ export default function InitiativeTracker({
                         ? "bg-red-900/50 text-red-400"
                         : "bg-blue-900/50 text-blue-400"
                   )}>
-                    {char.initiative_roll}
+                    {combatant.initiative_roll}
                   </div>
 
                   {/* Name & Icon */}
