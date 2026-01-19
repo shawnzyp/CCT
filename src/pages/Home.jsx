@@ -14,7 +14,9 @@ export default function Home() {
 
   const { data: characters = [] } = useQuery({
     queryKey: ['characters'],
-    queryFn: () => base44.entities.Character.list('-created_date')
+    queryFn: () => base44.entities.Character.list('-created_date'),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
 
   const handleCharacterSelect = (character) => {

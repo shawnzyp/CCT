@@ -14,7 +14,9 @@ export default function Characters() {
   
   const { data: characters = [], isLoading } = useQuery({
     queryKey: ['characters'],
-    queryFn: () => base44.entities.Character.list('-created_date')
+    queryFn: () => base44.entities.Character.list('-created_date'),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   });
   
   const filteredCharacters = characters.filter(char => 

@@ -25,7 +25,9 @@ export default function Layout({ children }) {
 
   const { data: characters = [] } = useQuery({
     queryKey: ['characters'],
-    queryFn: () => base44.entities.Character.list('-created_date')
+    queryFn: () => base44.entities.Character.list('-created_date'),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {
@@ -73,30 +75,7 @@ export default function Layout({ children }) {
       {/* Military grid background */}
       <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
       
-      {/* Animated background elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-violet-500/50 to-transparent"
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        />
-        <motion.div
-          className="absolute top-1/4 left-0 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-          animate={{ 
-            scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5]
-          }}
-          transition={{ duration: 8, repeat: Infinity, delay: 1 }}
-        />
-      </div>
+
       
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-lg border-b border-violet-500/30 shadow-lg shadow-violet-500/10">
@@ -105,22 +84,11 @@ export default function Layout({ children }) {
             {/* Logo */}
             <Link 
               to={createPageUrl('Home')} 
-              className="flex items-center gap-3" 
-              onClick={(e) => {
-                e.preventDefault();
-                play('navigate', 0.2);
-                window.history.pushState({}, '', createPageUrl('Home'));
-                window.location.reload();
-              }}
+              className="flex items-center gap-3"
             >
-              <motion.div 
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center relative"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                 <Zap className="h-5 w-5 text-white" />
-                <div className="absolute inset-0 rounded-xl bg-violet-400/20 animate-pulse" />
-              </motion.div>
+              </div>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-white text-lg tracking-wider">CATALYST CORE</span>
@@ -136,20 +104,16 @@ export default function Layout({ children }) {
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map(item => (
                 <Link key={item.path} to={createPageUrl(item.path)}>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      variant="ghost"
-                      onMouseEnter={() => play('hover', 0.1)}
-                      onClick={() => play('click', 0.2)}
-                      className={cn(
-                        "gap-2 text-slate-400 hover:text-white hover:bg-violet-500/10 border border-transparent hover:border-violet-500/30 transition-all",
-                        isActive(item.path) && "text-white bg-violet-500/20 border-violet-500/50"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.name}
-                    </Button>
-                  </motion.div>
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "gap-2 text-slate-400 hover:text-white hover:bg-violet-500/10 border border-transparent hover:border-violet-500/30 transition-all",
+                      isActive(item.path) && "text-white bg-violet-500/20 border-violet-500/50"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.name}
+                  </Button>
                 </Link>
               ))}
             </nav>
