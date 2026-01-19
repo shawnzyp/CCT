@@ -24,6 +24,7 @@ import SharedResources from "@/components/campaign/SharedResources";
 import CampaignChat from "@/components/campaign/CampaignChat";
 import { Badge } from "@/components/ui/badge";
 import AegisInterface from "@/components/aegis/AegisInterface";
+import GMToolsPanel from "@/components/campaign/GMToolsPanel";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -103,6 +104,7 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="resources">📦 Shared Resources</SelectItem>
               <SelectItem value="chat">💬 Chat</SelectItem>
               <SelectItem value="aegis">🤖 A.E.G.I.S.</SelectItem>
+              <SelectItem value="gm-tools">🎲 GM Tools</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
             </SelectContent>
           </Select>
@@ -222,6 +224,10 @@ export default function CampaignDetail({ currentCharacter }) {
           
           <TabsContent value="aegis">
             <AegisInterface campaignId={campaignId} />
+          </TabsContent>
+          
+          <TabsContent value="gm-tools">
+            <GMToolsPanel campaign={campaign} onUpdate={(data) => updateCampaign.mutate(data)} />
           </TabsContent>
           
           <TabsContent value="combat">
