@@ -19,7 +19,9 @@ import AdventureModuleDeployment from './AdventureModuleDeployment';
 import ShardsOfManyFates from './ShardsOfManyFates';
 import PINSettings from '../dm/PINSettings';
 import EchoEventsDeployment from './EchoEventsDeployment';
-import { Shield, DollarSign } from 'lucide-react';
+import GameSettings from '../dm/GameSettings';
+import AchievementsManager from '../dm/AchievementsManager';
+import { Shield, DollarSign, Settings as SettingsIcon, Trophy } from 'lucide-react';
 
 export default function GMToolsPanel({ campaign, characters, onUpdate }) {
   const [npcs, setNpcs] = useState(campaign.gm_npcs || []);
@@ -283,38 +285,36 @@ Generated: ${new Date().toLocaleString()}
       </div>
 
       <Tabs defaultValue="npcs" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-4 md:grid-cols-8 w-full gap-1 p-1">
+        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-5 md:grid-cols-10 w-full gap-1 p-1">
           <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <Users className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">NPCs</span>
+            <Users className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="relationships" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <Heart className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Relations</span>
+            <Heart className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="encounters" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <Swords className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Encounters</span>
+            <Swords className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="adventures" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <BookOpen className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Adventures</span>
+            <BookOpen className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="deck" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <Sparkles className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Deck</span>
+            <Sparkles className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <Zap className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Shards</span>
+            <Zap className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="echo" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <Radio className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Echo</span>
+            <Radio className="h-4 w-4" />
+          </TabsTrigger>
+          <TabsTrigger value="achievements" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Trophy className="h-4 w-4" />
           </TabsTrigger>
           <TabsTrigger value="credits" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <DollarSign className="h-4 w-4 mr-1" />
-            <span className="hidden md:inline">Credits</span>
+            <DollarSign className="h-4 w-4" />
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <SettingsIcon className="h-4 w-4" />
           </TabsTrigger>
         </TabsList>
 
@@ -542,6 +542,15 @@ Generated: ${new Date().toLocaleString()}
           />
         </TabsContent>
 
+        {/* Achievements Tab */}
+        <TabsContent value="achievements" className="space-y-3">
+          <AchievementsManager
+            campaign={campaign}
+            characters={characters}
+            onUpdate={onUpdate}
+          />
+        </TabsContent>
+
         {/* Credits Tab */}
         <TabsContent value="credits" className="space-y-3">
           <Card className="bg-slate-800 border-slate-700">
@@ -606,6 +615,14 @@ Generated: ${new Date().toLocaleString()}
               </Button>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="space-y-3">
+          <GameSettings
+            campaign={campaign}
+            onUpdate={onUpdate}
+          />
         </TabsContent>
       </Tabs>
 
