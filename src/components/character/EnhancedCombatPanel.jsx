@@ -2,33 +2,42 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Shield, Heart, Zap, Sword, Target, Move, HelpCircle, Swords, Eye, HandMetal, Shield as ShieldIcon } from "lucide-react";
+import { 
+  Shield, Heart, Zap, Sword, Target, Move, HelpCircle, Swords, 
+  Eye, HandMetal, Shield as ShieldIcon, TrendingUp, Crosshair,
+  Activity, Zap as BonusIcon, ArrowRight
+} from "lucide-react";
 import { getModifier, formatModifier } from "./StatBlock";
-import TutorialTooltip from '@/components/tutorial/TutorialTooltip';
 import { cn } from '@/lib/utils';
+import CalculatorResourceTracker from './CalculatorResourceTracker';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const COMBAT_ACTIONS = [
-  { id: 'attack', name: 'Attack', description: 'Make a melee or ranged attack roll against an enemy\'s TC', type: 'action', icon: Sword },
-  { id: 'power', name: 'Use Power', description: 'Activate one of your powers (costs SP)', type: 'action', icon: Zap },
-  { id: 'dash', name: 'Dash', description: 'Move up to 2x your speed this turn', type: 'action', icon: Move },
-  { id: 'disengage', name: 'Disengage', description: 'Move without provoking reactions', type: 'action', icon: Move },
-  { id: 'dodge', name: 'Dodge', description: 'Enemies have disadvantage to hit you until your next turn', type: 'action', icon: ShieldIcon },
-  { id: 'help', name: 'Help', description: 'Give ally advantage on their next attack or ability check', type: 'action', icon: HandMetal },
-  { id: 'hide', name: 'Hide', description: 'Make a Stealth check to become hidden', type: 'action', icon: Eye },
-  { id: 'ready', name: 'Ready', description: 'Prepare an action to trigger on a condition', type: 'action', icon: Target },
+  { id: 'attack', name: 'Attack', description: 'Make a melee or ranged attack roll against an enemy\'s TC', icon: Sword },
+  { id: 'power', name: 'Use Power', description: 'Activate one of your powers (costs SP)', icon: Zap },
+  { id: 'dash', name: 'Dash', description: 'Move up to 2x your speed this turn', icon: Move },
+  { id: 'disengage', name: 'Disengage', description: 'Move without provoking reactions', icon: Move },
+  { id: 'dodge', name: 'Dodge', description: 'Enemies have disadvantage to hit you until your next turn', icon: ShieldIcon },
+  { id: 'help', name: 'Help', description: 'Give ally advantage on their next attack or ability check', icon: HandMetal },
+  { id: 'hide', name: 'Hide', description: 'Make a Stealth check to become hidden', icon: Eye },
+  { id: 'ready', name: 'Ready', description: 'Prepare an action to trigger on a condition', icon: Target },
 ];
 
 const COMBAT_REACTIONS = [
-  { name: 'Opportunity Attack', description: 'When an enemy leaves your reach, make one melee attack against them' },
-  { name: 'Counterspell', description: 'Use a power as a reaction to negate or counter another power (if applicable)' },
-  { name: 'Block/Parry', description: 'Use equipment or a power to reduce incoming damage (if applicable)' },
+  { name: 'Opportunity Attack', description: 'When an enemy leaves your reach, make one melee attack' },
+  { name: 'Counterspell', description: 'Use a power as reaction to negate another power' },
+  { name: 'Block/Parry', description: 'Use equipment or power to reduce incoming damage' },
 ];
 
 const BONUS_ACTIONS = [
-  { name: 'Second Wind', description: 'Some powers or abilities can be used as bonus actions' },
-  { name: 'Quick Power', description: 'Powers marked as "Bonus Action" in their description' },
+  { name: 'Quick Power', description: 'Powers marked as "Bonus Action"' },
+  { name: 'Second Wind', description: 'Some powers/abilities use bonus actions' },
 ];
 
 export default function EnhancedCombatPanel({ character, onUpdate }) {
@@ -46,11 +55,9 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
     return statMod + profBonus;
   };
 
-  const hpPercentage = (character.current_hp / character.max_hp) * 100;
-  const spPercentage = character.current_sp ? (character.current_sp / character.max_sp) * 100 : 100;
-
   const strMod = getModifier(character.ability_scores?.STR || 10);
   const dexMod = getModifier(character.ability_scores?.DEX || 10);
+  const initiativeBonus = character.initiative_modifier || dexMod;
 
   const toggleAction = (actionType) => {
     setUsedActions(prev => ({
@@ -69,328 +76,398 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Core Combat Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Card className="bg-red-950/20 border-red-900/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Heart className="h-4 w-4 text-red-400" />
-              <span className="text-xs text-red-300 font-medium">HP</span>
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {character.current_hp}/{character.max_hp}
-            </div>
-            <Progress value={hpPercentage} className="h-1.5 mt-2" />
-          </CardContent>
-        </Card>
+    <TooltipProvider>
+      <div className="space-y-4">
+        {/* Section 1: Resources & Core Stats */}
+        <div className="grid md:grid-cols-3 gap-4">
+          {/* HP Tracker */}
+          <CalculatorResourceTracker
+            icon={Heart}
+            label="Hit Points"
+            current={character.current_hp || character.max_hp}
+            max={character.max_hp}
+            color="red"
+            onUpdate={(newHP) => onUpdate({ current_hp: newHP })}
+            adjustments={[-1, -5, -10, -15, -20]}
+            type="HP"
+          />
 
-        <Card className="bg-blue-950/20 border-blue-900/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="h-4 w-4 text-blue-400" />
-              <span className="text-xs text-blue-300 font-medium">SP</span>
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {character.current_sp || character.max_sp}/{character.max_sp}
-            </div>
-            <Progress value={spPercentage} className="h-1.5 mt-2" />
-          </CardContent>
-        </Card>
+          {/* SP Tracker */}
+          <CalculatorResourceTracker
+            icon={Zap}
+            label="Stamina Points"
+            current={character.current_sp || character.max_sp}
+            max={character.max_sp}
+            color="blue"
+            onUpdate={(newSP) => onUpdate({ current_sp: newSP })}
+            adjustments={[-1, -2, -3, -4, -5]}
+            type="SP"
+          />
 
-        <Card className="bg-violet-950/20 border-violet-900/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Shield className="h-4 w-4 text-violet-400" />
-              <TutorialTooltip content="Toughness Class - Enemies must roll equal or higher to hit you. TC = 10 + DEX modifier + armor bonuses.">
-                <span className="text-xs text-violet-300 font-medium">TC</span>
-              </TutorialTooltip>
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {character.toughness_class || 10}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-emerald-950/20 border-emerald-900/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Move className="h-4 w-4 text-emerald-400" />
-              <span className="text-xs text-emerald-300 font-medium">Speed</span>
-            </div>
-            <div className="text-2xl font-bold text-white">
-              {character.speed || 30} ft
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Action Economy */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-white text-sm">Action Economy</CardTitle>
-            <Button size="sm" variant="outline" onClick={resetActions} className="h-7 text-xs">
-              Reset Turn
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { id: 'action', label: 'Action', icon: Swords },
-              { id: 'movement', label: 'Movement', icon: Move },
-              { id: 'bonus_action', label: 'Bonus Action', icon: Zap },
-              { id: 'reaction', label: 'Reaction', icon: Shield }
-            ].map(action => (
-              <button
-                key={action.id}
-                onClick={() => toggleAction(action.id)}
-                className={cn(
-                  "flex items-center gap-2 p-3 rounded-lg border-2 transition-all",
-                  usedActions[action.id]
-                    ? "border-slate-600 bg-slate-800/50"
-                    : "border-violet-500/50 bg-violet-500/10 hover:bg-violet-500/20"
-                )}
-              >
-                <action.icon className={cn(
-                  "h-4 w-4",
-                  usedActions[action.id] ? "text-slate-500" : "text-violet-400"
-                )} />
-                <span className={cn(
-                  "text-sm font-semibold",
-                  usedActions[action.id] ? "text-slate-500 line-through" : "text-white"
-                )}>
-                  {action.label}
-                </span>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Attack Bonuses */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-white text-sm">Attack Bonuses</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-3">
-            <div className="p-3 bg-slate-700/30 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-slate-300 text-sm">Melee Attack</div>
-                  <div className="text-xs text-slate-500">STR modifier</div>
+          {/* Quick Stats */}
+          <div className="space-y-3">
+            <Card className="bg-violet-950/30 border-violet-900/50">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Shield className="h-4 w-4 text-violet-400" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="text-xs text-violet-300 font-medium cursor-help">Toughness Class</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">Enemies must roll equal or higher to hit you. TC = 10 + DEX modifier + armor bonuses.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="text-3xl font-bold text-white">
+                      {character.toughness_class || 10}
+                    </div>
+                  </div>
                 </div>
-                <Badge className="bg-red-500/20 text-red-300 text-lg font-bold border-red-500/50">
-                  {formatModifier(strMod)}
-                </Badge>
-              </div>
-            </div>
-            <div className="p-3 bg-slate-700/30 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-slate-300 text-sm">Ranged Attack</div>
-                  <div className="text-xs text-slate-500">DEX modifier</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-emerald-950/30 border-emerald-900/50">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Move className="h-4 w-4 text-emerald-400" />
+                      <span className="text-xs text-emerald-300 font-medium">Movement Speed</span>
+                    </div>
+                    <div className="text-3xl font-bold text-white">
+                      {character.speed || 30} <span className="text-lg text-slate-400">ft</span>
+                    </div>
+                  </div>
                 </div>
-                <Badge className="bg-blue-500/20 text-blue-300 text-lg font-bold border-blue-500/50">
-                  {formatModifier(dexMod)}
-                </Badge>
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 p-3 bg-violet-950/20 border border-violet-500/30 rounded-lg">
-            <div className="flex items-start gap-2 text-xs text-violet-200">
-              <Target className="h-3 w-3 mt-0.5 flex-shrink-0" />
-              <span>Attack Roll: d20 + modifier vs. enemy TC. On hit, roll weapon/power damage.</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
 
-      {/* Available Actions */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-white text-sm">Available Actions</CardTitle>
-            <TutorialTooltip 
-              content="These are the actions you can take on your turn. Most require using your Action from the Action Economy."
-              position="left"
-            >
-              <span className="text-slate-400 text-xs">What can I do?</span>
-            </TutorialTooltip>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-2">
-            {COMBAT_ACTIONS.map(action => (
-              <div key={action.id} className="p-2 bg-slate-700/30 rounded-lg flex items-start gap-2">
-                <action.icon className="h-4 w-4 text-violet-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-white">{action.name}</div>
-                  <div className="text-xs text-slate-400">{action.description}</div>
+            <Card className="bg-amber-950/30 border-amber-900/50">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Activity className="h-4 w-4 text-amber-400" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="text-xs text-amber-300 font-medium cursor-help">Initiative</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-xs">Roll d20 + this modifier at combat start to determine turn order</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <div className="text-3xl font-bold text-white">
+                      {formatModifier(initiativeBonus)}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Reactions */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-white text-sm">Reactions</CardTitle>
-            <TutorialTooltip 
-              content="Reactions are special actions you can take outside your turn, once per round. They're triggered by specific conditions."
-              position="left"
-            >
-              <HelpCircle className="h-4 w-4 text-slate-400" />
-            </TutorialTooltip>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {COMBAT_REACTIONS.map((reaction, idx) => (
-              <div key={idx} className="p-2 bg-orange-950/20 border border-orange-500/30 rounded-lg">
-                <div className="text-sm font-medium text-orange-300">{reaction.name}</div>
-                <div className="text-xs text-slate-400">{reaction.description}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Bonus Actions */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-white text-sm">Bonus Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {BONUS_ACTIONS.map((bonus, idx) => (
-              <div key={idx} className="p-2 bg-blue-950/20 border border-blue-500/30 rounded-lg">
-                <div className="text-sm font-medium text-blue-300">{bonus.name}</div>
-                <div className="text-xs text-slate-400">{bonus.description}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Combat Skills */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-white text-sm">Combat Skills & Saves</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-2">
-            <div className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
-              <span className="text-slate-200 text-sm">Athletics (STR)</span>
-              <Badge variant="outline" className="font-mono text-white border-violet-500/50">
-                {formatModifier(getSkillBonus('athletics', 'STR'))}
-              </Badge>
-            </div>
-            <div className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
-              <span className="text-slate-200 text-sm">Acrobatics (DEX)</span>
-              <Badge variant="outline" className="font-mono text-white border-violet-500/50">
-                {formatModifier(getSkillBonus('acrobatics', 'DEX'))}
-              </Badge>
-            </div>
-            <div className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
-              <span className="text-slate-200 text-sm">Stealth (DEX)</span>
-              <Badge variant="outline" className="font-mono text-white border-violet-500/50">
-                {formatModifier(getSkillBonus('stealth', 'DEX'))}
-              </Badge>
-            </div>
-            <div className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
-              <span className="text-slate-200 text-sm">Perception (WIS)</span>
-              <Badge variant="outline" className="font-mono text-white border-violet-500/50">
-                {formatModifier(getSkillBonus('perception', 'WIS'))}
-              </Badge>
-            </div>
-            <div className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
-              <TutorialTooltip content="Roll this at the start of combat to determine turn order">
-                <span className="text-slate-200 text-sm">Initiative (DEX)</span>
-              </TutorialTooltip>
-              <Badge variant="outline" className="font-mono text-white border-violet-500/50">
-                {formatModifier(character.initiative_modifier || getModifier(character.ability_scores?.DEX || 10))}
-              </Badge>
-            </div>
-            <div className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
-              <span className="text-slate-200 text-sm">Passive Perception</span>
-              <Badge variant="outline" className="font-mono text-white border-violet-500/50">
-                {10 + getSkillBonus('perception', 'WIS')}
-              </Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Powers in Combat */}
-      {character.powers?.length > 0 && (
+        {/* Section 2: Action Economy */}
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">Powers</CardTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-white text-base">Action Economy</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p>Track what you've used this turn. Click to mark as used, then reset at turn end.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <Button size="sm" variant="outline" onClick={resetActions} className="h-7 text-xs">
+                Reset Turn
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              {character.powers.map((power, idx) => (
-                <div key={idx} className="p-3 bg-slate-700/30 rounded-lg border border-slate-600">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white font-medium">{power.name}</span>
-                      {power.is_signature_move && (
-                        <Badge className="bg-violet-500 text-xs">Signature</Badge>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {[
+                { id: 'action', label: 'Action', icon: Swords, desc: 'Attack, power, dash, dodge, etc.' },
+                { id: 'movement', label: 'Movement', icon: Move, desc: 'Move up to your speed' },
+                { id: 'bonus_action', label: 'Bonus Action', icon: BonusIcon, desc: 'Quick powers or abilities' },
+                { id: 'reaction', label: 'Reaction', icon: Shield, desc: 'Opportunity attacks, blocks' }
+              ].map(action => (
+                <Tooltip key={action.id}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => toggleAction(action.id)}
+                      className={cn(
+                        "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
+                        usedActions[action.id]
+                          ? "border-slate-600 bg-slate-800/50"
+                          : "border-violet-500/50 bg-violet-500/10 hover:bg-violet-500/20"
                       )}
-                    </div>
-                    <Badge variant="outline" className="text-xs bg-blue-500/20 border-blue-500/50 text-blue-300">
-                      {power.sp_cost} SP
-                    </Badge>
+                    >
+                      <action.icon className={cn(
+                        "h-5 w-5",
+                        usedActions[action.id] ? "text-slate-500" : "text-violet-400"
+                      )} />
+                      <span className={cn(
+                        "text-xs font-semibold text-center",
+                        usedActions[action.id] ? "text-slate-500 line-through" : "text-white"
+                      )}>
+                        {action.label}
+                      </span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{action.desc}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section 3: Combat Actions */}
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white text-base">Combat Actions</CardTitle>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1 text-xs text-slate-400 cursor-help">
+                    <HelpCircle className="h-3 w-3" />
+                    <span>What can I do?</span>
                   </div>
-                  <div className="flex flex-wrap gap-2 text-xs text-slate-400 mb-2">
-                    <span>Range: {power.range}</span>
-                    {power.cooldown > 0 && <span>• Cooldown: {power.cooldown} turns</span>}
-                    {power.save && <span>• Save: {power.save}</span>}
+                </TooltipTrigger>
+                <TooltipContent className="max-w-sm">
+                  <div className="space-y-2">
+                    <p className="font-semibold">Actions you can take on your turn:</p>
+                    {COMBAT_ACTIONS.map(action => (
+                      <div key={action.id} className="text-xs">
+                        <span className="font-medium">{action.name}:</span> {action.description}
+                      </div>
+                    ))}
                   </div>
-                  <p className="text-sm text-slate-300">{power.effect}</p>
-                  {power.damage_type && (
-                    <Badge variant="outline" className="mt-2 text-xs">
-                      {power.damage_type} damage
-                    </Badge>
-                  )}
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-2">
+              {COMBAT_ACTIONS.slice(0, 8).map(action => (
+                <div key={action.id} className="p-2.5 bg-slate-700/30 rounded-lg flex items-center gap-2 hover:bg-slate-700/50 transition-colors">
+                  <action.icon className="h-4 w-4 text-violet-400 flex-shrink-0" />
+                  <span className="text-sm font-medium text-white">{action.name}</span>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
-      )}
 
-      {/* Equipped Items */}
-      {character.equipment?.filter(e => e.equipped).length > 0 && (
+        {/* Section 4: Attack Bonuses */}
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">Equipped Gear</CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-white text-base">Attack Bonuses</CardTitle>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p>Roll d20 + modifier vs. enemy TC. On hit, roll damage.</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              {character.equipment.filter(e => e.equipped).map((item, idx) => (
-                <div key={idx} className="p-2 bg-slate-700/30 rounded flex justify-between items-center">
+            <div className="grid md:grid-cols-2 gap-3">
+              <div className="p-4 bg-gradient-to-br from-red-950/30 to-red-900/10 border border-red-900/50 rounded-lg">
+                <div className="flex justify-between items-center">
                   <div>
-                    <span className="text-white text-sm font-medium">{item.name}</span>
-                    {item.bonus && (
-                      <span className="text-violet-400 text-xs ml-2">{item.bonus}</span>
-                    )}
+                    <div className="text-slate-300 text-sm font-semibold">Melee Attack</div>
+                    <div className="text-xs text-slate-500 mt-0.5">STR modifier</div>
                   </div>
-                  <Badge variant="outline" className="text-xs capitalize border-slate-600">
-                    {item.type}
+                  <div className="text-3xl font-bold text-red-300">
+                    {formatModifier(strMod)}
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 bg-gradient-to-br from-blue-950/30 to-blue-900/10 border border-blue-900/50 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-slate-300 text-sm font-semibold">Ranged Attack</div>
+                    <div className="text-xs text-slate-500 mt-0.5">DEX modifier</div>
+                  </div>
+                  <div className="text-3xl font-bold text-blue-300">
+                    {formatModifier(dexMod)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section 5: Powers */}
+        {character.powers?.length > 0 && (
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-white text-base">Your Powers</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p>Powers cost SP to use. Check range, cooldown, and save DC before using.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-3">
+                {character.powers.map((power, idx) => (
+                  <div key={idx} className="p-3 bg-gradient-to-br from-violet-950/30 to-purple-900/10 border border-violet-900/50 rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex items-center gap-2">
+                        <Zap className="h-4 w-4 text-violet-400" />
+                        <span className="text-white font-semibold">{power.name}</span>
+                      </div>
+                      <Badge className="bg-blue-500/30 border-blue-500/50 text-blue-200 text-xs">
+                        {power.sp_cost} SP
+                      </Badge>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs text-slate-400 mb-2">
+                      <span>Range: {power.range}</span>
+                      {power.cooldown > 0 && <span>• CD: {power.cooldown}</span>}
+                      {power.save && <span>• {power.save} save</span>}
+                    </div>
+                    <p className="text-sm text-slate-300 line-clamp-2">{power.effect}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Section 6: Combat Skills */}
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-white text-base">Combat Skills</CardTitle>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p>Roll d20 + bonus for skill checks. Higher proficiency = better bonus.</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-2">
+              {[
+                { name: 'Athletics', stat: 'STR', skill: 'athletics' },
+                { name: 'Acrobatics', stat: 'DEX', skill: 'acrobatics' },
+                { name: 'Stealth', stat: 'DEX', skill: 'stealth' },
+                { name: 'Perception', stat: 'WIS', skill: 'perception' }
+              ].map(({ name, stat, skill }) => (
+                <div key={skill} className="p-2.5 bg-slate-700/30 rounded flex justify-between items-center">
+                  <span className="text-slate-200 text-sm font-medium">{name} ({stat})</span>
+                  <Badge variant="outline" className="font-mono text-base text-white border-violet-500/50">
+                    {formatModifier(getSkillBonus(skill, stat))}
                   </Badge>
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
-      )}
-    </div>
+
+        {/* Section 7: Reactions & Bonus Actions */}
+        <div className="grid md:grid-cols-2 gap-4">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-white text-sm">Reactions</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p>Special actions outside your turn, once per round, triggered by conditions.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {COMBAT_REACTIONS.map((reaction, idx) => (
+                  <div key={idx} className="p-2 bg-orange-950/20 border border-orange-500/30 rounded text-xs">
+                    <div className="font-semibold text-orange-300">{reaction.name}</div>
+                    <div className="text-slate-400 mt-0.5">{reaction.description}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-white text-sm">Bonus Actions</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p>Quick actions that don't use your main Action.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {BONUS_ACTIONS.map((bonus, idx) => (
+                  <div key={idx} className="p-2 bg-blue-950/20 border border-blue-500/30 rounded text-xs">
+                    <div className="font-semibold text-blue-300">{bonus.name}</div>
+                    <div className="text-slate-400 mt-0.5">{bonus.description}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Section 8: Equipped Gear */}
+        {character.equipment?.filter(e => e.equipped).length > 0 && (
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-white text-base">Equipped Gear</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-2">
+                {character.equipment.filter(e => e.equipped).map((item, idx) => (
+                  <div key={idx} className="p-2.5 bg-slate-700/30 rounded flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <ShieldIcon className="h-4 w-4 text-slate-400" />
+                      <span className="text-white text-sm font-medium">{item.name}</span>
+                      {item.bonus && (
+                        <span className="text-violet-400 text-xs">{item.bonus}</span>
+                      )}
+                    </div>
+                    <Badge variant="outline" className="text-xs capitalize border-slate-600">
+                      {item.type}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </TooltipProvider>
   );
 }
