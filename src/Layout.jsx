@@ -131,8 +131,12 @@ export default function Layout({ children }) {
               to={createPageUrl('Home')} 
               className="flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                <Zap className="h-5 w-5 text-white" />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg" 
+                  alt="DC Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <div className="flex items-center gap-2">
