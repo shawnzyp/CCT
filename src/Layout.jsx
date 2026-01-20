@@ -16,6 +16,7 @@ import { AegisProvider } from '@/components/aegis/AegisContext';
 import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
 import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
 import DMLoginFooter from '@/components/dm/DMLoginFooter';
+import { useSettings } from '@/components/utils/useSettings';
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -24,6 +25,7 @@ export default function Layout({ children }) {
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
   const [isDM, setIsDM] = useState(false);
   const { play } = useSoundEffects();
+  const { settings } = useSettings();
 
   const { data: characters = [] } = useQuery({
     queryKey: ['characters'],
@@ -66,15 +68,28 @@ export default function Layout({ children }) {
     return location.pathname.includes(path);
   };
   
+  const fontSizeClass = {
+    small: 'text-sm',
+    medium: '',
+    large: 'text-lg',
+    xlarge: 'text-xl'
+  }[settings.fontSize] || '';
+
   return (
     <TutorialProvider>
       <AegisProvider>
-        <div className="min-h-screen bg-slate-950 overflow-x-hidden relative">
-      {/* Scanline effect */}
-      <div className="scanline" />
-      
+        <div className={cn(
+          "min-h-screen bg-slate-950 overflow-x-hidden relative",
+          fontSizeClass,
+          settings.highContrast && "contrast-125"
+        )}>
+          {/* Scanline effect */}
+          {settings.scanlineEffect && <div className="scanline" />}
+
       {/* Military grid background */}
-      <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
+      {settings.particleEffects && (
+        <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
+      )}
       
 
       

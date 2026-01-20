@@ -1,64 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useTutorial } from '@/components/tutorial/TutorialSystem';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings as SettingsIcon, Palette, Volume2, Gamepad2, Save } from "lucide-react";
+import { Settings as SettingsIcon, Volume2, Play } from "lucide-react";
 import { toast } from "sonner";
+import { useSettings } from '@/components/utils/useSettings';
+import useSoundEffects from '@/components/sounds/useSoundEffects';
 
 export default function Settings() {
-  const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem('catalystCoreSettings');
-    return saved ? JSON.parse(saved) : {
-      // Visual Settings
-      theme: 'dark',
-      animationsEnabled: true,
-      particleEffects: true,
-      colorblindMode: 'none',
-      fontSize: 'medium',
-      highContrast: false,
-      
-      // Audio Settings
-      soundEffects: true,
-      sfxVolume: 70,
-      uiSounds: true,
-      uiVolume: 50,
-      backgroundMusic: false,
-      musicVolume: 30,
-      
-      // Game Settings
-      autoCalculateModifiers: true,
-      showTutorials: true,
-      confirmDangerousActions: true,
-      autoSave: true,
-      autoSaveInterval: 3,
-      showDiceAnimations: true,
-      criticalHitEffects: true,
-      damageNumbersFloat: true,
-      initiativeReminders: true
-    };
-  });
-
-  const saveSettings = () => {
-    localStorage.setItem('catalystCoreSettings', JSON.stringify(settings));
-    window.dispatchEvent(new CustomEvent('settingsChanged', { detail: settings }));
-    toast.success('Settings saved!');
-  };
+  const { settings, updateSettings } = useSettings();
+  const { play } = useSoundEffects();
 
   const updateSetting = (key, value) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
+    updateSettings({ [key]: value });
+    toast.success('Setting updated', { duration: 1000 });
   };
-
-  useEffect(() => {
-    saveSettings();
-  }, [settings]);
+  
+  const testSound = () => {
+    play('click');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 p-6">
@@ -71,25 +34,15 @@ export default function Settings() {
           <p className="text-slate-400 mt-2">Customize your Catalyst Core experience</p>
         </div>
 
-        <Tabs value={settings.activeTab || 'visual'} className="space-y-4">
-          <Select value={settings.activeTab || 'visual'} onValueChange={(v) => updateSetting('activeTab', v)}>
-            <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="visual">🎨 Visual</SelectItem>
-              <SelectItem value="audio">🔊 Audio</SelectItem>
-              <SelectItem value="game">🎮 Gameplay</SelectItem>
-            </SelectContent>
-          </Select>
+        <Card className="bg-slate-800 border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              🎨 Visual Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
 
-          {/* Visual Settings */}
-          <TabsContent value="visual">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Visual Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
+
                 <div className="space-y-2">
                   <Label className="text-slate-300">Theme</Label>
                   <Select value={settings.theme} onValueChange={(v) => updateSetting('theme', v)}>
@@ -166,17 +119,49 @@ export default function Settings() {
                     onCheckedChange={(v) => updateSetting('highContrast', v)}
                   />
                 </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
+                  <div>
+                    <Label className="text-slate-300">Reduced Motion</Label>
+                    <p className="text-xs text-slate-500">Minimize animations for motion sensitivity</p>
+                  </div>
+                  <Switch
+                    checked={settings.reducedMotion}
+                    onCheckedChange={(v) => updateSetting('reducedMotion', v)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
+                  <div>
+                    <Label className="text-slate-300">Scanline Effect</Label>
+                    <p className="text-xs text-slate-500">Retro CRT scanline overlay</p>
+                  </div>
+                  <Switch
+                    checked={settings.scanlineEffect}
+                    onCheckedChange={(v) => updateSetting('scanlineEffect', v)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
+                  <div>
+                    <Label className="text-slate-300">Glow Effects</Label>
+                    <p className="text-xs text-slate-500">Card and button glow effects</p>
+                  </div>
+                  <Switch
+                    checked={settings.glowEffects}
+                    onCheckedChange={(v) => updateSetting('glowEffects', v)}
+                  />
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Audio Settings */}
-          <TabsContent value="audio">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Audio Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
+            
+        <Card className="bg-slate-800 border-slate-700 mt-4">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              🔊 Audio Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
                   <div>
                     <Label className="text-slate-300">Sound Effects</Label>
@@ -190,7 +175,12 @@ export default function Settings() {
 
                 {settings.soundEffects && (
                   <div className="space-y-2 pl-4 border-l-2 border-violet-500">
-                    <Label className="text-slate-300">SFX Volume: {settings.sfxVolume}%</Label>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-slate-300">SFX Volume: {settings.sfxVolume}%</Label>
+                      <Button size="sm" variant="outline" onClick={testSound} className="h-7">
+                        <Play className="h-3 w-3" />
+                      </Button>
+                    </div>
                     <Slider
                       value={[settings.sfxVolume]}
                       onValueChange={([v]) => updateSetting('sfxVolume', v)}
@@ -366,22 +356,47 @@ export default function Settings() {
                     onCheckedChange={(v) => updateSetting('initiativeReminders', v)}
                   />
                 </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
+                  <div>
+                    <Label className="text-slate-300">Auto-Roll Initiative</Label>
+                    <p className="text-xs text-slate-500">Automatically roll initiative in combat</p>
+                  </div>
+                  <Switch
+                    checked={settings.autoRollInitiative}
+                    onCheckedChange={(v) => updateSetting('autoRollInitiative', v)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
+                  <div>
+                    <Label className="text-slate-300">Compact Mode</Label>
+                    <p className="text-xs text-slate-500">Reduce spacing and padding throughout app</p>
+                  </div>
+                  <Switch
+                    checked={settings.compactMode}
+                    onCheckedChange={(v) => updateSetting('compactMode', v)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
+                  <div>
+                    <Label className="text-slate-300">Show Grid Lines</Label>
+                    <p className="text-xs text-slate-500">Display tactical grid on combat map</p>
+                  </div>
+                  <Switch
+                    checked={settings.showGridLines}
+                    onCheckedChange={(v) => updateSetting('showGridLines', v)}
+                  />
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
-
-        <Card className="bg-slate-800 border-slate-700 mt-4">
-          <CardContent className="py-4">
-            <Button
-              onClick={saveSettings}
-              className="w-full bg-violet-600 hover:bg-violet-700 text-white"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Save All Settings
-            </Button>
-          </CardContent>
-        </Card>
+            
+        <div className="mt-6 p-4 bg-slate-800/50 border border-violet-500/30 rounded-xl">
+          <p className="text-sm text-slate-400 text-center">
+            ✨ Settings are automatically saved as you change them
+          </p>
+        </div>
       </div>
     </div>
   );

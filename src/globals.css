@@ -95,6 +95,12 @@
     pointer-events: none;
     z-index: 9999;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scanline {
+      animation: none;
+    }
+  }
   
   .military-grid {
     background-image: 

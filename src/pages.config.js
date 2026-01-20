@@ -4,13 +4,13 @@ import CharacterSheet from './pages/CharacterSheet';
 import Characters from './pages/Characters';
 import CreateCharacter from './pages/CreateCharacter';
 import DMTools from './pages/DMTools';
+import DiceRoller from './pages/DiceRoller';
 import Economy from './pages/Economy';
 import Help from './pages/Help';
 import Home from './pages/Home';
 import PlayCampaign from './pages/PlayCampaign';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import DiceRoller from './pages/DiceRoller';
 import __Layout from './Layout.jsx';
 
 
@@ -21,13 +21,13 @@ export const PAGES = {
     "Characters": Characters,
     "CreateCharacter": CreateCharacter,
     "DMTools": DMTools,
+    "DiceRoller": DiceRoller,
     "Economy": Economy,
     "Help": Help,
     "Home": Home,
     "PlayCampaign": PlayCampaign,
     "Rules": Rules,
     "Settings": Settings,
-    "DiceRoller": DiceRoller,
 }
 
 export const pagesConfig = {
