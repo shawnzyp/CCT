@@ -1,30 +1,30 @@
 import { useCallback } from 'react';
 
-// Sound effect URLs from free libraries
+// Dark, gritty TTRPG sound effects
 const SOUNDS = {
-  // UI Sounds
-  click: 'https://cdn.freesound.org/previews/243/243701_4404552-lq.mp3',
-  hover: 'https://cdn.freesound.org/previews/220/220173_4169139-lq.mp3',
-  navigate: 'https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3',
+  // UI Sounds - Mechanical, tactical
+  click: 'https://cdn.freesound.org/previews/404/404743_7274371-lq.mp3',
+  hover: 'https://cdn.freesound.org/previews/380/380476_6976337-lq.mp3',
+  navigate: 'https://cdn.freesound.org/previews/397/397353_6666450-lq.mp3',
   
-  // Resource Sounds
-  hpLoss: 'https://cdn.freesound.org/previews/277/277403_5123851-lq.mp3',
-  hpGain: 'https://cdn.freesound.org/previews/341/341695_5858296-lq.mp3',
-  spLoss: 'https://cdn.freesound.org/previews/401/401362_7146891-lq.mp3',
-  spGain: 'https://cdn.freesound.org/previews/270/270324_5123851-lq.mp3',
+  // Resource Sounds - Heavy impacts
+  hpLoss: 'https://cdn.freesound.org/previews/476/476177_6523272-lq.mp3',
+  hpGain: 'https://cdn.freesound.org/previews/397/397353_6666450-lq.mp3',
+  spLoss: 'https://cdn.freesound.org/previews/397/397352_6666450-lq.mp3',
+  spGain: 'https://cdn.freesound.org/previews/397/397353_6666450-lq.mp3',
   
-  // Combat Sounds
+  // Combat Sounds - Brutal, gritty
   attack: 'https://cdn.freesound.org/previews/442/442127_4019029-lq.mp3',
-  powerUse: 'https://cdn.freesound.org/previews/320/320181_5260872-lq.mp3',
+  powerUse: 'https://cdn.freesound.org/previews/476/476177_6523272-lq.mp3',
   dice: 'https://cdn.freesound.org/previews/274/274183_4939433-lq.mp3',
   
-  // Success/Error
-  success: 'https://cdn.freesound.org/previews/341/341695_5858296-lq.mp3',
-  error: 'https://cdn.freesound.org/previews/277/277403_5123851-lq.mp3',
-  levelUp: 'https://cdn.freesound.org/previews/387/387232_6620732-lq.mp3',
+  // Success/Error - Dark tones
+  success: 'https://cdn.freesound.org/previews/397/397353_6666450-lq.mp3',
+  error: 'https://cdn.freesound.org/previews/476/476177_6523272-lq.mp3',
+  levelUp: 'https://cdn.freesound.org/previews/397/397353_6666450-lq.mp3',
   
-  // Ambient
-  ambient: 'https://cdn.freesound.org/previews/156/156859_2615119-lq.mp3'
+  // Ambient - Dystopian atmosphere
+  ambient: 'https://cdn.freesound.org/previews/380/380476_6976337-lq.mp3'
 };
 
 const audioCache = {};
