@@ -86,7 +86,7 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
           </div>
           <DialogFooter>
             <Button onClick={onClose} variant="outline">Cancel</Button>
-            <Button onClick={startEditing} className="bg-violet-600 hover:bg-violet-700">
+            <Button onClick={startEditing}>
               Continue to Editor
             </Button>
           </DialogFooter>
@@ -195,8 +195,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Level</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.level || 1}
-                    onChange={(e) => updateField('level', parseInt(e.target.value))}
+                    onChange={(e) => updateField('level', e.target.value === '' ? 1 : parseInt(e.target.value) || 1)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -216,8 +217,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                         <Label className="text-slate-400">{stat}</Label>
                         <Input
                           type="number"
+                          inputMode="numeric"
                           value={editedCharacter.ability_scores?.[stat] || 10}
-                          onChange={(e) => updateField(`ability_scores.${stat}`, parseInt(e.target.value))}
+                          onChange={(e) => updateField(`ability_scores.${stat}`, e.target.value === '' ? 10 : parseInt(e.target.value) || 10)}
                           className="bg-slate-900 border-slate-600 text-white"
                         />
                       </div>
@@ -262,8 +264,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Current HP</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.current_hp || 0}
-                    onChange={(e) => updateField('current_hp', parseInt(e.target.value))}
+                    onChange={(e) => updateField('current_hp', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -271,8 +274,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Max HP</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.max_hp || 0}
-                    onChange={(e) => updateField('max_hp', parseInt(e.target.value))}
+                    onChange={(e) => updateField('max_hp', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -280,8 +284,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Speed</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.speed || 30}
-                    onChange={(e) => updateField('speed', parseInt(e.target.value))}
+                    onChange={(e) => updateField('speed', e.target.value === '' ? 30 : parseInt(e.target.value) || 30)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -292,8 +297,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Current SP</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.current_sp || 0}
-                    onChange={(e) => updateField('current_sp', parseInt(e.target.value))}
+                    onChange={(e) => updateField('current_sp', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -301,8 +307,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Max SP</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.max_sp || 0}
-                    onChange={(e) => updateField('max_sp', parseInt(e.target.value))}
+                    onChange={(e) => updateField('max_sp', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -310,8 +317,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Toughness Class (TC)</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.toughness_class || 10}
-                    onChange={(e) => updateField('toughness_class', parseInt(e.target.value))}
+                    onChange={(e) => updateField('toughness_class', e.target.value === '' ? 10 : parseInt(e.target.value) || 10)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -384,8 +392,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Current XP</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.current_xp || 0}
-                    onChange={(e) => updateField('current_xp', parseInt(e.target.value))}
+                    onChange={(e) => updateField('current_xp', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -393,8 +402,9 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
                   <Label className="text-slate-400">Credits</Label>
                   <Input
                     type="number"
+                    inputMode="numeric"
                     value={editedCharacter.gold || 0}
-                    onChange={(e) => updateField('gold', parseInt(e.target.value))}
+                    onChange={(e) => updateField('gold', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-600 text-white"
                   />
                 </div>
@@ -413,7 +423,7 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
               <X className="h-4 w-4 mr-2" />
               Cancel
             </Button>
-            <Button onClick={handleSave} className="bg-violet-600 hover:bg-violet-700">
+            <Button onClick={handleSave}>
               <Save className="h-4 w-4 mr-2" />
               Save Changes
             </Button>
@@ -442,7 +452,7 @@ export default function CharacterEditor({ character, isOpen, onClose, onSave }) 
             <Button onClick={() => setShowExitConfirm(false)} variant="outline">
               Keep Editing
             </Button>
-            <Button onClick={handleCancel} className="bg-red-600 hover:bg-red-700">
+            <Button onClick={handleCancel} variant="destructive">
               Discard Changes
             </Button>
           </DialogFooter>
