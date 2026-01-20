@@ -16,6 +16,9 @@ import useSoundEffects from '@/components/sounds/useSoundEffects';
 import DeckOfFatesDeployment from './DeckOfFatesDeployment';
 import NPCRelationshipManager from './NPCRelationshipManager';
 import AdventureModuleDeployment from './AdventureModuleDeployment';
+import ShardsOfManyFates from './ShardsOfManyFates';
+import PINSettings from '../dm/PINSettings';
+import { Shield, DollarSign } from 'lucide-react';
 
 export default function GMToolsPanel({ campaign, characters, onUpdate }) {
   const [npcs, setNpcs] = useState(campaign.gm_npcs || []);
@@ -24,6 +27,8 @@ export default function GMToolsPanel({ campaign, characters, onUpdate }) {
   const [editingNPC, setEditingNPC] = useState(null);
   const [generating, setGenerating] = useState(false);
   const { play } = useSoundEffects();
+  const [showPINSettings, setShowPINSettings] = useState(false);
+  const [currentPIN, setCurrentPIN] = useState(localStorage.getItem('dm_pin') || '0000');
 
   const [npcForm, setNpcForm] = useState({
     name: '',
@@ -248,10 +253,36 @@ Generated: ${new Date().toLocaleString()}
     toast.success('Notes saved');
   };
 
+  const handlePINChange = (newPIN) => {
+    setCurrentPIN(newPIN);
+    localStorage.setItem('dm_pin', newPIN);
+  };
+
+  const handleCreditsAdjust = async (charId, currentCredits, charName) => {
+    const amount = prompt('Credits to add/subtract (negative to subtract):');
+    if (amount) {
+      const newCredits = (currentCredits || 0) + parseInt(amount);
+      await base44.entities.Character.update(charId, { credits: Math.max(0, newCredits) });
+      toast.success(`Updated ${charName}'s credits`);
+    }
+  };
+
   return (
     <div className="space-y-4">
+      <div className="flex gap-2 flex-wrap mb-4">
+        <Button
+          onClick={() => setShowPINSettings(true)}
+          variant="outline"
+          size="sm"
+          className="border-violet-500/30 text-violet-400 hover:bg-violet-500/20"
+        >
+          <Shield className="h-4 w-4 mr-2" />
+          Change PIN
+        </Button>
+      </div>
+
       <Tabs defaultValue="npcs" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-6 w-full">
+        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-7 w-full gap-1 p-1">
           <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
             <Users className="h-4 w-4 mr-2" />
             NPCs
@@ -268,13 +299,21 @@ Generated: ${new Date().toLocaleString()}
             <BookOpen className="h-4 w-4 mr-2" />
             Adventures
           </TabsTrigger>
-          <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Sparkles className="h-4 w-4 mr-2" />
-            Deck of Fates
+          <TabsTrigger value="deck" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Sparkles className="h-4 w-4 mr-1" />
+            Deck
           </TabsTrigger>
-          <TabsTrigger value="notes" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <FileText className="h-4 w-4 mr-2" />
-            GM Notes
+          <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Zap className="h-4 w-4 mr-1" />
+            Shards
+          </TabsTrigger>
+          <TabsTrigger value="credits" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <DollarSign className="h-4 w-4 mr-1" />
+            Credits
+          </TabsTrigger>
+          <TabsTrigger value="notes" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <FileText className="h-4 w-4 mr-1" />
+            Notes
           </TabsTrigger>
         </TabsList>
 
@@ -475,13 +514,62 @@ Generated: ${new Date().toLocaleString()}
           </Card>
         </TabsContent>
 
-        {/* Shards Tab */}
-        <TabsContent value="shards" className="space-y-3">
+        {/* Deck Tab */}
+        <TabsContent value="deck" className="space-y-3">
           <DeckOfFatesDeployment 
             campaign={campaign}
             characters={characters}
             onUpdate={onUpdate}
           />
+        </TabsContent>
+
+        {/* Shards Tab */}
+        <TabsContent value="shards" className="space-y-3">
+          <ShardsOfManyFates
+            campaign={campaign}
+            onUpdate={onUpdate}
+            characterName="GM"
+            isGM={true}
+          />
+        </TabsContent>
+
+        {/* Credits Tab */}
+        <TabsContent value="credits" className="space-y-3">
+          <Card className="bg-slate-800 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-emerald-400" />
+                Credits Manager
+              </CardTitle>
+              <p className="text-xs text-slate-400">Manage character currency</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {characters.map(char => (
+                  <Card key={char.id} className="bg-slate-700/50 border-slate-600">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-white">{char.name}</p>
+                          <p className="text-sm text-emerald-400 font-mono">
+                            💰 {char.credits || 0} Credits
+                          </p>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => handleCreditsAdjust(char.id, char.credits, char.name)}
+                          className="bg-emerald-600 hover:bg-emerald-700"
+                        >
+                          <DollarSign className="h-4 w-4 mr-2" />
+                          Adjust
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* GM Notes Tab */}
@@ -657,6 +745,13 @@ Generated: ${new Date().toLocaleString()}
           </div>
         </DialogContent>
       </Dialog>
+
+      <PINSettings
+        currentPIN={currentPIN}
+        onPINChange={handlePINChange}
+        open={showPINSettings}
+        onOpenChange={setShowPINSettings}
+      />
     </div>
   );
 }
