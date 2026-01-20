@@ -40,6 +40,8 @@ import EnhancedCombatPanel from '@/components/character/EnhancedCombatPanel';
 import EnhancedInventorySystem from '@/components/character/EnhancedInventorySystem';
 import ProgressionTracker from '@/components/character/ProgressionTracker';
 import PlayerJournal from '@/components/character/PlayerJournal';
+import EnhancedLevelUpDialog from '@/components/character/EnhancedLevelUpDialog';
+import { canLevelUp } from '@/components/character/ProgressionData';
 import { toast } from 'sonner';
 
 const ORIGIN_LABELS = {
