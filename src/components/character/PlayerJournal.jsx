@@ -6,8 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BookOpen, Plus, Edit, Trash2, Lock } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { BookOpen, Plus, Edit, Trash2, Lock, Share2, Sparkles, Users } from "lucide-react";
 import { toast } from "sonner";
+import { base44 } from '@/api/base44Client';
 
 export default function PlayerJournal({ character, onUpdate }) {
   const [showCreateEntry, setShowCreateEntry] = useState(false);
@@ -16,8 +18,11 @@ export default function PlayerJournal({ character, onUpdate }) {
     title: '',
     content: '',
     category: 'general',
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    shared_with: []
   });
+  const [loadingPrompt, setLoadingPrompt] = useState(false);
+  const [aiPrompts, setAiPrompts] = useState([]);
 
   const journal = character.player_journal || [];
 
@@ -54,8 +59,54 @@ export default function PlayerJournal({ character, onUpdate }) {
       title: '',
       content: '',
       category: 'general',
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
+      shared_with: []
     });
+    setAiPrompts([]);
+  };
+
+  const generateAIPrompts = async () => {
+    setLoadingPrompt(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a game master helping a player reflect on their character in the Catalyst Core RPG.
+
+Character Details:
+- Name: ${character.name}
+- Classification: ${character.classification}
+- Origin Story: ${character.origin_story}
+- Alignment: ${character.alignment}
+- Power Styles: ${character.power_styles?.join(', ')}
+
+Recent milestones: ${(character.milestones || []).slice(-3).map(m => m.description).join(', ') || 'None yet'}
+
+Generate 5 thoughtful journal prompts that would help this character reflect on their journey, moral choices, relationships, or powers. Each prompt should be specific to their origin and alignment. Make them thought-provoking but not too long.
+
+Return as JSON array of strings.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            prompts: {
+              type: "array",
+              items: { type: "string" }
+            }
+          }
+        }
+      });
+
+      setAiPrompts(response.prompts || []);
+    } catch (error) {
+      toast.error('Failed to generate prompts');
+    }
+    setLoadingPrompt(false);
+  };
+
+  const toggleShare = (shareTarget) => {
+    const currentShared = entryForm.shared_with || [];
+    const updated = currentShared.includes(shareTarget)
+      ? currentShared.filter(s => s !== shareTarget)
+      : [...currentShared, shareTarget];
+    setEntryForm({ ...entryForm, shared_with: updated });
   };
 
   const getCategoryColor = (category) => {
@@ -101,15 +152,26 @@ export default function PlayerJournal({ character, onUpdate }) {
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="font-semibold text-white">{entry.title}</h3>
                             <Badge className={getCategoryColor(entry.category)}>
                               {entry.category}
                             </Badge>
+                            {entry.shared_with?.length > 0 && (
+                              <Badge variant="outline" className="text-xs border-blue-400 text-blue-400">
+                                <Share2 className="h-3 w-3 mr-1" />
+                                Shared
+                              </Badge>
+                            )}
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
                             {new Date(entry.date).toLocaleDateString()}
                           </p>
+                          {entry.shared_with?.length > 0 && (
+                            <p className="text-xs text-blue-400 mt-1">
+                              Shared with: {entry.shared_with.join(', ')}
+                            </p>
+                          )}
                         </div>
                         <div className="flex gap-1">
                           <Button
@@ -161,6 +223,44 @@ export default function PlayerJournal({ character, onUpdate }) {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {/* AI Prompts */}
+            {aiPrompts.length === 0 && (
+              <div className="bg-violet-900/20 border border-violet-500/30 rounded-lg p-3">
+                <Button
+                  onClick={generateAIPrompts}
+                  disabled={loadingPrompt}
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-violet-400 hover:bg-violet-500/20"
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  {loadingPrompt ? 'Generating prompts...' : 'Get AI Writing Prompts'}
+                </Button>
+              </div>
+            )}
+
+            {aiPrompts.length > 0 && (
+              <div className="bg-violet-900/20 border border-violet-500/30 rounded-lg p-3">
+                <p className="text-xs text-violet-400 uppercase mb-2 flex items-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Reflection Prompts
+                </p>
+                <div className="space-y-1">
+                  {aiPrompts.map((prompt, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setEntryForm({ ...entryForm, content: prompt });
+                        setAiPrompts([]);
+                      }}
+                      className="w-full text-left text-xs text-slate-300 hover:text-white p-2 rounded hover:bg-violet-500/20 transition-colors"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               <label className="text-xs text-slate-400 uppercase">Title</label>
               <Input
@@ -195,6 +295,36 @@ export default function PlayerJournal({ character, onUpdate }) {
                 placeholder="Write your thoughts..."
                 className="bg-slate-800 border-slate-600 text-white h-48"
               />
+            </div>
+
+            {/* Sharing Options */}
+            <div className="bg-slate-800/50 border border-slate-600 rounded-lg p-3">
+              <p className="text-xs text-slate-400 uppercase mb-2 flex items-center gap-1">
+                <Share2 className="h-3 w-3" />
+                Share Entry
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  variant={entryForm.shared_with?.includes('DM') ? 'default' : 'outline'}
+                  onClick={() => toggleShare('DM')}
+                  className={entryForm.shared_with?.includes('DM') ? 'bg-emerald-600' : ''}
+                >
+                  Share with DM
+                </Button>
+                <Button
+                  size="sm"
+                  variant={entryForm.shared_with?.includes('Party') ? 'default' : 'outline'}
+                  onClick={() => toggleShare('Party')}
+                  className={entryForm.shared_with?.includes('Party') ? 'bg-blue-600' : ''}
+                >
+                  <Users className="h-3 w-3 mr-1" />
+                  Share with Party
+                </Button>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                Shared entries can be viewed by selected recipients
+              </p>
             </div>
 
             <div className="flex gap-2">
