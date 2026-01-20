@@ -29,6 +29,8 @@ import DeathSaveRoller from "@/components/combat/DeathSaveRoller";
 import { ScreenFlash, CriticalHitEffect, DeathEffect } from "@/components/combat/CombatVisualFeedback";
 import useCombatMusic from "@/components/sounds/useCombatMusic";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CombatTurnTimer from "@/components/combat/CombatTurnTimer";
+import InitiativeReroll from "@/components/combat/InitiativeReroll";
 import { Music, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -476,6 +478,9 @@ export default function CombatTracker({ characters, campaignId }) {
       <DeathEffect show={showDeathEffect} />
 
       <Tabs defaultValue="tracker" className="space-y-4">
+        {/* Combat Turn Timer */}
+        <CombatTurnTimer duration={60} />
+
         <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-white">Combat - Round {currentRound}</h2>
@@ -484,6 +489,10 @@ export default function CombatTracker({ characters, campaignId }) {
           </p>
         </div>
         <div className="flex gap-2">
+          <InitiativeReroll 
+            initiativeOrder={initiativeOrder}
+            onReroll={setInitiativeOrder}
+          />
           <Button onClick={nextTurn} className="gap-2">
             <SkipForward className="h-4 w-4" />
             Next Turn

@@ -31,6 +31,10 @@ import PlayerDashboard from "@/components/campaign/PlayerDashboard";
 import DMLoginFooter from "@/components/dm/DMLoginFooter";
 import ShardsOfManyFates from "@/components/campaign/ShardsOfManyFates";
 import EchoEventsPlayer from "@/components/campaign/EchoEventsPlayer";
+import SessionTimer from "@/components/utils/SessionTimer";
+import DiceRollHistory from "@/components/utils/DiceRollHistory";
+import CampaignExport from "@/components/campaign/CampaignExport";
+import CharacterComparison from "@/components/utils/CharacterComparison";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -104,6 +108,13 @@ export default function CampaignDetail({ currentCharacter }) {
             <h1 className="text-3xl font-bold text-white">{campaign.name}</h1>
             <p className="text-slate-400">{campaign.description}</p>
           </div>
+          <CampaignExport campaign={campaign} characters={characters} />
+        </div>
+
+        {/* Session Timer & Dice History - Always Visible */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <SessionTimer />
+          <DiceRollHistory />
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -129,6 +140,7 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="echo">📡 Echo Events</SelectItem>
               <SelectItem value="gm-tools">🎲 GM Tools</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
+              <SelectItem value="compare">📊 Compare Characters</SelectItem>
             </SelectContent>
           </Select>
           
@@ -297,6 +309,10 @@ export default function CampaignDetail({ currentCharacter }) {
           
           <TabsContent value="combat">
             <CombatTracker characters={characters} campaignId={campaignId} />
+          </TabsContent>
+
+          <TabsContent value="compare">
+            <CharacterComparison characters={characters} />
           </TabsContent>
         </Tabs>
       </div>
