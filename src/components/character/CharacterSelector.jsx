@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { getModifier } from "@/components/character/StatBlock";
 
 export default function CharacterSelector({ characters, onSelect, onClose }) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
@@ -196,6 +199,7 @@ export default function CharacterSelector({ characters, onSelect, onClose }) {
                 onClick={() => {
                   onSelect(selectedCharacter);
                   setSelectedCharacter(null);
+                  navigate(createPageUrl(`CharacterSheet?id=${selectedCharacter.id}`));
                 }}
                 className="flex-1 bg-violet-600 hover:bg-violet-700"
               >
