@@ -57,7 +57,7 @@ export default function Home() {
       icon: Dices,
       title: 'Dice Roller',
       description: 'Roll d20s and skill checks',
-      link: characters.length > 0 ? `CharacterSheet?id=${characters[0].id}` : 'Characters',
+      link: 'DiceRoller',
       color: 'from-emerald-500 to-green-600'
     },
     {
