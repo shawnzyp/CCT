@@ -240,15 +240,14 @@ export default function Settings() {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Game Settings */}
-          <TabsContent value="game">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Gameplay Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
+            
+        <Card className="bg-slate-800 border-slate-700 mt-4">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              🎮 Gameplay Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg">
                   <div>
                     <Label className="text-slate-300">Auto-Calculate Modifiers</Label>
