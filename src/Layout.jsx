@@ -60,7 +60,7 @@ export default function Layout({ children }) {
     {
       name: 'Character',
       items: [
-        { name: 'My Characters', path: 'Characters', icon: Users },
+        { name: 'My Characters', path: 'Characters', icon: Users, action: 'characterSelector' },
         { name: 'Create Character', path: 'CreateCharacter', icon: User },
       ]
     },
@@ -158,19 +158,30 @@ export default function Layout({ children }) {
                   <div className="absolute top-full left-0 mt-1 w-48 bg-slate-900 border border-violet-500/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                     <div className="p-2 space-y-1">
                       {category.items.map(item => (
-                        <Link
-                          key={item.path}
-                          to={createPageUrl(item.path)}
-                          className={cn(
-                            "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                            isActive(item.path) 
-                              ? "bg-violet-600 text-white" 
-                              : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                          )}
-                        >
-                          <item.icon className="h-4 w-4" />
-                          {item.name}
-                        </Link>
+                        item.action === 'characterSelector' ? (
+                          <button
+                            key={item.path}
+                            onClick={() => setShowCharacterSelector(true)}
+                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white w-full text-left"
+                          >
+                            <item.icon className="h-4 w-4" />
+                            {item.name}
+                          </button>
+                        ) : (
+                          <Link
+                            key={item.path}
+                            to={createPageUrl(item.path)}
+                            className={cn(
+                              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                              isActive(item.path) 
+                                ? "bg-violet-600 text-white" 
+                                : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                            )}
+                          >
+                            <item.icon className="h-4 w-4" />
+                            {item.name}
+                          </Link>
+                        )
                       ))}
                     </div>
                   </div>
@@ -225,22 +236,37 @@ export default function Layout({ children }) {
                   </div>
                   <div className="space-y-1">
                     {category.items.map(item => (
-                      <Link 
-                        key={item.path} 
-                        to={createPageUrl(item.path)}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
+                      item.action === 'characterSelector' ? (
                         <Button
+                          key={item.path}
+                          onClick={() => {
+                            setShowCharacterSelector(true);
+                            setMobileMenuOpen(false);
+                          }}
                           variant="ghost"
-                          className={cn(
-                            "w-full justify-start gap-2 text-slate-300 hover:text-white hover:bg-slate-800",
-                            isActive(item.path) && "bg-violet-600 text-white hover:bg-violet-700"
-                          )}
+                          className="w-full justify-start gap-2 text-slate-300 hover:text-white hover:bg-slate-800"
                         >
                           <item.icon className="h-4 w-4" />
                           {item.name}
                         </Button>
-                      </Link>
+                      ) : (
+                        <Link 
+                          key={item.path} 
+                          to={createPageUrl(item.path)}
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Button
+                            variant="ghost"
+                            className={cn(
+                              "w-full justify-start gap-2 text-slate-300 hover:text-white hover:bg-slate-800",
+                              isActive(item.path) && "bg-violet-600 text-white hover:bg-violet-700"
+                            )}
+                          >
+                            <item.icon className="h-4 w-4" />
+                            {item.name}
+                          </Button>
+                        </Link>
+                      )
                     ))}
                   </div>
                 </div>
