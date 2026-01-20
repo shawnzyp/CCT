@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Zap, Swords, Heart, BookOpen } from "lucide-react";
+import { Users, Sparkles, Plus, Eye, EyeOff, Trash2, Edit, FileText, Loader2, Zap, Swords, Heart, BookOpen, Radio } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
@@ -18,6 +18,7 @@ import NPCRelationshipManager from './NPCRelationshipManager';
 import AdventureModuleDeployment from './AdventureModuleDeployment';
 import ShardsOfManyFates from './ShardsOfManyFates';
 import PINSettings from '../dm/PINSettings';
+import EchoEventsDeployment from './EchoEventsDeployment';
 import { Shield, DollarSign } from 'lucide-react';
 
 export default function GMToolsPanel({ campaign, characters, onUpdate }) {
@@ -282,38 +283,38 @@ Generated: ${new Date().toLocaleString()}
       </div>
 
       <Tabs defaultValue="npcs" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-7 w-full gap-1 p-1">
-          <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Users className="h-4 w-4 mr-2" />
-            NPCs
+        <TabsList className="bg-slate-800 border border-slate-700 grid grid-cols-4 md:grid-cols-8 w-full gap-1 p-1">
+          <TabsTrigger value="npcs" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Users className="h-4 w-4 mr-1" />
+            <span className="hidden md:inline">NPCs</span>
           </TabsTrigger>
-          <TabsTrigger value="relationships" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Heart className="h-4 w-4 mr-2" />
-            Relations
+          <TabsTrigger value="relationships" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Heart className="h-4 w-4 mr-1" />
+            <span className="hidden md:inline">Relations</span>
           </TabsTrigger>
-          <TabsTrigger value="encounters" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Swords className="h-4 w-4 mr-2" />
-            Encounters
+          <TabsTrigger value="encounters" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Swords className="h-4 w-4 mr-1" />
+            <span className="hidden md:inline">Encounters</span>
           </TabsTrigger>
-          <TabsTrigger value="adventures" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <BookOpen className="h-4 w-4 mr-2" />
-            Adventures
+          <TabsTrigger value="adventures" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <BookOpen className="h-4 w-4 mr-1" />
+            <span className="hidden md:inline">Adventures</span>
           </TabsTrigger>
           <TabsTrigger value="deck" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
             <Sparkles className="h-4 w-4 mr-1" />
-            Deck
+            <span className="hidden md:inline">Deck</span>
           </TabsTrigger>
           <TabsTrigger value="shards" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
             <Zap className="h-4 w-4 mr-1" />
-            Shards
+            <span className="hidden md:inline">Shards</span>
+          </TabsTrigger>
+          <TabsTrigger value="echo" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
+            <Radio className="h-4 w-4 mr-1" />
+            <span className="hidden md:inline">Echo</span>
           </TabsTrigger>
           <TabsTrigger value="credits" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
             <DollarSign className="h-4 w-4 mr-1" />
-            Credits
-          </TabsTrigger>
-          <TabsTrigger value="notes" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300 text-xs">
-            <FileText className="h-4 w-4 mr-1" />
-            Notes
+            <span className="hidden md:inline">Credits</span>
           </TabsTrigger>
         </TabsList>
 
@@ -530,6 +531,14 @@ Generated: ${new Date().toLocaleString()}
             onUpdate={onUpdate}
             characterName="GM"
             isGM={true}
+          />
+        </TabsContent>
+
+        {/* Echo Events Tab */}
+        <TabsContent value="echo" className="space-y-3">
+          <EchoEventsDeployment
+            campaign={campaign}
+            onUpdate={onUpdate}
           />
         </TabsContent>
 

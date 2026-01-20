@@ -30,6 +30,7 @@ import AdventureModulePlayer from "@/components/campaign/AdventureModulePlayer";
 import PlayerDashboard from "@/components/campaign/PlayerDashboard";
 import DMLoginFooter from "@/components/dm/DMLoginFooter";
 import ShardsOfManyFates from "@/components/campaign/ShardsOfManyFates";
+import EchoEventsPlayer from "@/components/campaign/EchoEventsPlayer";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -125,6 +126,7 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="aegis">🤖 A.E.G.I.S.</SelectItem>
               <SelectItem value="adventure">📖 Adventure</SelectItem>
               <SelectItem value="deck">🃏 Deck of Fates</SelectItem>
+              <SelectItem value="echo">📡 Echo Events</SelectItem>
               <SelectItem value="gm-tools">🎲 GM Tools</SelectItem>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
             </SelectContent>
@@ -261,6 +263,14 @@ export default function CampaignDetail({ currentCharacter }) {
 
           <TabsContent value="deck">
             <DeckOfFatesPlayer 
+              campaign={campaign}
+              currentCharacter={currentCharacter}
+              onUpdate={(data) => updateCampaign.mutate(data)}
+            />
+          </TabsContent>
+
+          <TabsContent value="echo">
+            <EchoEventsPlayer
               campaign={campaign}
               currentCharacter={currentCharacter}
               onUpdate={(data) => updateCampaign.mutate(data)}
