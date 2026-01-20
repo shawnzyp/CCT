@@ -64,7 +64,7 @@ export default function AdventureModulePlayer({ campaign, currentCharacter, onUp
   const minutesLeft = Math.floor(timeLeft / 60000);
   const secondsLeft = Math.floor((timeLeft % 60000) / 1000);
 
-  const makeChoice = (choice) => {
+  const makeChoice = async (choice) => {
     if (hasCompleted || hasExpired) return;
 
     const newPath = [...storyPath, { stage_id: currentStageId, choice: choice.text }];
