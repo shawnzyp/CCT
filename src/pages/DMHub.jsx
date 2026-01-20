@@ -3,12 +3,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import {
   Shield, Users, Zap, Settings, Coins, BookOpen,
   Trophy, Package, Store, MapPin, Calendar, FileText
 } from 'lucide-react';
 
 export default function DMHub() {
+  const { data: campaigns = [] } = useQuery({
+    queryKey: ['campaigns'],
+    queryFn: () => base44.entities.Campaign.list('-created_date')
+  });
+
+  const { data: characters = [] } = useQuery({
+    queryKey: ['characters'],
+    queryFn: () => base44.entities.Character.list('-created_date')
+  });
+
+  const activeCampaigns = campaigns.filter(c => c.status === 'active');
+  const totalSessions = campaigns.reduce((sum, c) => sum + (c.session_count || 0), 0);
+  
+  // Count total achievements across all campaigns
+  const totalAchievements = campaigns.reduce((sum, c) => {
+    return sum + (c.achievement_definitions?.length || 0);
+  }, 0);
   const toolCategories = [
     {
       title: 'Campaign Management',
@@ -16,7 +35,6 @@ export default function DMHub() {
       color: 'violet',
       tools: [
         { name: 'Campaigns', path: 'Campaigns', icon: BookOpen, description: 'Manage your campaigns' },
-        { name: 'DM Tools', path: 'DMTools', icon: Shield, description: 'Advanced DM utilities' },
       ]
     },
     {
@@ -25,7 +43,6 @@ export default function DMHub() {
       color: 'blue',
       tools: [
         { name: 'All Characters', path: 'Characters', icon: Users, description: 'View all characters' },
-        { name: 'Combat Tracker', path: 'CombatTracker', icon: Zap, description: 'Manage encounters' },
       ]
     },
     {
@@ -33,9 +50,7 @@ export default function DMHub() {
       icon: Coins,
       color: 'emerald',
       tools: [
-        { name: 'Economy System', path: 'Economy', icon: Coins, description: 'Trading & marketplace' },
-        { name: 'Vendor Manager', path: 'Economy', icon: Store, description: 'Create and manage vendors' },
-        { name: 'Loot Generator', path: 'DMTools', icon: Package, description: 'Generate rewards' },
+        { name: 'Economy & Trading', path: 'Economy', icon: Coins, description: 'Full economy system with trading & marketplace' },
       ]
     },
     {
@@ -44,7 +59,7 @@ export default function DMHub() {
       color: 'amber',
       tools: [
         { name: 'Settings', path: 'Settings', icon: Settings, description: 'App configuration' },
-        { name: 'Achievements', path: 'DMTools', icon: Trophy, description: 'Manage achievements' },
+        { name: 'Rules Reference', path: 'Rules', icon: BookOpen, description: 'Game rules & mechanics' },
       ]
     }
   ];
@@ -100,7 +115,7 @@ export default function DMHub() {
                 <Users className="h-8 w-8 text-violet-400" />
                 <div>
                   <p className="text-xs text-slate-400 uppercase">Active Campaigns</p>
-                  <p className="text-2xl font-bold text-white">-</p>
+                  <p className="text-2xl font-bold text-white">{activeCampaigns.length}</p>
                 </div>
               </div>
             </CardContent>
@@ -112,7 +127,7 @@ export default function DMHub() {
                 <Shield className="h-8 w-8 text-blue-400" />
                 <div>
                   <p className="text-xs text-slate-400 uppercase">Total Characters</p>
-                  <p className="text-2xl font-bold text-white">-</p>
+                  <p className="text-2xl font-bold text-white">{characters.length}</p>
                 </div>
               </div>
             </CardContent>
@@ -124,7 +139,7 @@ export default function DMHub() {
                 <Calendar className="h-8 w-8 text-emerald-400" />
                 <div>
                   <p className="text-xs text-slate-400 uppercase">Sessions Played</p>
-                  <p className="text-2xl font-bold text-white">-</p>
+                  <p className="text-2xl font-bold text-white">{totalSessions}</p>
                 </div>
               </div>
             </CardContent>
@@ -136,7 +151,7 @@ export default function DMHub() {
                 <Trophy className="h-8 w-8 text-amber-400" />
                 <div>
                   <p className="text-xs text-slate-400 uppercase">Achievements</p>
-                  <p className="text-2xl font-bold text-white">-</p>
+                  <p className="text-2xl font-bold text-white">{totalAchievements}</p>
                 </div>
               </div>
             </CardContent>
