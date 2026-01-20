@@ -2,7 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Shield, Zap, Swords, Users, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Shield, Zap, Swords, Users, AlertCircle, Download, FileText } from "lucide-react";
 
 export default function Rules() {
   return (
@@ -18,8 +19,9 @@ export default function Rules() {
           </div>
         </div>
 
-        <Tabs defaultValue="creation" className="space-y-4">
+        <Tabs defaultValue="rulebook" className="space-y-4">
           <TabsList className="bg-slate-800/50 border border-slate-700">
+            <TabsTrigger value="rulebook">Player Guide</TabsTrigger>
             <TabsTrigger value="creation">Character Creation</TabsTrigger>
             <TabsTrigger value="combat">Combat</TabsTrigger>
             <TabsTrigger value="powers">Powers & SP</TabsTrigger>
@@ -27,6 +29,73 @@ export default function Rules() {
             <TabsTrigger value="downtime">Downtime</TabsTrigger>
             <TabsTrigger value="glossary">Glossary</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="rulebook" className="space-y-4">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-violet-400" />
+                  Catalyst Core Player Guide
+                </CardTitle>
+                <p className="text-sm text-slate-400">Complete guide to gameplay, lore, character creation, and campaign references</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-violet-900/20 border border-violet-500/30 rounded-lg p-6 text-center">
+                  <FileText className="h-16 w-16 mx-auto mb-4 text-violet-400" />
+                  <h3 className="text-xl font-bold text-white mb-2">Official Rulebook PDF</h3>
+                  <p className="text-slate-400 mb-4">
+                    Complete 93-page guide covering Earth-9 lore, character creation, combat mechanics, 
+                    factions, global systems, and campaign references.
+                  </p>
+                  <a
+                    href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6f77e7c82_Catalyst_Core_Player_Guide.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download="Catalyst_Core_Player_Guide.pdf"
+                  >
+                    <Button className="bg-violet-600 hover:bg-violet-700 gap-2">
+                      <Download className="h-4 w-4" />
+                      Download PDF
+                    </Button>
+                  </a>
+                  <a
+                    href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6f77e7c82_Catalyst_Core_Player_Guide.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-2"
+                  >
+                    <Button variant="outline" className="gap-2">
+                      <FileText className="h-4 w-4" />
+                      View in Browser
+                    </Button>
+                  </a>
+                </div>
+
+                <div className="bg-slate-700/30 rounded-lg p-4">
+                  <h4 className="text-white font-semibold mb-3">Table of Contents</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                    {[
+                      'Ch 1-3: Welcome to Earth-9 & Creation Checklist',
+                      'Ch 4-6: The Catalyst Event & Powers',
+                      'Ch 7-9: A Decade of Change & NYC 2036',
+                      'Ch 10-12: Factions & Global Reactions',
+                      'Ch 13-16: Themes, Advancement & The Big Question',
+                      'Ch 17-24: Americas, Europe, Africa, Asia & 2036',
+                      'Ch 25-27: Core System & Character Creation',
+                      'Ch 28-30: Augments, Mechanics & Levels',
+                      'Ch 31: Complete Gear & Equipment',
+                      'Ch 32: Speeches, Handouts & Character Sheets'
+                    ].map((chapter, i) => (
+                      <div key={i} className="flex items-start gap-2 text-slate-400">
+                        <span className="text-violet-400">•</span>
+                        {chapter}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="creation" className="space-y-4">
             {/* Classification */}

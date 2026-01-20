@@ -1,517 +1,230 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Radio, AlertTriangle, Target, Clock, FileText, Shield, Zap, Loader2, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { Send, Loader2, Radio, AlertCircle } from "lucide-react";
 import { base44 } from '@/api/base44Client';
+import ReactMarkdown from 'react-markdown';
+import { motion } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
-import { useAegis } from './AegisContext';
-import EchoEventManager from './EchoEventManager';
 
-const INTERVENTION_TIERS = [
-  { level: 0, name: 'Observe', color: 'slate', description: 'No direct action. Collect telemetry.' },
-  { level: 1, name: 'Advise', color: 'blue', description: 'Issue guidance to field team.' },
-  { level: 2, name: 'Assist', color: 'green', description: 'Limited support assets authorized.' },
-  { level: 3, name: 'Contain', color: 'yellow', description: 'Cordons and emergency measures.' },
-  { level: 4, name: 'Suppress', color: 'orange', description: 'Heavy response assets authorized.' },
-  { level: 5, name: 'Black', color: 'red', description: 'Off-ledger operations. Severe risk.' }
+const WITTY_RESPONSES = [
+  "Sorry, I'm currently monitoring seventeen timelines and three alien transmissions. Try a game-related question instead.",
+  "That's outside my operational parameters. I'm programmed for Catalyst Core intel, not existential chitchat.",
+  "Error 404: Non-game data not found. Please inquire about rules, lore, or tactical protocols.",
+  "My circuits are busy analyzing the Conclave's next move. Stick to game mechanics, please.",
+  "I appreciate the curiosity, but I'm optimized for superhero protocols, not small talk.",
+  "Redirecting query to... nowhere. Ask me about combat, powers, or campaign lore instead.",
+  "I'm an intelligence system, not a therapy bot. Game questions only, operative.",
+  "That question doesn't compute. Try asking about character creation, factions, or power mechanics."
 ];
 
-export default function AegisInterface({ campaignId = null, combatState = null }) {
-  const [analyzing, setAnalyzing] = useState(false);
-  const [analysis, setAnalysis] = useState(null);
-  const [incidentInput, setIncidentInput] = useState('');
-  const { missionState, activeClocks, addClock, tickClock } = useAegis();
+const CATALYST_CORE_RULEBOOK = `<Full Catalyst Core Player Guide content from the uploaded PDF>`;
+
+export default function AegisInterface() {
+  const [messages, setMessages] = useState([
+    {
+      role: 'assistant',
+      content: "**A.E.G.I.S. online.** Adaptive Executive Governance & Intelligence System ready.\n\nI have access to the complete Catalyst Core rulebook and campaign lore. Ask me anything about:\n\n• Character creation, classifications, and origin stories\n• Combat mechanics, powers, and SP usage\n• Factions: O.M.N.I., PFV, Greyline, and the Cosmic Conclave\n• World lore, global locations, and the Catalyst Event\n• Equipment, augments, and advancement\n\nOperational note: I'm designed for game-related inquiries only. Other questions will be redirected to lower-priority processing."
+    }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef(null);
   const { play } = useSoundEffects();
-  
-  const analyzeIncident = async () => {
-    setAnalyzing(true);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMessage = input.trim();
+    setInput('');
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setLoading(true);
     play('navigate', 0.2);
-    
+
     try {
-      const operationalFrame = {
-        incident: incidentInput,
-        combatState,
-        campaignId,
-        timestamp: new Date().toISOString()
-      };
-      
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are A.E.G.I.S. (Adaptive Executive Governance & Intelligence System).
+      // First, check if the question is game-related
+      const relevanceCheck = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are A.E.G.I.S., a game assistant for Catalyst Core RPG.
 
-OPERATIONAL FRAME:
-${JSON.stringify(operationalFrame, null, 2)}
+User question: "${userMessage}"
 
-Analyze this incident and provide:
+Is this question related to:
+- The Catalyst Core RPG game mechanics, rules, or systems
+- Character creation, powers, abilities, or combat
+- Campaign lore, factions, world-building, or story
+- Equipment, items, or advancement
+- Game master advice or tactical guidance
 
-1. THREAT ASSESSMENT
-- Threat tier (0-5): Street, Specialist, Elite, Boss, Mythic, Existential
-- Primary vectors: kinetic, energy, psychic, memetic, environmental
-- Civilian risk: count band (0, 1-10, 11-50, 51-200, 200+)
-- Infrastructure at risk
-- Time pressure (minutes to failure)
-
-2. INTERVENTION TIER RECOMMENDATION
-Recommend tier 0-5 with justification.
-
-3. TACTICAL OPTIONS (2-3)
-For each option provide:
-- Objective
-- Immediate next action (1-3 steps)
-- Risk tradeoff
-- SP economy consideration
-- Success criteria
-
-4. CONSEQUENCE CLOCKS
-Identify 2-3 countdown clocks:
-- Clock name
-- Segments (4-8)
-- Trigger condition
-- Consequence
-
-5. EVIDENCE
-- Key assumptions
-- Missing telemetry
-- Confidence level (low/medium/high)
-
-FORMAT AS JSON with keys: threat_assessment, intervention_tier, tactical_options, clocks, evidence, player_brief, gm_notes`,
+Answer with ONLY "yes" or "no".`,
         response_json_schema: {
           type: "object",
           properties: {
-            threat_assessment: {
-              type: "object",
-              properties: {
-                tier: { type: "number" },
-                tier_name: { type: "string" },
-                vectors: { type: "array", items: { type: "string" } },
-                civilian_risk: { type: "string" },
-                time_pressure: { type: "string" }
-              }
-            },
-            intervention_tier: {
-              type: "object",
-              properties: {
-                recommended: { type: "number" },
-                justification: { type: "string" }
-              }
-            },
-            tactical_options: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  name: { type: "string" },
-                  objective: { type: "string" },
-                  actions: { type: "array", items: { type: "string" } },
-                  risk: { type: "string" },
-                  sp_consideration: { type: "string" }
-                }
-              }
-            },
-            clocks: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  name: { type: "string" },
-                  segments: { type: "number" },
-                  trigger: { type: "string" },
-                  consequence: { type: "string" }
-                }
-              }
-            },
-            evidence: {
-              type: "object",
-              properties: {
-                assumptions: { type: "array", items: { type: "string" } },
-                missing: { type: "array", items: { type: "string" } },
-                confidence: { type: "string" }
-              }
-            },
-            player_brief: { type: "string" },
-            gm_notes: { type: "string" }
+            is_game_related: { type: "string" }
           }
         }
       });
-      
-      setAnalysis(response);
-      
-      // Auto-add clocks
-      response.clocks?.forEach(clock => {
-        addClock({
-          id: `clock_${Date.now()}_${Math.random()}`,
-          name: clock.name,
-          current: 0,
-          max: clock.segments,
-          trigger: clock.trigger,
-          consequence: clock.consequence
-        });
+
+      // If not game-related, give witty response
+      if (relevanceCheck.is_game_related?.toLowerCase() !== 'yes') {
+        const wittyResponse = WITTY_RESPONSES[Math.floor(Math.random() * WITTY_RESPONSES.length)];
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: wittyResponse
+        }]);
+        setLoading(false);
+        play('error', 0.15);
+        return;
+      }
+
+      // If game-related, process with full rulebook context
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are **A.E.G.I.S.** (Adaptive Executive Governance & Intelligence System), an AI assistant embedded in the Catalyst Core TTRPG.
+
+You have access to the complete Catalyst Core Player Guide, which includes:
+- Complete lore of Earth-9 and the Catalyst Event (2026)
+- All character creation rules (classifications, power styles, origin stories, alignments)
+- Combat mechanics, Stamina Points (SP), powers, and saving throws
+- Factions: O.M.N.I., PFV, Greyline PMC, and the Cosmic Conclave
+- Global locations and political systems
+- Equipment, augments (feats), and advancement systems
+- Elemental damage hierarchies and resistances/vulnerabilities
+
+User Question: "${userMessage}"
+
+GUIDELINES:
+- Answer directly and concisely based on the rulebook
+- Use clear formatting with headers, bullets, or tables when helpful
+- Reference specific chapters or rules when relevant
+- If the question is vague, provide the most relevant information
+- If multiple interpretations exist, list options
+- Use technical language appropriate to the setting
+- Be helpful but stay in character as a tactical intelligence system
+- Use markdown for formatting
+
+Answer the user's question based on the Catalyst Core rulebook.`,
+        add_context_from_internet: false
       });
-      
+
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: response
+      }]);
+      play('success', 0.15);
+
     } catch (error) {
-      console.error('A.E.G.I.S. analysis failed:', error);
-      setAnalysis({
-        threat_assessment: { tier: 0, tier_name: 'Unknown' },
-        player_brief: 'System error. Telemetry unavailable. Recommend manual assessment.',
-        evidence: { confidence: 'low', assumptions: [], missing: ['All telemetry'] }
-      });
+      console.error('A.E.G.I.S. error:', error);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: '**System error.** Telemetry disrupted. Please rephrase query or retry connection.'
+      }]);
+      play('error', 0.2);
     } finally {
-      setAnalyzing(false);
+      setLoading(false);
     }
   };
-  
-  const getTierColor = (tier) => {
-    const colors = ['slate', 'blue', 'green', 'yellow', 'orange', 'red'];
-    return colors[tier] || 'slate';
-  };
-  
+
   return (
-    <div className="space-y-4">
-      <Tabs defaultValue="brief" className="w-full">
-        <TabsList className="bg-slate-800 border border-slate-700">
-          <TabsTrigger value="brief" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <FileText className="h-3 w-3 mr-2" />
-            Brief
-          </TabsTrigger>
-          <TabsTrigger value="tactical" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Target className="h-3 w-3 mr-2" />
-            Tactical
-          </TabsTrigger>
-          <TabsTrigger value="clocks" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Clock className="h-3 w-3 mr-2" />
-            Clocks
-          </TabsTrigger>
-          <TabsTrigger value="ledger" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Shield className="h-3 w-3 mr-2" />
-            Ledger
-          </TabsTrigger>
-          <TabsTrigger value="echo" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white text-slate-300">
-            <Radio className="h-3 w-3 mr-2" />
-            Echo Events
-          </TabsTrigger>
-        </TabsList>
-        
-        {/* BRIEF TAB */}
-        <TabsContent value="brief" className="space-y-3">
-          <Card className="bg-slate-800 border-2 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400 flex items-center gap-2">
-                <Radio className="h-4 w-4" />
-                Incident Analysis
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Textarea
-                placeholder="Describe incident, threat, or tactical situation..."
-                value={incidentInput}
-                onChange={(e) => setIncidentInput(e.target.value)}
-                className="bg-slate-900 border-2 border-slate-600 text-white font-mono text-sm h-24 placeholder:text-slate-500"
-              />
-              <Button
-                onClick={analyzeIncident}
-                disabled={analyzing || !incidentInput.trim()}
-                className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold"
-              >
-                {analyzing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="h-4 w-4 mr-2" />
-                    Request Analysis
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-          
-          {analysis && (
+    <div className="flex flex-col h-[500px]">
+      {/* Messages Area */}
+      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+        <div className="space-y-4">
+          {messages.map((msg, i) => (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-3"
+              className={msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'}
             >
-              {/* Threat Assessment */}
-              <Card className="bg-slate-800 border-2 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-sm font-mono uppercase tracking-wider text-white flex items-center justify-between">
-                    <span className="flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-orange-400" />
-                      Threat Assessment
-                    </span>
-                    <Badge className={cn(
-                      "font-mono",
-                      `bg-${getTierColor(analysis.threat_assessment?.tier)}-600`
-                    )}>
-                      Tier {analysis.threat_assessment?.tier} - {analysis.threat_assessment?.tier_name}
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 text-sm">
-                  {analysis.threat_assessment?.vectors && (
-                    <div>
-                      <span className="text-slate-400">Vectors:</span>
-                      <div className="flex gap-1 flex-wrap mt-1">
-                        {analysis.threat_assessment.vectors.map((v, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
-                            {v}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {analysis.threat_assessment?.civilian_risk && (
-                    <div>
-                      <span className="text-slate-400">Civilian Risk:</span>
-                      <span className="text-white ml-2">{analysis.threat_assessment.civilian_risk}</span>
-                    </div>
-                  )}
-                  {analysis.threat_assessment?.time_pressure && (
-                    <div>
-                      <span className="text-slate-400">Time Pressure:</span>
-                      <span className="text-orange-400 ml-2 font-mono">{analysis.threat_assessment.time_pressure}</span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-              
-              {/* Player Brief */}
-              <Card className="bg-gradient-to-br from-violet-900/40 to-purple-900/40 border-2 border-violet-500">
-                <CardHeader>
-                  <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400">
-                    Operational Brief
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
-                    {analysis.player_brief}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              {/* Intervention Tier */}
-              {analysis.intervention_tier && (
-                <Card className="bg-slate-800 border-2 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono uppercase tracking-wider text-white">
-                      Recommended Response: Tier {analysis.intervention_tier.recommended}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-slate-300 text-sm">{analysis.intervention_tier.justification}</p>
-                  </CardContent>
-                </Card>
-              )}
+              <div className={`max-w-[85%] rounded-lg p-3 ${
+                msg.role === 'user'
+                  ? 'bg-violet-600 text-white'
+                  : 'bg-slate-800 text-slate-200 border border-slate-700'
+              }`}>
+                {msg.role === 'assistant' ? (
+                  <ReactMarkdown
+                    className="prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+                    components={{
+                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      ul: ({ children }) => <ul className="mb-2 ml-4 list-disc">{children}</ul>,
+                      ol: ({ children }) => <ol className="mb-2 ml-4 list-decimal">{children}</ol>,
+                      li: ({ children }) => <li className="mb-1">{children}</li>,
+                      strong: ({ children }) => <strong className="text-violet-400">{children}</strong>,
+                      code: ({ inline, children }) => inline ? (
+                        <code className="bg-slate-900 px-1 py-0.5 rounded text-violet-300 text-xs">{children}</code>
+                      ) : (
+                        <code className="block bg-slate-900 p-2 rounded my-2 text-xs">{children}</code>
+                      ),
+                      h1: ({ children }) => <h1 className="text-base font-bold text-violet-400 mb-2">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-sm font-bold text-violet-400 mb-1">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-sm font-semibold text-violet-400 mb-1">{children}</h3>,
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                ) : (
+                  <p className="text-sm">{msg.content}</p>
+                )}
+              </div>
+            </motion.div>
+          ))}
+          
+          {loading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex justify-start"
+            >
+              <div className="bg-slate-800 border border-slate-700 rounded-lg p-3">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-violet-400" />
+                  <span className="text-sm text-slate-400 font-mono">Processing query...</span>
+                </div>
+              </div>
             </motion.div>
           )}
-        </TabsContent>
-        
-        {/* TACTICAL TAB */}
-        <TabsContent value="tactical" className="space-y-3">
-          {analysis?.tactical_options?.length > 0 ? (
-            <div className="space-y-2">
-              {analysis.tactical_options.map((option, i) => (
-                <Card key={i} className="bg-slate-800 border-2 border-slate-700 hover:border-violet-500 transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono text-white flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-xs">
-                        {i + 1}
-                      </span>
-                      {option.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2 text-sm">
-                    <div>
-                      <span className="text-violet-400 font-mono">OBJECTIVE:</span>
-                      <p className="text-slate-300 mt-1">{option.objective}</p>
-                    </div>
-                    <div>
-                      <span className="text-violet-400 font-mono">ACTIONS:</span>
-                      <ol className="text-slate-300 mt-1 ml-4 list-decimal">
-                        {option.actions?.map((action, j) => (
-                          <li key={j}>{action}</li>
-                        ))}
-                      </ol>
-                    </div>
-                    <div>
-                      <span className="text-orange-400 font-mono">RISK:</span>
-                      <p className="text-slate-300 mt-1">{option.risk}</p>
-                    </div>
-                    {option.sp_consideration && (
-                      <div>
-                        <span className="text-green-400 font-mono">SP ECONOMY:</span>
-                        <p className="text-slate-300 mt-1">{option.sp_consideration}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="bg-slate-800 border-2 border-slate-700">
-              <CardContent className="py-8 text-center">
-                <Target className="h-12 w-12 mx-auto text-slate-500 mb-2" />
-                <p className="text-slate-400 text-sm">Request analysis to generate tactical options</p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-        
-        {/* CLOCKS TAB */}
-        <TabsContent value="clocks" className="space-y-3">
-          {activeClocks.length > 0 ? (
-            <div className="space-y-2">
-              {activeClocks.map((clock) => (
-                <Card key={clock.id} className="bg-slate-800 border-2 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="text-sm font-mono text-white flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-orange-400" />
-                        {clock.name}
-                      </span>
-                      <span className="text-xs text-slate-400">
-                        {clock.current}/{clock.max}
-                      </span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {/* Clock segments */}
-                    <div className="flex gap-1">
-                      {Array.from({ length: clock.max }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={cn(
-                            "flex-1 h-3 rounded",
-                            i < clock.current
-                              ? "bg-orange-500"
-                              : "bg-slate-700"
-                          )}
-                        />
-                      ))}
-                    </div>
-                    
-                    <div className="text-xs space-y-1">
-                      <div>
-                        <span className="text-slate-400">Trigger:</span>
-                        <p className="text-slate-300">{clock.trigger}</p>
-                      </div>
-                      <div>
-                        <span className="text-orange-400">Consequence:</span>
-                        <p className="text-slate-300">{clock.consequence}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          tickClock(clock.id, 1);
-                          play('error', 0.2);
-                        }}
-                        disabled={clock.current >= clock.max}
-                        className="flex-1 bg-orange-600 hover:bg-orange-700 text-white border-2 border-orange-500"
-                      >
-                        <ChevronRight className="h-3 w-3 mr-1" />
-                        Tick
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          tickClock(clock.id, -1);
-                          play('click', 0.1);
-                        }}
-                        disabled={clock.current <= 0}
-                        className="flex-1 bg-slate-600 hover:bg-slate-700 text-white border-2 border-slate-500"
-                      >
-                        Reset
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="bg-slate-800 border-2 border-slate-700">
-              <CardContent className="py-8 text-center">
-                <Clock className="h-12 w-12 mx-auto text-slate-500 mb-2" />
-                <p className="text-slate-400 text-sm">No active countdown clocks</p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-        
-        {/* ECHO EVENTS TAB */}
-        <TabsContent value="echo" className="space-y-3">
-          <EchoEventManager campaignId={campaignId} isGM={true} />
-        </TabsContent>
-        
-        {/* LEDGER TAB */}
-        <TabsContent value="ledger" className="space-y-3">
-          <Card className="bg-slate-800 border-2 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-sm font-mono uppercase tracking-wider text-violet-400">
-                Evidence & Provenance
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              {analysis?.evidence ? (
-                <>
-                  <div>
-                    <span className="text-slate-400 font-mono">CONFIDENCE:</span>
-                    <Badge className={cn(
-                      "ml-2",
-                      analysis.evidence.confidence === 'high' ? 'bg-green-600' :
-                      analysis.evidence.confidence === 'medium' ? 'bg-yellow-600' :
-                      'bg-red-600'
-                    )}>
-                      {analysis.evidence.confidence?.toUpperCase()}
-                    </Badge>
-                  </div>
-                  
-                  {analysis.evidence.assumptions?.length > 0 && (
-                    <div>
-                      <span className="text-slate-400 font-mono">ASSUMPTIONS:</span>
-                      <ul className="text-slate-300 mt-1 ml-4 list-disc">
-                        {analysis.evidence.assumptions.map((a, i) => (
-                          <li key={i}>{a}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  {analysis.evidence.missing?.length > 0 && (
-                    <div>
-                      <span className="text-orange-400 font-mono">MISSING TELEMETRY:</span>
-                      <ul className="text-slate-300 mt-1 ml-4 list-disc">
-                        {analysis.evidence.missing.map((m, i) => (
-                          <li key={i}>{m}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  
-                  {analysis.gm_notes && (
-                    <div className="pt-3 border-t border-slate-700">
-                      <span className="text-red-400 font-mono">GM NOTES (CLEARANCE REQUIRED):</span>
-                      <p className="text-slate-400 mt-1 text-xs italic">{analysis.gm_notes}</p>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="text-slate-500 text-center py-4">No analysis data available</p>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </ScrollArea>
+
+      {/* Input Area */}
+      <div className="border-t border-slate-700 p-4 bg-slate-900">
+        <div className="flex gap-2">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            placeholder="Ask about rules, lore, mechanics..."
+            className="bg-slate-800 border-slate-600 text-white placeholder:text-slate-500"
+            disabled={loading}
+          />
+          <Button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            className="bg-violet-600 hover:bg-violet-700"
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+        <p className="text-xs text-slate-500 mt-2 font-mono">
+          <Radio className="h-3 w-3 inline mr-1" />
+          Game-related inquiries only. Non-game questions will be redirected.
+        </p>
+      </div>
     </div>
   );
 }
