@@ -102,7 +102,7 @@ export default function XPAwardPanel({ characters, onAwardXP }) {
             <Users className="h-4 w-4" />
             Select Characters ({selectedCharacters.length})
           </label>
-          <div className="space-y-2 max-h-48 overflow-y-auto">
+          <div className="space-y-2 max-h-40 overflow-y-auto">
             {characters.map(char => (
               <button
                 key={char.id}

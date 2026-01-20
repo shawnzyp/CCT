@@ -84,9 +84,9 @@ export default function EnhancedLevelUpDialog({ character, onConfirm, onClose })
   
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-violet-500 max-w-2xl max-h-[90vh] overflow-hidden">
-        <DialogHeader>
-          <DialogTitle className="text-white flex items-center gap-3 text-2xl">
+      <DialogContent className="bg-slate-900 border-violet-500 max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle className="text-white flex items-center gap-3 text-xl">
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -104,18 +104,18 @@ export default function EnhancedLevelUpDialog({ character, onConfirm, onClose })
           </DialogTitle>
         </DialogHeader>
         
-        <ScrollArea className="max-h-[calc(90vh-8rem)]">
-          <div className="space-y-4 pr-4">
+        <ScrollArea className="flex-1 overflow-auto">
+          <div className="space-y-3 pr-4 pb-4">
             {/* Level Progress */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-6 bg-gradient-to-br from-violet-900/30 to-purple-900/30 rounded-xl border border-violet-500/30"
+              className="text-center py-4 bg-gradient-to-br from-violet-900/30 to-purple-900/30 rounded-xl border border-violet-500/30"
             >
-              <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400">
+              <div className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400">
                 {character.level || 1} → {newLevel}
               </div>
-              <p className="text-slate-300 text-sm mt-2">{levelInfo.gains}</p>
+              <p className="text-slate-300 text-xs mt-1">{levelInfo.gains}</p>
             </motion.div>
             
             <Separator className="bg-slate-700" />
@@ -204,7 +204,7 @@ export default function EnhancedLevelUpDialog({ character, onConfirm, onClose })
                       <TabsTrigger value="transcendence">Transcend</TabsTrigger>
                     </TabsList>
                     {Object.keys(AUGMENTS).map(category => (
-                      <TabsContent key={category} value={category} className="space-y-2">
+                      <TabsContent key={category} value={category} className="space-y-2 max-h-60 overflow-y-auto">
                         {AUGMENTS[category].map((augment, i) => {
                           const isSelected = selectedAugment?.name === augment.name;
                           const alreadyHas = (character.augments || []).some(a => a.name === augment.name);
@@ -252,7 +252,7 @@ export default function EnhancedLevelUpDialog({ character, onConfirm, onClose })
           </div>
         </ScrollArea>
         
-        <div className="flex gap-3 pt-2 border-t border-slate-700">
+        <div className="flex gap-3 pt-3 border-t border-slate-700 flex-shrink-0">
           <Button
             variant="outline"
             onClick={onClose}

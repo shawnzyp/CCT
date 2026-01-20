@@ -193,7 +193,7 @@ export default function ProgressionTracker({ character, onLevelUp }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={200}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#475569" />
               <PolarAngleAxis dataKey="ability" stroke="#94a3b8" />
