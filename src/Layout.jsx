@@ -53,9 +53,8 @@ export default function Layout({ children }) {
   };
   
   const navItems = [
-    { name: 'Home', path: 'Home', icon: Zap },
     { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
-    { name: 'Characters', path: 'Characters', icon: Users },
+    { name: 'Vigilantes', path: 'Characters', icon: Users },
     { name: 'Rules', path: 'Rules', icon: Book },
     { name: 'Settings', path: 'Settings', icon: Settings },
     { name: 'Help', path: 'Help', icon: HelpCircle },
@@ -101,18 +100,32 @@ export default function Layout({ children }) {
             </Link>
             
             {/* Desktop Nav */}
-            <nav className="hidden md:block">
-              <select
-                value={location.pathname.split('/').pop() || 'Home'}
-                onChange={(e) => window.location.href = createPageUrl(e.target.value)}
-                className="bg-slate-800 border border-violet-500/30 text-white rounded-md px-4 py-2 text-sm hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
-              >
-                {navItems.map(item => (
-                  <option key={item.path} value={item.path}>
+            <nav className="hidden md:flex items-center gap-4">
+              {navItems.map(item => (
+                item.name === 'Vigilantes' ? (
+                  <Button
+                    key={item.path}
+                    variant="ghost"
+                    onClick={() => setShowCharacterSelector(true)}
+                    className="gap-2 text-slate-400 hover:text-white"
+                  >
+                    <item.icon className="h-4 w-4" />
                     {item.name}
-                  </option>
-                ))}
-              </select>
+                  </Button>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={createPageUrl(item.path)}
+                    className={cn(
+                      "flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-medium",
+                      isActive(item.path) && "text-violet-400"
+                    )}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.name}
+                  </Link>
+                )
+              ))}
             </nav>
 
             {/* Current Character */}
@@ -156,22 +169,37 @@ export default function Layout({ children }) {
           <div className="md:hidden border-t border-slate-800 bg-slate-900">
             <nav className="px-4 py-3 space-y-1">
               {navItems.map(item => (
-                <Link 
-                  key={item.path} 
-                  to={createPageUrl(item.path)}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                item.name === 'Vigilantes' ? (
                   <Button
+                    key={item.path}
                     variant="ghost"
-                    className={cn(
-                      "w-full justify-start gap-2 text-slate-400 hover:text-white hover:bg-slate-800",
-                      isActive(item.path) && "text-white bg-slate-800"
-                    )}
+                    onClick={() => {
+                      setShowCharacterSelector(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full justify-start gap-2 text-slate-400 hover:text-white hover:bg-slate-800"
                   >
                     <item.icon className="h-4 w-4" />
                     {item.name}
                   </Button>
-                </Link>
+                ) : (
+                  <Link 
+                    key={item.path} 
+                    to={createPageUrl(item.path)}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "w-full justify-start gap-2 text-slate-400 hover:text-white hover:bg-slate-800",
+                        isActive(item.path) && "text-white bg-slate-800"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </Button>
+                  </Link>
+                )
               ))}
             </nav>
           </div>
