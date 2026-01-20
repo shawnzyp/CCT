@@ -16,7 +16,7 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
 
   const inventory = character.inventory || [];
 
-  const filtered Inventory = inventory.filter(item => {
+  const filteredInventory = inventory.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (item.description || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' || item.type === filterType;
