@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
-import { Users, Zap, BookOpen, Menu, X, User, RefreshCw, Book, HelpCircle, Radio, Settings } from 'lucide-react';
+import { Users, Zap, BookOpen, Menu, X, User, RefreshCw, Book, HelpCircle, Radio, Settings, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
@@ -56,12 +56,40 @@ export default function Layout({ children }) {
     setShowCharacterSelector(true);
   };
   
-  const navItems = [
-    { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
-    { name: 'Vigilantes', path: 'Characters', icon: Users },
-    { name: 'Rules', path: 'Rules', icon: Book },
-    { name: 'Settings', path: 'Settings', icon: Settings },
-    { name: 'Help', path: 'Help', icon: HelpCircle },
+  const navCategories = [
+    {
+      name: 'Character',
+      items: [
+        { name: 'My Characters', path: 'Characters', icon: Users },
+        { name: 'Create Character', path: 'CreateCharacter', icon: User },
+      ]
+    },
+    {
+      name: 'Campaign',
+      items: [
+        { name: 'Campaigns', path: 'Campaigns', icon: BookOpen },
+      ]
+    },
+    {
+      name: 'Tools',
+      items: [
+        { name: 'Dice Roller', path: 'DiceRoller', icon: Zap },
+        { name: 'Economy', path: 'Economy', icon: Package },
+      ]
+    },
+    {
+      name: 'Reference',
+      items: [
+        { name: 'Rules', path: 'Rules', icon: Book },
+        { name: 'Help', path: 'Help', icon: HelpCircle },
+      ]
+    },
+    {
+      name: 'System',
+      items: [
+        { name: 'Settings', path: 'Settings', icon: Settings },
+      ]
+    }
   ];
   
   const isActive = (path) => {
@@ -117,31 +145,36 @@ export default function Layout({ children }) {
             </Link>
             
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-4">
-              {navItems.map(item => (
-                item.name === 'Vigilantes' ? (
+            <nav className="hidden md:flex items-center gap-1">
+              {navCategories.map(category => (
+                <div key={category.name} className="relative group">
                   <Button
-                    key={item.path}
                     variant="ghost"
-                    onClick={() => setShowCharacterSelector(true)}
-                    className="gap-2 text-slate-400 hover:text-white"
+                    className="gap-2 text-slate-400 hover:text-white hover:bg-slate-800"
                   >
-                    <item.icon className="h-4 w-4" />
-                    {item.name}
+                    {category.name}
+                    <Menu className="h-3 w-3" />
                   </Button>
-                ) : (
-                  <Link
-                    key={item.path}
-                    to={createPageUrl(item.path)}
-                    className={cn(
-                      "flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-medium",
-                      isActive(item.path) && "text-violet-400"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.name}
-                  </Link>
-                )
+                  <div className="absolute top-full left-0 mt-1 w-48 bg-slate-900 border border-violet-500/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                    <div className="p-2 space-y-1">
+                      {category.items.map(item => (
+                        <Link
+                          key={item.path}
+                          to={createPageUrl(item.path)}
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                            isActive(item.path) 
+                              ? "bg-violet-600 text-white" 
+                              : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                          )}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ))}
             </nav>
 
@@ -183,40 +216,34 @@ export default function Layout({ children }) {
         
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-800 bg-slate-900">
-            <nav className="px-4 py-3 space-y-1">
-              {navItems.map(item => (
-                item.name === 'Vigilantes' ? (
-                  <Button
-                    key={item.path}
-                    variant="ghost"
-                    onClick={() => {
-                      setShowCharacterSelector(true);
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full justify-start gap-2 text-slate-400 hover:text-white hover:bg-slate-800"
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.name}
-                  </Button>
-                ) : (
-                  <Link 
-                    key={item.path} 
-                    to={createPageUrl(item.path)}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Button
-                      variant="ghost"
-                      className={cn(
-                        "w-full justify-start gap-2 text-slate-400 hover:text-white hover:bg-slate-800",
-                        isActive(item.path) && "text-white bg-slate-800"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.name}
-                    </Button>
-                  </Link>
-                )
+          <div className="md:hidden border-t border-slate-800 bg-slate-900 max-h-[80vh] overflow-y-auto">
+            <nav className="px-4 py-3 space-y-4">
+              {navCategories.map(category => (
+                <div key={category.name}>
+                  <div className="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-2 px-3">
+                    {category.name}
+                  </div>
+                  <div className="space-y-1">
+                    {category.items.map(item => (
+                      <Link 
+                        key={item.path} 
+                        to={createPageUrl(item.path)}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Button
+                          variant="ghost"
+                          className={cn(
+                            "w-full justify-start gap-2 text-slate-300 hover:text-white hover:bg-slate-800",
+                            isActive(item.path) && "bg-violet-600 text-white hover:bg-violet-700"
+                          )}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          {item.name}
+                        </Button>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               ))}
             </nav>
           </div>
