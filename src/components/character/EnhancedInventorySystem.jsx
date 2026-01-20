@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Search, Filter, SortAsc, Grid, List } from "lucide-react";
+import { Package, Search, Filter, SortAsc, Grid, List, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function EnhancedInventorySystem({ character, onUpdate }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,6 +30,12 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
 
   const itemTypes = [...new Set(inventory.map(i => i.type).filter(Boolean))];
 
+  const bulkDelete = (rarity) => {
+    const updated = inventory.filter(item => item.rarity !== rarity);
+    onUpdate({ ...character, inventory: updated });
+    toast.success(`Removed all ${rarity} items`);
+  };
+
   return (
     <Card className="bg-slate-800 border-slate-700">
       <CardHeader>
@@ -38,6 +45,17 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
             Inventory ({inventory.length} items)
           </CardTitle>
           <div className="flex gap-2">
+            <Select onValueChange={bulkDelete}>
+              <SelectTrigger className="w-[160px] bg-slate-700 border-slate-600 text-white h-8">
+                <Trash2 className="h-3 w-3 mr-2" />
+                <span className="text-xs">Bulk Actions</span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="common">Delete All Common</SelectItem>
+                <SelectItem value="uncommon">Delete All Uncommon</SelectItem>
+                <SelectItem value="consumable">Delete Consumables</SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               size="sm"
               variant="ghost"

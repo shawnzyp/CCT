@@ -21,12 +21,20 @@ export default function SessionLog({ sessionLog = [], onAddMessage, currentChara
   const handleSend = () => {
     if (!message.trim() || !currentCharacter) return;
     
-    onAddMessage({
+    const newMessage = {
       character_id: currentCharacter.id,
       character_name: currentCharacter.name,
       message: message.trim(),
       timestamp: new Date().toISOString()
-    });
+    };
+    
+    onAddMessage(newMessage);
+    
+    // Auto-save to localStorage
+    const saved = JSON.parse(localStorage.getItem('sessionNotesBackup') || '[]');
+    saved.push(newMessage);
+    localStorage.setItem('sessionNotesBackup', JSON.stringify(saved.slice(-100)));
+    
     setMessage('');
   };
 

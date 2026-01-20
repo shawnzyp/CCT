@@ -68,6 +68,14 @@ export default function ResourceBar({
       onChange(newValue);
     }
   };
+
+  const quickAdjust = (amount) => {
+    if (onChange) {
+      const newValue = Math.min(max, Math.max(0, current + amount));
+      play('click', 0.1);
+      onChange(newValue);
+    }
+  };
   
   return (
     <motion.div 
@@ -93,16 +101,29 @@ export default function ResourceBar({
       
       <div className="flex items-center gap-2">
         {showControls && onChange && (
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-6 w-6 text-slate-400 hover:text-white hover:bg-violet-500/20 border border-transparent hover:border-violet-500/30"
-              onClick={() => handleChange(-1)}
-            >
-              <Minus className="h-3 w-3" />
-            </Button>
-          </motion.div>
+          <>
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 text-slate-400 hover:text-red-400 hover:bg-red-500/20"
+                onClick={() => quickAdjust(-5)}
+                title="-5"
+              >
+                <span className="text-[10px] font-bold">-5</span>
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 text-slate-400 hover:text-white hover:bg-violet-500/20 border border-transparent hover:border-violet-500/30"
+                onClick={() => handleChange(-1)}
+              >
+                <Minus className="h-3 w-3" />
+              </Button>
+            </motion.div>
+          </>
         )}
         
         <div className="flex-1 relative">
@@ -143,16 +164,29 @@ export default function ResourceBar({
         </div>
         
         {showControls && onChange && (
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-6 w-6 text-slate-400 hover:text-white hover:bg-violet-500/20 border border-transparent hover:border-violet-500/30"
-              onClick={() => handleChange(1)}
-            >
-              <Plus className="h-3 w-3" />
-            </Button>
-          </motion.div>
+          <>
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 text-slate-400 hover:text-white hover:bg-violet-500/20 border border-transparent hover:border-violet-500/30"
+                onClick={() => handleChange(1)}
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 text-slate-400 hover:text-green-400 hover:bg-green-500/20"
+                onClick={() => quickAdjust(5)}
+                title="+5"
+              >
+                <span className="text-[10px] font-bold">+5</span>
+              </Button>
+            </motion.div>
+          </>
         )}
       </div>
     </motion.div>
