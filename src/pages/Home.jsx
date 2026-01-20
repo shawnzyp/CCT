@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart } from 'lucide-react';
+import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart, Settings, Scroll, DollarSign } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
@@ -24,12 +24,21 @@ export default function Home() {
     setShowCharacterSelector(false);
     window.dispatchEvent(new CustomEvent('characterChanged', { detail: character }));
   };
+  const currentCharacter = (() => {
+    try {
+      const stored = localStorage.getItem('currentCharacter');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  })();
+
   const features = [
     {
       icon: Users,
       title: 'My Characters',
       description: 'View and manage your hero roster',
-      link: 'Characters',
+      action: () => setShowCharacterSelector(true),
       color: 'from-violet-500 to-purple-600'
     },
     {
@@ -47,11 +56,12 @@ export default function Home() {
       color: 'from-purple-500 to-pink-600'
     },
     {
-      icon: Swords,
-      title: 'Combat Tracker',
-      description: 'Your character combat stats',
-      link: characters.length > 0 ? `CharacterSheet?id=${characters[0].id}` : 'Characters',
-      color: 'from-red-500 to-orange-600'
+      icon: User,
+      title: 'Character Sheet',
+      description: currentCharacter ? currentCharacter.name : 'Select a character first',
+      link: currentCharacter ? `CharacterSheet?id=${currentCharacter.id}` : null,
+      action: !currentCharacter ? () => setShowCharacterSelector(true) : null,
+      color: 'from-cyan-500 to-blue-600'
     },
     {
       icon: Dices,
@@ -61,24 +71,24 @@ export default function Home() {
       color: 'from-emerald-500 to-green-600'
     },
     {
-      icon: Shield,
-      title: 'DM Tools',
-      description: 'Game master utilities',
-      link: 'DMTools',
+      icon: DollarSign,
+      title: 'Economy',
+      description: 'Trade items and manage credits',
+      link: 'Economy',
       color: 'from-amber-500 to-yellow-600'
     },
     {
-      icon: FileText,
+      icon: Scroll,
       title: 'Rules',
       description: 'Game system reference',
       link: 'Rules',
       color: 'from-slate-500 to-slate-600'
     },
     {
-      icon: Heart,
-      title: 'Help',
-      description: 'Guides and support',
-      link: 'Help',
+      icon: Settings,
+      title: 'Settings',
+      description: 'Customize your experience',
+      link: 'Settings',
       color: 'from-rose-500 to-pink-600'
     }
   ];
@@ -179,8 +189,11 @@ export default function Home() {
               transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
             >
-              <Link to={createPageUrl(feature.link)}>
-                <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all h-full group cursor-pointer">
+              {feature.action ? (
+                <Card 
+                  onClick={feature.action}
+                  className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all h-full group cursor-pointer"
+                >
                   <CardContent className="p-4">
                     <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                       <feature.icon className="h-5 w-5 text-white" />
@@ -189,7 +202,29 @@ export default function Home() {
                     <p className="text-xs text-slate-400 line-clamp-2">{feature.description}</p>
                   </CardContent>
                 </Card>
-              </Link>
+              ) : feature.link ? (
+                <Link to={createPageUrl(feature.link)}>
+                  <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all h-full group cursor-pointer">
+                    <CardContent className="p-4">
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                        <feature.icon className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="text-sm font-semibold text-white mb-1">{feature.title}</h3>
+                      <p className="text-xs text-slate-400 line-clamp-2">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ) : (
+                <Card className="bg-slate-800/50 border-slate-700 opacity-50 h-full cursor-not-allowed">
+                  <CardContent className="p-4">
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3`}>
+                      <feature.icon className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-white mb-1">{feature.title}</h3>
+                    <p className="text-xs text-slate-400 line-clamp-2">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              )}
             </motion.div>
           ))}
         </div>
