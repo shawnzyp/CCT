@@ -37,6 +37,9 @@ import ItemsReference from "@/components/character/ItemsReference";
 import CharacterQuestionnaire from "@/components/character/CharacterQuestionnaire";
 import ExportCharacterPDF from '@/components/utils/ExportCharacterPDF';
 import EnhancedCombatPanel from '@/components/character/EnhancedCombatPanel';
+import EnhancedInventorySystem from '@/components/character/EnhancedInventorySystem';
+import ProgressionTracker from '@/components/character/ProgressionTracker';
+import PlayerJournal from '@/components/character/PlayerJournal';
 import { toast } from 'sonner';
 
 const ORIGIN_LABELS = {
