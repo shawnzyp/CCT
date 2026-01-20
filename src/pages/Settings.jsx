@@ -71,21 +71,17 @@ export default function Settings() {
           <p className="text-slate-400 mt-2">Customize your Catalyst Core experience</p>
         </div>
 
-        <Tabs defaultValue="visual" className="space-y-4">
-          <TabsList className="bg-slate-800 border border-slate-700">
-            <TabsTrigger value="visual" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
-              <Palette className="h-4 w-4 mr-2" />
-              Visual
-            </TabsTrigger>
-            <TabsTrigger value="audio" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
-              <Volume2 className="h-4 w-4 mr-2" />
-              Audio
-            </TabsTrigger>
-            <TabsTrigger value="game" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
-              <Gamepad2 className="h-4 w-4 mr-2" />
-              Gameplay
-            </TabsTrigger>
-          </TabsList>
+        <Tabs value={settings.activeTab || 'visual'} className="space-y-4">
+          <Select value={settings.activeTab || 'visual'} onValueChange={(v) => updateSetting('activeTab', v)}>
+            <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="visual">🎨 Visual</SelectItem>
+              <SelectItem value="audio">🔊 Audio</SelectItem>
+              <SelectItem value="game">🎮 Gameplay</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* Visual Settings */}
           <TabsContent value="visual">

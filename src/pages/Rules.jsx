@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Shield, Zap, Swords, Users, AlertCircle, Download, FileText } from "lucide-react";
 
 export default function Rules() {
+  const [activeTab, setActiveTab] = useState('rulebook');
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 overflow-x-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -19,16 +21,21 @@ export default function Rules() {
           </div>
         </div>
 
-        <Tabs defaultValue="rulebook" className="space-y-4">
-          <TabsList className="bg-slate-800/50 border border-slate-700">
-            <TabsTrigger value="rulebook">Player Guide</TabsTrigger>
-            <TabsTrigger value="creation">Character Creation</TabsTrigger>
-            <TabsTrigger value="combat">Combat</TabsTrigger>
-            <TabsTrigger value="powers">Powers & SP</TabsTrigger>
-            <TabsTrigger value="elements">Elements</TabsTrigger>
-            <TabsTrigger value="downtime">Downtime</TabsTrigger>
-            <TabsTrigger value="glossary">Glossary</TabsTrigger>
-          </TabsList>
+        <Tabs value={activeTab} className="space-y-4">
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="rulebook">📖 Player Guide</SelectItem>
+              <SelectItem value="creation">✨ Character Creation</SelectItem>
+              <SelectItem value="combat">⚔️ Combat</SelectItem>
+              <SelectItem value="powers">⚡ Powers & SP</SelectItem>
+              <SelectItem value="elements">🔥 Elements</SelectItem>
+              <SelectItem value="downtime">💤 Downtime</SelectItem>
+              <SelectItem value="glossary">📚 Glossary</SelectItem>
+            </SelectContent>
+          </Select>
 
           <TabsContent value="rulebook" className="space-y-4">
             <Card className="bg-slate-800/50 border-slate-700">
