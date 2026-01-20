@@ -338,6 +338,8 @@ export default function CharacterSheet() {
               <SelectItem value="inventory">📦 Inventory</SelectItem>
               <SelectItem value="info">📖 Info</SelectItem>
               <SelectItem value="downtime">💙 Downtime</SelectItem>
+              <SelectItem value="progression">📈 Progression</SelectItem>
+              <SelectItem value="journal">📔 Journal</SelectItem>
               <SelectItem value="notes">📝 Notes</SelectItem>
               <SelectItem value="items">📦 Items Reference</SelectItem>
               <SelectItem value="questionnaire">📖 Questionnaire</SelectItem>
@@ -479,7 +481,10 @@ export default function CharacterSheet() {
 
           {/* Progression Tracker Tab */}
           <TabsContent value="progression">
-            <ProgressionTracker character={character} />
+            <ProgressionTracker 
+              character={character} 
+              onLevelUp={() => setShowLevelUp(true)}
+            />
           </TabsContent>
 
           {/* Player Journal Tab */}
@@ -620,7 +625,7 @@ export default function CharacterSheet() {
       )}
       
       {showLevelUp && (
-        <LevelUpDialog
+        <EnhancedLevelUpDialog
           character={character}
           onConfirm={handleLevelUp}
           onClose={() => setShowLevelUp(false)}
