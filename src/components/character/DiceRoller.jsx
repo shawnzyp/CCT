@@ -11,10 +11,12 @@ export default function DiceRoller({ onRoll, modifier = 0, label = "" }) {
   const [rolling, setRolling] = useState(false);
   const [history, setHistory] = useState([]);
   const { play } = useSoundEffects();
+  const { haptic } = useHaptic();
   
   const rollDice = (sides = 20, count = 1) => {
     setRolling(true);
     play('dice', 0.4);
+    haptic('dice');
     
     setTimeout(() => {
       const rolls = [];

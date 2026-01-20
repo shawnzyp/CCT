@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Dices, Swords, Shield, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from 'canvas-confetti';
+import useSoundEffects from '@/components/sounds/useSoundEffects';
+import { useHaptic } from '@/components/utils/useHaptic';
 
 export default function DiceRollDialog({ 
   open, 
@@ -16,9 +18,13 @@ export default function DiceRollDialog({
 }) {
   const [result, setResult] = useState(null);
   const [rolling, setRolling] = useState(false);
+  const { play } = useSoundEffects();
+  const { haptic } = useHaptic();
 
   const rollDice = () => {
     setRolling(true);
+    play('dice', 0.4);
+    haptic('dice');
     const roll = Math.floor(Math.random() * 20) + 1;
     const total = roll + modifier;
     
@@ -27,11 +33,16 @@ export default function DiceRollDialog({
       setRolling(false);
       
       if (roll === 20) {
+        play('success', 0.5);
+        haptic('success');
         confetti({
           particleCount: 100,
           spread: 70,
           origin: { y: 0.6 }
         });
+      } else if (roll === 1) {
+        play('error', 0.3);
+        haptic('error');
       }
       
       if (onRoll) {
