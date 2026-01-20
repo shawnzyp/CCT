@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Clock, Gift, CheckCircle, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import { base44 } from "@/api/base44Client";
 
 export default function AdventureModulePlayer({ campaign, currentCharacter, onUpdate }) {
   const [currentStageId, setCurrentStageId] = useState(null);
@@ -117,6 +118,20 @@ export default function AdventureModulePlayer({ campaign, currentCharacter, onUp
       toast.success('Adventure completed! Rewards granted!', {
         description: `+${activeAdventure.rewards.xp} XP, +${activeAdventure.rewards.gold} Gold`
       });
+      
+      // Notify Discord
+      try {
+        await base44.functions.notifyDiscord({
+          eventType: 'adventure_complete',
+          data: {
+            adventureTitle: activeAdventure.title,
+            characterName: currentCharacter.name,
+            rewards: activeAdventure.rewards
+          }
+        });
+      } catch (e) {
+        console.error('Discord notification failed:', e);
+      }
     }
   };
 
