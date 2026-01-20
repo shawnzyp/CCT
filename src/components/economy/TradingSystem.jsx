@@ -11,7 +11,6 @@ import { ArrowRightLeft, Send, X, Check, DollarSign, Plus, Trash2 } from "lucide
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Badge } from "@/components/ui/badge";
 
 export default function TradingSystem({ campaign, currentCharacter, allCharacters }) {
   const [showCreateTrade, setShowCreateTrade] = useState(false);
