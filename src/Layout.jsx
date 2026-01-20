@@ -15,12 +15,14 @@ import AegisAssistant from '@/components/aegis/AegisAssistant';
 import { AegisProvider } from '@/components/aegis/AegisContext';
 import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
 import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
+import DMLoginFooter from '@/components/dm/DMLoginFooter';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentCharacter, setCurrentCharacter] = useState(null);
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
+  const [isDM, setIsDM] = useState(false);
   const { play } = useSoundEffects();
 
   const { data: characters = [] } = useQuery({
@@ -207,14 +209,18 @@ export default function Layout({ children }) {
       </header>
       
       {/* Main Content */}
-      <main className="pt-16 relative z-10">
+      <main className="pt-16 pb-16 relative z-10">
         <div className="overflow-y-auto scroll-smooth">
           {children}
         </div>
       </main>
 
-      {/* Bottom tactical bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-violet-500/50 to-transparent pointer-events-none z-50" />
+      {/* DM Login Footer */}
+      <DMLoginFooter 
+        isDM={isDM}
+        onDMLogin={() => setIsDM(true)}
+        onDMLogout={() => setIsDM(false)}
+      />
 
       {showCharacterSelector && (
         <CharacterSelector
