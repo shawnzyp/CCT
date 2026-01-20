@@ -35,6 +35,9 @@ import CombatStatsPanel from "@/components/character/CombatStatsPanel";
 import CharacterEditor from "@/components/character/CharacterEditor";
 import ItemsReference from "@/components/character/ItemsReference";
 import CharacterQuestionnaire from "@/components/character/CharacterQuestionnaire";
+import ExportCharacterPDF from '@/components/utils/ExportCharacterPDF';
+import EnhancedCombatPanel from '@/components/character/EnhancedCombatPanel';
+import { toast } from 'sonner';
 
 const ORIGIN_LABELS = {
   the_accident: 'The Accident',
