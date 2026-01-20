@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Flame, Droplet, Wind, Sparkles, Swords, Shield, Target, Crosshair, Radio } from 'lucide-react';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import { getSettings } from '@/components/utils/useSettings';
 
 const effectIcons = {
   fire: Flame,
@@ -57,8 +58,14 @@ export function TargetingReticle({ active, onComplete }) {
 
 // Enhanced attack effect with weapon trails
 export function AttackEffect({ type = 'physical', onComplete }) {
+  const settings = getSettings();
   const Icon = effectIcons[type] || Swords;
   const colors = effectColors[type] || effectColors.physical;
+  
+  if (!settings.animationsEnabled && !settings.criticalHitEffects) {
+    onComplete?.();
+    return null;
+  }
   
   return (
     <motion.div
@@ -66,9 +73,9 @@ export function AttackEffect({ type = 'physical', onComplete }) {
       animate={{ 
         scale: [0, 1.5, 0],
         opacity: [0, 1, 0],
-        rotate: [0, 360]
+        rotate: settings.animationsEnabled ? [0, 360] : 0
       }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: settings.animationsEnabled ? 0.8 : 0.2, ease: "easeOut" }}
       onAnimationComplete={onComplete}
       className="absolute inset-0 flex items-center justify-center pointer-events-none z-50"
     >
@@ -144,6 +151,13 @@ export function PowerBurstEffect({ type = 'energy', onComplete }) {
 
 // Hit effect with damage number
 export function HitEffect({ damage, isCritical, onComplete }) {
+  const settings = getSettings();
+  
+  if (!settings.damageNumbersFloat) {
+    onComplete?.();
+    return null;
+  }
+  
   return (
     <>
       <motion.div
@@ -153,7 +167,7 @@ export function HitEffect({ damage, isCritical, onComplete }) {
           opacity: 0,
           scale: isCritical ? 2 : 1.5
         }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
+        transition={{ duration: settings.animationsEnabled ? 1.2 : 0.3, ease: "easeOut" }}
         onAnimationComplete={onComplete}
         className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-50"
       >
@@ -166,12 +180,14 @@ export function HitEffect({ damage, isCritical, onComplete }) {
       </motion.div>
       
       {/* Impact flash */}
-      <motion.div
-        initial={{ opacity: 0.8, scale: 1 }}
-        animate={{ opacity: 0, scale: 2 }}
-        transition={{ duration: 0.3 }}
-        className="absolute inset-0 bg-red-500/30 rounded-lg pointer-events-none"
-      />
+      {settings.criticalHitEffects && (
+        <motion.div
+          initial={{ opacity: 0.8, scale: 1 }}
+          animate={{ opacity: 0, scale: 2 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 bg-red-500/30 rounded-lg pointer-events-none"
+        />
+      )}
     </>
   );
 }
@@ -298,6 +314,13 @@ export function ShieldEffect({ onComplete }) {
 
 // Critical hit explosion
 export function CriticalEffect({ onComplete }) {
+  const settings = getSettings();
+  
+  if (!settings.criticalHitEffects) {
+    onComplete?.();
+    return null;
+  }
+  
   return (
     <motion.div
       initial={{ scale: 0 }}
