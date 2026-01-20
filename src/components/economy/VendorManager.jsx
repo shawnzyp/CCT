@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function VendorManager({ campaign, isGM = false }) {
+export default function VendorManager({ campaign, isGM = false, currentCharacter }) {
   const [showCreateVendor, setShowCreateVendor] = useState(false);
   const [editingVendor, setEditingVendor] = useState(null);
   const [vendorForm, setVendorForm] = useState({
@@ -98,6 +98,40 @@ export default function VendorManager({ campaign, isGM = false }) {
     });
   };
 
+  const buyItem = useMutation({
+    mutationFn: async ({ vendor, invItem }) => {
+      if (!currentCharacter) {
+        throw new Error('No character selected');
+      }
+
+      if (currentCharacter.credits < invItem.price) {
+        throw new Error('Insufficient credits');
+      }
+
+      // Update character
+      await base44.entities.Character.update(currentCharacter.id, {
+        inventory: [...(currentCharacter.inventory || []), invItem.item],
+        credits: currentCharacter.credits - invItem.price
+      });
+
+      // Update vendor stock
+      const updatedInventory = vendor.inventory.map(item =>
+        item.item.name === invItem.item.name && item.stock > 0
+          ? { ...item, stock: item.stock - 1 }
+          : item
+      );
+
+      await base44.entities.VendorNPC.update(vendor.id, { inventory: updatedInventory });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['vendors']);
+      toast.success('Item purchased!');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
+
   return (
     <div className="space-y-4">
       {isGM && (
@@ -155,16 +189,30 @@ export default function VendorManager({ campaign, isGM = false }) {
               <ScrollArea className="h-[200px]">
                 <div className="space-y-2">
                   {(vendor.inventory || []).map((inv, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-slate-900/50 rounded">
+                    <div key={i} className="flex items-center justify-between p-2 bg-slate-900/50 rounded group">
                       <div className="flex-1">
                         <p className="text-sm text-white">{inv.item.name}</p>
                         <p className="text-xs text-slate-500">Stock: {inv.stock}</p>
                       </div>
-                      <Badge variant="outline" className="text-emerald-400 border-emerald-400">
-                        {inv.price} CR
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-emerald-400 border-emerald-400">
+                          {inv.price} CR
+                        </Badge>
+                        {!isGM && currentCharacter && inv.stock > 0 && (
+                          <Button
+                            size="sm"
+                            onClick={() => buyItem.mutate({ vendor, invItem: inv })}
+                            className="bg-emerald-600 hover:bg-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            Buy
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   ))}
+                  {(!vendor.inventory || vendor.inventory.length === 0) && (
+                    <p className="text-center text-slate-500 py-4 text-sm">No items in stock</p>
+                  )}
                 </div>
               </ScrollArea>
             </CardContent>

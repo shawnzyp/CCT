@@ -108,6 +108,11 @@ export default function CharacterSheet() {
       if (character) {
         setIsSaving(true);
         updateMutation.mutate(character);
+        // Play darker autosave sound
+        const audio = new Audio();
+        audio.src = 'https://cdn.freesound.org/previews/397/397353_6666450-lq.mp3';
+        audio.volume = 0.15;
+        audio.play().catch(() => {});
       }
     }, intervalMs);
 

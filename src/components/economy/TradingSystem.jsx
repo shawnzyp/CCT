@@ -7,10 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRightLeft, Send, X, Check, DollarSign } from "lucide-react";
+import { ArrowRightLeft, Send, X, Check, DollarSign, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Badge } from "@/components/ui/badge";
 
 export default function TradingSystem({ campaign, currentCharacter, allCharacters }) {
   const [showCreateTrade, setShowCreateTrade] = useState(false);
@@ -231,9 +232,37 @@ export default function TradingSystem({ campaign, currentCharacter, allCharacter
               </Select>
             </div>
 
+            {/* Items You Offer */}
+            <div>
+              <label className="text-xs text-emerald-400 uppercase mb-2 block">Items You Offer</label>
+              <Select onValueChange={(itemName) => {
+                const item = currentCharacter?.inventory?.find(i => i.name === itemName);
+                if (item && !offeredItems.find(i => i.name === item.name)) {
+                  setOfferedItems([...offeredItems, item]);
+                }
+              }}>
+                <SelectTrigger className="bg-slate-800 border-slate-600 text-white">
+                  <SelectValue placeholder="Add item from inventory" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(currentCharacter?.inventory || []).map((item, i) => (
+                    <SelectItem key={i} value={item.name}>{item.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {offeredItems.map((item, i) => (
+                  <Badge key={i} className="bg-emerald-600 text-white gap-2">
+                    {item.name}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => setOfferedItems(offeredItems.filter((_, idx) => idx !== i))} />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-emerald-400 uppercase">You Offer</label>
+                <label className="text-xs text-emerald-400 uppercase">Credits You Offer</label>
                 <Input
                   type="number"
                   placeholder="Credits"
@@ -243,7 +272,7 @@ export default function TradingSystem({ campaign, currentCharacter, allCharacter
                 />
               </div>
               <div>
-                <label className="text-xs text-orange-400 uppercase">You Request</label>
+                <label className="text-xs text-orange-400 uppercase">Credits You Request</label>
                 <Input
                   type="number"
                   placeholder="Credits"
@@ -252,6 +281,13 @@ export default function TradingSystem({ campaign, currentCharacter, allCharacter
                   className="bg-slate-800 border-slate-600 text-white"
                 />
               </div>
+            </div>
+
+            {/* Items You Request Note */}
+            <div className="p-3 bg-slate-800/50 border border-slate-700 rounded-lg">
+              <p className="text-xs text-slate-400">
+                💡 To request specific items, use the message field below to describe what you'd like in return
+              </p>
             </div>
 
             <div>

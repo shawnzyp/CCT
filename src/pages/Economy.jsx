@@ -97,6 +97,7 @@ export default function EconomyPage() {
             <VendorManager
               campaign={campaign}
               isGM={false}
+              currentCharacter={currentCharacter}
             />
           </TabsContent>
         </Tabs>

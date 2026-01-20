@@ -5,12 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ShoppingCart, DollarSign, Package, TrendingUp } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ShoppingCart, DollarSign, Package, TrendingUp, Plus as PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import CustomItemCreator from './CustomItemCreator';
 
 export default function MarketplaceHub({ campaign, currentCharacter }) {
+  const [showItemCreator, setShowItemCreator] = useState(false);
   const [showListDialog, setShowListDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [listPrice, setListPrice] = useState(0);
@@ -94,6 +97,15 @@ export default function MarketplaceHub({ campaign, currentCharacter }) {
   const myListings = listings.filter(l => l.character_id === currentCharacter?.id);
   const otherListings = listings.filter(l => l.character_id !== currentCharacter?.id);
 
+  const handleCreateCustomItem = (itemData) => {
+    // Add to character's inventory
+    base44.entities.Character.update(currentCharacter.id, {
+      inventory: [...(currentCharacter.inventory || []), itemData]
+    }).then(() => {
+      toast.success('Custom item created and added to inventory!');
+    });
+  };
+
   return (
     <div className="space-y-4">
       <Card className="bg-slate-800 border-slate-700">
@@ -103,13 +115,22 @@ export default function MarketplaceHub({ campaign, currentCharacter }) {
               <ShoppingCart className="h-5 w-5 text-violet-400" />
               Marketplace
             </CardTitle>
-            <Button
-              onClick={() => setShowListDialog(true)}
-              className="bg-violet-600 hover:bg-violet-700"
-            >
-              <Package className="h-4 w-4 mr-2" />
-              List Item
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowItemCreator(true)}
+                className="bg-emerald-600 hover:bg-emerald-700"
+              >
+                <PlusIcon className="h-4 w-4 mr-2" />
+                Create Item
+              </Button>
+              <Button
+                onClick={() => setShowListDialog(true)}
+                className="bg-violet-600 hover:bg-violet-700"
+              >
+                <Package className="h-4 w-4 mr-2" />
+                List Item
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -193,6 +214,14 @@ export default function MarketplaceHub({ campaign, currentCharacter }) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Custom Item Creator */}
+      <CustomItemCreator
+        isOpen={showItemCreator}
+        onClose={() => setShowItemCreator(false)}
+        onSave={handleCreateCustomItem}
+        character={currentCharacter}
+      />
     </div>
   );
 }

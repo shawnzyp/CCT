@@ -6,8 +6,11 @@ import { Shield, Lock, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { useHaptic } from "@/components/utils/useHaptic";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
+  const navigate = useNavigate();
   const [showPINDialog, setShowPINDialog] = useState(false);
   const [pin, setPin] = useState('');
   const { haptic } = useHaptic();
@@ -25,6 +28,8 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
       toast.success('DM Access Granted', {
         description: 'You now have full control over the campaign'
       });
+      // Navigate to DM Hub
+      navigate(createPageUrl('DMHub'));
     } else {
       haptic('error');
       play('error', 0.3);
