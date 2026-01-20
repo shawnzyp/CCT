@@ -129,9 +129,13 @@ export default function Home() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
-            className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center"
+            className="w-24 h-24 mx-auto mb-6 rounded-2xl flex items-center justify-center overflow-hidden"
           >
-            <Zap className="h-12 w-12 text-white" />
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg" 
+              alt="DC Logo" 
+              className="w-full h-full object-cover"
+            />
           </motion.div>
           
           <motion.h1
