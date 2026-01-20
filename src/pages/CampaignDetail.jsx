@@ -6,7 +6,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map } from "lucide-react";
+import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map, Shield } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
@@ -28,6 +28,8 @@ import GMToolsPanel from "@/components/campaign/GMToolsPanel";
 import DeckOfFatesPlayer from "@/components/campaign/DeckOfFatesPlayer";
 import AdventureModulePlayer from "@/components/campaign/AdventureModulePlayer";
 import PlayerDashboard from "@/components/campaign/PlayerDashboard";
+import DMLoginFooter from "@/components/dm/DMLoginFooter";
+import ShardsOfManyFates from "@/components/campaign/ShardsOfManyFates";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,9 +37,12 @@ export default function CampaignDetail({ currentCharacter }) {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('player');
   const [currentUser, setCurrentUser] = React.useState(null);
+  const [isDM, setIsDM] = React.useState(false);
   
   React.useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
+    const dmSession = localStorage.getItem('dm_session');
+    setIsDM(dmSession === 'active');
   }, []);
   
   const { data: campaign, isLoading } = useQuery({
@@ -68,9 +73,19 @@ export default function CampaignDetail({ currentCharacter }) {
   if (isLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Loading...</div>;
   if (!campaign) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Campaign not found</div>;
   
+  const handleDMLogin = () => {
+    setIsDM(true);
+    localStorage.setItem('dm_session', 'active');
+  };
+
+  const handleDMLogout = () => {
+    setIsDM(false);
+    localStorage.removeItem('dm_session');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 pb-20">
-      <div className="max-w-7xl mx-auto px-4 py-8 pb-20">
+      <div className="max-w-7xl mx-auto px-4 py-8 pb-24">
         <div className="flex items-start gap-4 mb-6">
           <Link to={createPageUrl('Campaigns')}>
             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
@@ -253,11 +268,21 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="gm-tools">
-            <GMToolsPanel 
-              campaign={campaign} 
-              characters={characters}
-              onUpdate={(data) => updateCampaign.mutate(data)} 
-            />
+            {isDM ? (
+              <GMToolsPanel 
+                campaign={campaign} 
+                characters={characters}
+                onUpdate={(data) => updateCampaign.mutate(data)} 
+              />
+            ) : (
+              <div className="bg-slate-900/50 border-2 border-red-500/50 rounded-xl p-12 text-center">
+                <Shield className="h-16 w-16 mx-auto text-red-400 mb-4" />
+                <h3 className="text-xl font-bold text-white mb-2">DM Access Required</h3>
+                <p className="text-slate-400">
+                  You must authenticate as the Dungeon Master to access these tools.
+                </p>
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="combat">
@@ -265,6 +290,12 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
         </Tabs>
       </div>
+      
+      <DMLoginFooter 
+        isDM={isDM}
+        onDMLogin={handleDMLogin}
+        onDMLogout={handleDMLogout}
+      />
     </div>
   );
 }
