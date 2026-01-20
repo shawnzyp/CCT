@@ -462,10 +462,22 @@ export default function CharacterSheet() {
           
           {/* Inventory Tab */}
           <TabsContent value="inventory">
-            <InventoryPanel 
+            <EnhancedInventorySystem 
               character={character}
-              onUpdate={handleInventoryUpdate}
-              onEquip={handleEquipFromInventory}
+              onUpdate={(data) => updateMutation.mutate(data)}
+            />
+          </TabsContent>
+
+          {/* Progression Tracker Tab */}
+          <TabsContent value="progression">
+            <ProgressionTracker character={character} />
+          </TabsContent>
+
+          {/* Player Journal Tab */}
+          <TabsContent value="journal">
+            <PlayerJournal 
+              character={character}
+              onUpdate={(data) => updateMutation.mutate(data)}
             />
           </TabsContent>
           
