@@ -23,12 +23,36 @@ const ENCOURAGEMENTS = [
   "Clearance check: green. All systems nominal."
 ];
 
+const EXPRESSIONS = {
+  neutral: { eyeScale: 1, mouthWidth: 24, mouthY: 0, mouthCurve: 0 },
+  happy: { eyeScale: 1, mouthWidth: 28, mouthY: 2, mouthCurve: 4 },
+  thinking: { eyeScale: 0.8, mouthWidth: 16, mouthY: 0, mouthCurve: -2 },
+  surprised: { eyeScale: 1.3, mouthWidth: 12, mouthY: 2, mouthCurve: 8 },
+  confident: { eyeScale: 0.7, mouthWidth: 26, mouthY: 1, mouthCurve: 3 },
+  analyzing: { eyeScale: 1.1, mouthWidth: 20, mouthY: 0, mouthCurve: 0 }
+};
+
 export default function AegisAssistant() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showEncouragement, setShowEncouragement] = useState(false);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isThinking, setIsThinking] = useState(false);
+  const [expression, setExpression] = useState('neutral');
   const { play } = useSoundEffects();
+  
+  // Random expression changes
+  useEffect(() => {
+    const changeExpression = () => {
+      const expressions = ['neutral', 'thinking', 'confident', 'analyzing'];
+      const randomExp = expressions[Math.floor(Math.random() * expressions.length)];
+      setExpression(randomExp);
+      
+      setTimeout(() => setExpression('neutral'), 2000);
+    };
+    
+    const expressionInterval = setInterval(changeExpression, 15000 + Math.random() * 10000);
+    return () => clearInterval(expressionInterval);
+  }, []);
   
   // Random encouragement system
   useEffect(() => {
@@ -36,10 +60,12 @@ export default function AegisAssistant() {
       const randomMessage = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
       setCurrentMessage(randomMessage);
       setShowEncouragement(true);
+      setExpression('happy');
       play('navigate', 0.1);
       
       setTimeout(() => {
         setShowEncouragement(false);
+        setExpression('neutral');
       }, 5000);
     };
     
@@ -86,26 +112,46 @@ export default function AegisAssistant() {
               className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-400/30 to-transparent"
             />
             
-            {/* Face - animated "eyes" */}
+            {/* Face - animated eyes and mouth */}
             <div className="relative z-10">
+              {/* Eyes */}
               <motion.div
-                animate={isThinking ? {
-                  scaleY: [1, 0.1, 1],
-                } : {}}
-                transition={{ duration: 0.3, repeat: isThinking ? Infinity : 0, repeatDelay: 2 }}
+                animate={{
+                  scaleY: EXPRESSIONS[expression].eyeScale
+                }}
+                transition={{ duration: 0.3 }}
                 className="flex gap-2 mb-1"
               >
-                <div className="w-2 h-2 bg-white rounded-full" />
-                <div className="w-2 h-2 bg-white rounded-full" />
+                <motion.div 
+                  className="w-2 h-2 bg-white rounded-full"
+                  animate={{
+                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <motion.div 
+                  className="w-2 h-2 bg-white rounded-full"
+                  animate={{
+                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
               </motion.div>
-              {/* Mouth line */}
-              <motion.div 
-                className="w-6 h-0.5 bg-white/70 rounded-full mx-auto"
-                animate={{
-                  width: isThinking ? ['24px', '16px', '24px'] : '24px'
-                }}
-                transition={{ duration: 1, repeat: Infinity }}
-              />
+              
+              {/* Mouth - curved based on expression */}
+              <svg width="28" height="12" className="mx-auto" style={{ overflow: 'visible' }}>
+                <motion.path
+                  d={`M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`}
+                  stroke="rgba(255,255,255,0.7)"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeLinecap="round"
+                  animate={{
+                    d: `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+              </svg>
             </div>
             
             {/* Pulse ring */}
