@@ -11,7 +11,6 @@ import { Store, Plus, Edit, Trash2, Package, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import ITEMS_DATABASE from '@/components/data/ItemsDatabase';
 
 export default function VendorManager({ campaign, isGM = false }) {
   const [showCreateVendor, setShowCreateVendor] = useState(false);
