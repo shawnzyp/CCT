@@ -27,6 +27,9 @@ import CombatActionPanel from "@/components/combat/CombatActionPanel";
 import ActiveBonusDisplay from "@/components/combat/ActiveBonusDisplay";
 import DeathSaveRoller from "@/components/combat/DeathSaveRoller";
 import { ScreenFlash, CriticalHitEffect, DeathEffect } from "@/components/combat/CombatVisualFeedback";
+import useCombatMusic from "@/components/sounds/useCombatMusic";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Music, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CombatTracker({ characters, campaignId }) {
@@ -48,6 +51,8 @@ export default function CombatTracker({ characters, campaignId }) {
   const [flashEffect, setFlashEffect] = useState(null);
   const [showCritEffect, setShowCritEffect] = useState(false);
   const [showDeathEffect, setShowDeathEffect] = useState(false);
+  const [combatIntensity, setCombatIntensity] = useState('medium');
+  const { playMusic, stopMusic, playSFX, currentIntensity } = useCombatMusic();
   const queryClient = useQueryClient();
   
   const updateCharacter = useMutation({
@@ -57,12 +62,14 @@ export default function CombatTracker({ characters, campaignId }) {
     }
   });
   
-  const addLogEntry = (actor, action, result = '') => {
+  const addLogEntry = (actor, action, result = '', type = 'action', critical = false) => {
     setCombatLog(prev => [...prev, {
       round: currentRound,
       actor,
       action,
       result,
+      type,
+      critical,
       timestamp: new Date().toISOString()
     }]);
   };
@@ -95,6 +102,7 @@ export default function CombatTracker({ characters, campaignId }) {
     setCurrentTurn(0);
     setCurrentRound(1);
     setCombatLog([]);
+    playMusic(combatIntensity);
     
     addLogEntry('Combat', `Combat started with ${heroes.length} heroes vs ${enemiesWithInit.length} enemies`);
   };
@@ -116,8 +124,10 @@ export default function CombatTracker({ characters, campaignId }) {
             handleHPChange(aiResult.target.id, Math.max(0, (aiResult.target.current_hp || aiResult.target.max_hp) - damage));
             addLogEntry(current.name, aiResult.description, `Hit! ${damage} damage dealt`);
             setVisualEffect({ type: 'hit', combatantId: aiResult.target.id, damage });
+            playSFX('hit');
           } else {
             addLogEntry(current.name, aiResult.description, 'Miss!');
+            playSFX('miss');
           }
           setTimeout(() => setVisualEffect(null), 1000);
         }, 800);
@@ -173,6 +183,8 @@ export default function CombatTracker({ characters, campaignId }) {
   
   const endCombat = () => {
     addLogEntry('Combat', 'Combat ended');
+    stopMusic();
+    playSFX('victory');
     setCombatActive(false);
     setInitiativeOrder([]);
     setCurrentTurn(0);
@@ -225,6 +237,7 @@ export default function CombatTracker({ characters, campaignId }) {
           // Check if enemy was defeated
           if (char.isEnemy && newHP <= 0 && char.hp > 0) {
             generateLoot(char);
+            playSFX('enemyDefeat');
             toast.success("Enemy Defeated!", { description: `${char.name} has been defeated!` });
           }
           return { ...char, current_hp: newHP, hp: newHP };
@@ -321,9 +334,11 @@ export default function CombatTracker({ characters, campaignId }) {
         if (result.isCrit) {
           setShowCritEffect(true);
           setTimeout(() => setShowCritEffect(false), 2000);
+          playSFX('critical');
           toast.success("CRITICAL HIT!", { description: "Natural 20! Roll damage twice!" });
-          addLogEntry(combatant.name, `Critical Hit vs ${target?.name || 'target'}!`, `Rolled ${result.roll} (Total: ${result.total})`);
+          addLogEntry(combatant.name, `Critical Hit vs ${target?.name || 'target'}!`, `Rolled ${result.roll} (Total: ${result.total})`, '', true);
         } else if (result.isFail) {
+          playSFX('miss');
           toast.error("Critical Miss!", { description: "Natural 1 - automatic miss!" });
           addLogEntry(combatant.name, 'Critical Miss!', `Rolled 1`);
         } else {
@@ -361,6 +376,20 @@ export default function CombatTracker({ characters, campaignId }) {
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">Combat Setup</h2>
           <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              <Music className="h-4 w-4 text-violet-400" />
+              <Select value={combatIntensity} onValueChange={setCombatIntensity}>
+                <SelectTrigger className="w-[140px] bg-slate-800 border-slate-600 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low Intensity</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High Stakes</SelectItem>
+                  <SelectItem value="boss">Boss Fight</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <Button 
               onClick={() => setShowRandomEncounter(true)}
               className="gap-2 bg-violet-600 hover:bg-violet-700"
@@ -541,9 +570,10 @@ export default function CombatTracker({ characters, campaignId }) {
                 return;
               }
 
-              addLogEntry(char.name, `Uses ${power.name}`, power.effect);
+              addLogEntry(char.name, `Uses ${power.name}`, power.effect, 'power');
               const newSP = currentSP - power.sp_cost;
               handleSPChange(char.id, newSP);
+              playSFX('powerUse');
               toast.success(`${power.name} activated!`, { description: `${power.sp_cost} SP spent` });
             }}
             onMove={() => {
@@ -742,7 +772,7 @@ export default function CombatTracker({ characters, campaignId }) {
       </TabsContent>
       
         <TabsContent value="log">
-          <CombatLog logs={combatLog} />
+          <CombatLog log={combatLog} />
         </TabsContent>
         
         <TabsContent value="aegis">
