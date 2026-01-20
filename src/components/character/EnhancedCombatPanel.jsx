@@ -78,8 +78,8 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
   return (
     <TooltipProvider>
       <div className="space-y-4">
-        {/* Section 1: Resources & Core Stats */}
-        <div className="grid md:grid-cols-3 gap-4">
+        {/* Section 1: Resources */}
+        <div className="grid md:grid-cols-2 gap-4">
           {/* HP Tracker */}
           <CalculatorResourceTracker
             icon={Heart}
@@ -103,71 +103,6 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
             adjustments={[-1, -2, -3, -4, -5]}
             type="SP"
           />
-
-          {/* Quick Stats */}
-          <div className="space-y-3">
-            <Card className="bg-violet-950/30 border-violet-900/50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Shield className="h-4 w-4 text-violet-400" />
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-xs text-violet-300 font-medium cursor-help">Toughness Class</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">Enemies must roll equal or higher to hit you. TC = 10 + DEX modifier + armor bonuses.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                    <div className="text-3xl font-bold text-white">
-                      {character.toughness_class || 10}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-emerald-950/30 border-emerald-900/50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Move className="h-4 w-4 text-emerald-400" />
-                      <span className="text-xs text-emerald-300 font-medium">Movement Speed</span>
-                    </div>
-                    <div className="text-3xl font-bold text-white">
-                      {character.speed || 30} <span className="text-lg text-slate-400">ft</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-amber-950/30 border-amber-900/50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Activity className="h-4 w-4 text-amber-400" />
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-xs text-amber-300 font-medium cursor-help">Initiative</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">Roll d20 + this modifier at combat start to determine turn order</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                    <div className="text-3xl font-bold text-white">
-                      {formatModifier(initiativeBonus)}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
 
         {/* Section 2: Action Economy */}
