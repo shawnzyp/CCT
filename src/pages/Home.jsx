@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart, Settings, Scroll, DollarSign } from 'lucide-react';
+import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart, Settings, Scroll, DollarSign, BookMarked, Award, MessageSquare } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
@@ -35,25 +35,28 @@ export default function Home() {
 
   const features = [
     {
-      icon: Users,
-      title: 'My Characters',
-      description: 'View and manage your hero roster',
-      action: () => setShowCharacterSelector(true),
-      color: 'from-violet-500 to-purple-600'
+      icon: Swords,
+      title: 'Combat Tracker',
+      description: 'Track combat encounters',
+      link: currentCharacter ? `CharacterSheet?id=${currentCharacter.id}` : null,
+      action: !currentCharacter ? () => setShowCharacterSelector(true) : null,
+      color: 'from-red-500 to-orange-600'
     },
     {
-      icon: BookOpen,
-      title: 'Campaigns',
-      description: 'Join or manage active campaigns',
-      link: 'Campaigns',
-      color: 'from-blue-500 to-cyan-600'
+      icon: BookMarked,
+      title: 'Journal',
+      description: 'Character notes and journal',
+      link: currentCharacter ? `CharacterSheet?id=${currentCharacter.id}` : null,
+      action: !currentCharacter ? () => setShowCharacterSelector(true) : null,
+      color: 'from-indigo-500 to-purple-600'
     },
     {
-      icon: Sparkles,
-      title: 'Create Character',
-      description: 'Build a new vigilante hero',
-      link: 'CreateCharacter',
-      color: 'from-purple-500 to-pink-600'
+      icon: Award,
+      title: 'Achievements',
+      description: 'View your achievements',
+      link: currentCharacter ? `CharacterSheet?id=${currentCharacter.id}` : null,
+      action: !currentCharacter ? () => setShowCharacterSelector(true) : null,
+      color: 'from-yellow-500 to-amber-600'
     },
     {
       icon: User,
