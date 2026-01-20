@@ -169,7 +169,7 @@ export default function ProgressionTracker({ character, onLevelUp }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width="100%" height={150}>
             <BarChart data={levelHistory}>
               <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
               <XAxis dataKey="level" stroke="#94a3b8" />
