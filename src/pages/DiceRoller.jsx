@@ -155,38 +155,36 @@ export default function DiceRoller() {
               </div>
 
               {/* Number of Dice */}
-              {!advantage && !disadvantage && (
-                <div>
-                  <Label className="text-slate-300 mb-2 block">Number of Dice</Label>
-                  <div className="flex items-center gap-3">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setNumDice(Math.max(1, numDice - 1))}
-                      className="border-slate-700"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Input
-                      type="number"
-                      value={numDice}
-                      onChange={(e) => setNumDice(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="bg-slate-900 border-slate-700 text-white text-center"
-                      min="1"
-                      max="99"
-                      autoFocus={false}
-                    />
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setNumDice(Math.min(99, numDice + 1))}
-                      className="border-slate-700"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
+              <div>
+                <Label className="text-slate-300 mb-2 block">Number of Dice</Label>
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setNumDice(Math.max(1, numDice - 1))}
+                    className="border-slate-700"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Input
+                    type="number"
+                    value={numDice}
+                    onChange={(e) => setNumDice(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="bg-slate-900 border-slate-700 text-white text-center"
+                    min="1"
+                    max="99"
+                    autoFocus={false}
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setNumDice(Math.min(99, numDice + 1))}
+                    className="border-slate-700"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-              )}
+              </div>
 
               {/* Modifier */}
               <div>
