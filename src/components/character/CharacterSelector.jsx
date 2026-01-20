@@ -14,6 +14,13 @@ export default function CharacterSelector({ characters, onSelect, onClose }) {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, []);
 
   const filteredCharacters = characters.filter(char =>
     char.name?.toLowerCase().includes(search.toLowerCase()) ||
