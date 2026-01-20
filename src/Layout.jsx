@@ -87,6 +87,7 @@ export default function Layout({ children }) {
     {
       name: 'System',
       items: [
+        ...(isDM ? [{ name: 'DM Hub', path: 'DMHub', icon: Settings }] : []),
         { name: 'Settings', path: 'Settings', icon: Settings },
       ]
     }
@@ -277,18 +278,18 @@ export default function Layout({ children }) {
       </header>
       
       {/* Main Content */}
-      <main className="pt-16 pb-16 relative z-10">
+      <main className="pt-16 relative z-10">
         <div className="overflow-y-auto scroll-smooth">
           {children}
         </div>
+        
+        {/* DM Login Footer - at bottom of page flow */}
+        <DMLoginFooter 
+          isDM={isDM}
+          onDMLogin={() => setIsDM(true)}
+          onDMLogout={() => setIsDM(false)}
+        />
       </main>
-
-      {/* DM Login Footer */}
-      <DMLoginFooter 
-        isDM={isDM}
-        onDMLogin={() => setIsDM(true)}
-        onDMLogout={() => setIsDM(false)}
-      />
 
       {showCharacterSelector && (
         <CharacterSelector

@@ -48,7 +48,7 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
   return (
     <>
       {/* Footer Button */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30">
+      <div className="w-full bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30 mt-12">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
           {isDM ? (
             <Button
