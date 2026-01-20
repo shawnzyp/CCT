@@ -267,6 +267,7 @@ export default function CharacterSheet() {
               <Settings className="h-4 w-4 mr-2" />
               Edit Character
             </Button>
+            <ExportCharacterPDF character={character} />
             <ImportExportCharacter character={character} onImport={handleImport} />
           </div>
         </div>
