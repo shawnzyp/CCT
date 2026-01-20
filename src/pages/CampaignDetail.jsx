@@ -27,12 +27,13 @@ import AegisInterface from "@/components/aegis/AegisInterface";
 import GMToolsPanel from "@/components/campaign/GMToolsPanel";
 import DeckOfFatesPlayer from "@/components/campaign/DeckOfFatesPlayer";
 import AdventureModulePlayer from "@/components/campaign/AdventureModulePlayer";
+import PlayerDashboard from "@/components/campaign/PlayerDashboard";
 
 export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
   const campaignId = urlParams.get('id');
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('player');
   const [currentUser, setCurrentUser] = React.useState(null);
   
   React.useEffect(() => {
@@ -95,7 +96,8 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="dashboard">📊 Dashboard</SelectItem>
+              <SelectItem value="player">👤 Player Dashboard</SelectItem>
+              <SelectItem value="dashboard">📊 GM Dashboard</SelectItem>
               <SelectItem value="log">💬 Session Log</SelectItem>
               <SelectItem value="quests">📜 Quests</SelectItem>
               <SelectItem value="arcs">🎯 Story Arcs</SelectItem>
@@ -112,6 +114,10 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectItem value="combat">⚔️ Combat</SelectItem>
             </SelectContent>
           </Select>
+          
+          <TabsContent value="player">
+            <PlayerDashboard campaign={campaign} currentCharacter={currentCharacter} />
+          </TabsContent>
           
           <TabsContent value="dashboard">
             <CampaignDashboard campaign={campaign} characters={characters} campaignId={campaignId} />
