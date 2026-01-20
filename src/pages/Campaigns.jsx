@@ -71,6 +71,7 @@ export default function Campaigns() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10 bg-slate-800/50 border-slate-700 text-white"
+            autoFocus={false}
           />
         </div>
         

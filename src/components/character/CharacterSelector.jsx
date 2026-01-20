@@ -34,6 +34,7 @@ export default function CharacterSelector({ characters, onSelect, onClose }) {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search characters..."
               className="pl-10 bg-slate-800 border-slate-700 text-white"
+              autoFocus={false}
             />
           </div>
 

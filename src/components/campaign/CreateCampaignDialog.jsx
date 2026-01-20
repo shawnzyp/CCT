@@ -71,6 +71,7 @@ export default function CreateCampaignDialog({ onClose }) {
               placeholder="e.g., Rise of the Catalyst"
               className="bg-slate-800 border-slate-700 text-white mt-1"
               required
+              autoFocus={false}
             />
           </div>
           <div>
