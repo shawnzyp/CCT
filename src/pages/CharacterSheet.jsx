@@ -305,7 +305,7 @@ export default function CharacterSheet() {
           <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <div className="text-xs text-slate-400 uppercase tracking-wider">Toughness Class</div>
+                <div className="text-xs text-slate-300 uppercase tracking-wider">Toughness Class</div>
                 <div className="text-3xl font-bold text-white">{character.toughness_class || 10}</div>
               </div>
               <Shield className="h-8 w-8 text-blue-400" />
@@ -315,9 +315,9 @@ export default function CharacterSheet() {
           <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <div className="text-xs text-slate-400 uppercase tracking-wider">Stamina Points</div>
+                <div className="text-xs text-slate-300 uppercase tracking-wider">Stamina Points</div>
                 <div className="text-3xl font-bold text-white">{maxSP}</div>
-                <div className="text-xs text-slate-500">Regenerates each round</div>
+                <div className="text-xs text-slate-400">Regenerates each round</div>
               </div>
               <Zap className="h-8 w-8 text-violet-400" />
             </CardContent>
@@ -381,10 +381,10 @@ export default function CharacterSheet() {
                     const mod = getModifier(character.ability_scores?.[stat] || 10);
                     return (
                       <div key={stat} className="flex items-center justify-between bg-slate-700/50 rounded-lg px-3 py-2">
-                        <span className="text-sm text-slate-400">{stat}</span>
+                        <span className="text-sm text-slate-300 font-medium">{stat}</span>
                         <span className={cn(
-                          "font-bold",
-                          mod >= 0 ? "text-emerald-400" : "text-red-400"
+                          "font-bold text-base",
+                          mod >= 0 ? "text-emerald-300" : "text-red-300"
                         )}>
                           {formatModifier(mod)}
                         </span>
@@ -449,8 +449,8 @@ export default function CharacterSheet() {
             ) : (
               <Card className="bg-slate-800/30 border-slate-700 border-dashed">
                 <CardContent className="py-12 text-center">
-                  <Zap className="h-10 w-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-slate-400 mb-4">No powers created yet</p>
+                  <Zap className="h-10 w-10 text-slate-500 mx-auto mb-3" />
+                  <p className="text-slate-300 mb-4">No powers created yet</p>
                   <Button 
                     onClick={() => setShowPowerEditor(true)}
                     variant="outline"
@@ -513,7 +513,7 @@ export default function CharacterSheet() {
                 <textarea
                   value={character.backstory_notes || ''}
                   onChange={(e) => updateMutation.mutate({ backstory_notes: e.target.value })}
-                  className="w-full min-h-[300px] bg-slate-900/50 border border-slate-700 rounded-lg p-4 text-slate-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  className="w-full min-h-[300px] bg-slate-900/50 border border-slate-700 rounded-lg p-4 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   placeholder="Add your character notes, backstory, or roleplay details..."
                 />
               </CardContent>
@@ -542,15 +542,15 @@ export default function CharacterSheet() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <div className="text-xs text-slate-500 uppercase tracking-wider">Classification</div>
-                    <div className="text-white font-medium">{CLASSIFICATION_LABELS[character.classification]}</div>
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Classification</div>
+                    <div className="text-white font-medium mt-1">{CLASSIFICATION_LABELS[character.classification]}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 uppercase tracking-wider">Origin Story</div>
-                    <div className="text-white font-medium">{ORIGIN_LABELS[character.origin_story]}</div>
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Origin Story</div>
+                    <div className="text-white font-medium mt-1">{ORIGIN_LABELS[character.origin_story]}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 uppercase tracking-wider">Power Styles</div>
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Power Styles</div>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {character.power_styles?.map(style => (
                         <Badge 
@@ -577,23 +577,23 @@ export default function CharacterSheet() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <div className="text-xs text-slate-500 uppercase tracking-wider">Vigilante Name</div>
-                    <div className="text-white font-medium">{character.name}</div>
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Vigilante Name</div>
+                    <div className="text-white font-medium mt-1">{character.name}</div>
                   </div>
                   {character.real_name && (
                     <div>
-                      <div className="text-xs text-slate-500 uppercase tracking-wider">Real Name</div>
-                      <div className="text-white">{character.real_name}</div>
+                      <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Real Name</div>
+                      <div className="text-white mt-1">{character.real_name}</div>
                     </div>
                   )}
                   <div>
-                    <div className="text-xs text-slate-500 uppercase tracking-wider">Alignment</div>
-                    <div className="text-white">{ALIGNMENT_LABELS[character.alignment]}</div>
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Alignment</div>
+                    <div className="text-white mt-1">{ALIGNMENT_LABELS[character.alignment]}</div>
                   </div>
                   {character.damage_resistance && (
                     <div>
-                      <div className="text-xs text-slate-500 uppercase tracking-wider">Damage Resistance</div>
-                      <div className="text-white">{character.damage_resistance}</div>
+                      <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Damage Resistance</div>
+                      <div className="text-white mt-1">{character.damage_resistance}</div>
                     </div>
                   )}
                 </CardContent>
@@ -606,7 +606,7 @@ export default function CharacterSheet() {
                   <CardTitle className="text-white text-lg">Backstory Notes</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-300 whitespace-pre-wrap">{character.backstory_notes}</p>
+                  <p className="text-slate-200 whitespace-pre-wrap leading-relaxed">{character.backstory_notes}</p>
                 </CardContent>
               </Card>
             )}
