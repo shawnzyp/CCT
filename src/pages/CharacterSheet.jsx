@@ -549,10 +549,16 @@ export default function CharacterSheet() {
                   <div>
                     <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Classification</div>
                     <div className="text-white font-medium mt-1">{CLASSIFICATION_LABELS[character.classification]}</div>
+                    {character.classification_perk && (
+                      <div className="text-xs text-violet-400 mt-1 italic">✦ {character.classification_perk}</div>
+                    )}
                   </div>
                   <div>
                     <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Origin Story</div>
                     <div className="text-white font-medium mt-1">{ORIGIN_LABELS[character.origin_story]}</div>
+                    {character.origin_perk && (
+                      <div className="text-xs text-violet-400 mt-1 italic">✦ {character.origin_perk}</div>
+                    )}
                   </div>
                   <div>
                     <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Power Styles</div>
@@ -572,6 +578,9 @@ export default function CharacterSheet() {
                         </Badge>
                       ))}
                     </div>
+                    {character.primary_power_style_perk && (
+                      <div className="text-xs text-violet-400 mt-1 italic">✦ Primary Perk: {character.primary_power_style_perk}</div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -594,6 +603,9 @@ export default function CharacterSheet() {
                   <div>
                     <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Alignment</div>
                     <div className="text-white mt-1">{ALIGNMENT_LABELS[character.alignment]}</div>
+                    {character.alignment_perk && (
+                      <div className="text-xs text-violet-400 mt-1 italic">✦ {character.alignment_perk}</div>
+                    )}
                   </div>
                   {character.damage_resistance && (
                     <div>
