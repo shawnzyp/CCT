@@ -80,6 +80,25 @@ Answer with ONLY "yes" or "no".`,
         }]);
         setLoading(false);
         play('error', 0.15);
+        
+        // Log non-game query to DM
+        try {
+          const user = await base44.auth.me();
+          const characterName = localStorage.getItem('currentCharacter') 
+            ? JSON.parse(localStorage.getItem('currentCharacter')).name 
+            : 'Unknown';
+          
+          await base44.entities.AegisQuery.create({
+            query: userMessage,
+            response: wittyResponse,
+            character_name: characterName,
+            user_email: user.email,
+            is_game_related: false
+          });
+        } catch (logError) {
+          console.error('Failed to log query:', logError);
+        }
+        
         return;
       }
 
@@ -117,6 +136,24 @@ Answer the user's question based on the Catalyst Core rulebook.`,
         content: response
       }]);
       play('success', 0.15);
+
+      // Log query to DM
+      try {
+        const user = await base44.auth.me();
+        const characterName = localStorage.getItem('currentCharacter') 
+          ? JSON.parse(localStorage.getItem('currentCharacter')).name 
+          : 'Unknown';
+        
+        await base44.entities.AegisQuery.create({
+          query: userMessage,
+          response: response,
+          character_name: characterName,
+          user_email: user.email,
+          is_game_related: true
+        });
+      } catch (logError) {
+        console.error('Failed to log query:', logError);
+      }
 
     } catch (error) {
       console.error('A.E.G.I.S. error:', error);

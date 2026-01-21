@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import PlayCampaign from './pages/PlayCampaign';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
+import AegisLogs from './pages/AegisLogs';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "PlayCampaign": PlayCampaign,
     "Rules": Rules,
     "Settings": Settings,
+    "AegisLogs": AegisLogs,
 }
 
 export const pagesConfig = {
