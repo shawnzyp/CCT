@@ -25,6 +25,14 @@
     --ring: 263 70% 50%;
     --radius: 0.5rem;
   }
+  
+  /* Mobile safe area support */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+  }
 }
 
 @layer base {
