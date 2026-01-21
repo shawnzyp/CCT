@@ -96,6 +96,15 @@ export default function PowerCard({
         
         <p className="text-sm text-slate-300 mb-3">{power.description || power.effect}</p>
         
+        {power.damage_dice_count > 0 && (
+          <div className="mb-2">
+            <Badge className="bg-red-500/20 text-red-300 font-mono text-sm">
+              {power.damage_dice_count}d{power.damage_dice_type}
+              {power.damage_modifier !== 0 && ` ${power.damage_modifier >= 0 ? '+' : ''}${power.damage_modifier}`}
+            </Badge>
+          </div>
+        )}
+        
         {power.damage_type && (
           <div className="mb-2">
             <Badge variant="outline" className="border-orange-500/50 text-orange-300 text-xs">
