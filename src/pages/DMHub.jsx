@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, Users, Zap, Settings, Coins, BookOpen,
-  Trophy, Package, Store, MapPin, Calendar, FileText
+  Trophy, Package, Store, MapPin, Calendar, FileText, Radio
 } from 'lucide-react';
 
 export default function DMHub() {
@@ -59,6 +59,7 @@ export default function DMHub() {
       color: 'amber',
       tools: [
         { name: 'Settings', path: 'Settings', icon: Settings, description: 'App configuration' },
+        { name: 'A.E.G.I.S. Logs', path: 'AegisLogs', icon: Radio, description: 'View all player queries to A.E.G.I.S.' },
         { name: 'Rules Reference', path: 'Rules', icon: BookOpen, description: 'Game rules & mechanics' },
       ]
     }
