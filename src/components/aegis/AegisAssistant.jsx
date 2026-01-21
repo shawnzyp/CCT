@@ -95,7 +95,11 @@ export default function AegisAssistant() {
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="fixed bottom-6 left-6 z-50"
+        className="fixed z-50"
+        style={{
+          bottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
+          left: 'max(24px, env(safe-area-inset-left, 24px))'
+        }}
       >
         <motion.button
           onClick={toggleExpanded}
@@ -191,7 +195,11 @@ export default function AegisAssistant() {
             initial={{ opacity: 0, x: -20, y: 20 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="fixed bottom-24 left-6 z-50 max-w-xs"
+            className="fixed z-50 max-w-xs"
+            style={{
+              bottom: 'max(96px, calc(env(safe-area-inset-bottom, 24px) + 72px))',
+              left: 'max(24px, env(safe-area-inset-left, 24px))'
+            }}
           >
             <div className="relative bg-slate-800 border-2 border-violet-500 rounded-xl p-4 shadow-xl shadow-violet-500/30">
               {/* Close button */}
@@ -229,7 +237,11 @@ export default function AegisAssistant() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-28 left-6 z-50 w-96 max-h-[600px]"
+            className="fixed z-50 w-96 max-h-[600px]"
+            style={{
+              bottom: 'max(112px, calc(env(safe-area-inset-bottom, 24px) + 88px))',
+              left: 'max(24px, env(safe-area-inset-left, 24px))'
+            }}
           >
             <div className="bg-slate-900 border-2 border-violet-500 rounded-xl shadow-2xl shadow-violet-500/30 overflow-hidden">
               {/* Header */}

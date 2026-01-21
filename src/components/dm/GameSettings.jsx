@@ -37,6 +37,41 @@ export default function GameSettings({ campaign, onUpdate }) {
     toast.success('Discord settings saved');
   };
 
+  const testWebhook = async () => {
+    if (!discordWebhook) {
+      toast.error('Please enter a webhook URL first');
+      return;
+    }
+
+    try {
+      const response = await fetch(discordWebhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: webhookName,
+          embeds: [{
+            title: "🧪 Webhook Test",
+            description: "Your Discord webhook is properly configured!",
+            color: 0x8B5CF6,
+            fields: [
+              { name: "Status", value: "✅ Connection successful", inline: true },
+              { name: "Bot Name", value: webhookName, inline: true }
+            ],
+            timestamp: new Date().toISOString()
+          }]
+        })
+      });
+
+      if (response.ok) {
+        toast.success('Test message sent to Discord!');
+      } else {
+        toast.error('Failed to send test message. Check your webhook URL.');
+      }
+    } catch (error) {
+      toast.error('Error sending test message: ' + error.message);
+    }
+  };
+
   const toggleWebhookEvent = (event) => {
     const updated = { ...webhookEvents, [event]: !webhookEvents[event] };
     setWebhookEvents(updated);
@@ -106,9 +141,14 @@ export default function GameSettings({ campaign, onUpdate }) {
                 </ScrollArea>
               </div>
 
-              <Button onClick={saveDiscordSettings} className="w-full bg-violet-600 hover:bg-violet-700">
-                Save Discord Settings
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={saveDiscordSettings} className="flex-1 bg-violet-600 hover:bg-violet-700">
+                  Save Settings
+                </Button>
+                <Button onClick={testWebhook} variant="outline" className="flex-1">
+                  Test Webhook
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
