@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import PlayCampaign from './pages/PlayCampaign';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
+import DiscordSettings from './pages/DiscordSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "PlayCampaign": PlayCampaign,
     "Rules": Rules,
     "Settings": Settings,
+    "DiscordSettings": DiscordSettings,
 }
 
 export const pagesConfig = {

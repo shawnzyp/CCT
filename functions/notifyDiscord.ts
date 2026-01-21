@@ -1,7 +1,37 @@
-export default async function notifyDiscord(params, context) {
-  const { eventType, data } = params;
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+
+export default async function notifyDiscord(req) {
+  const base44 = createClientFromRequest(req);
+  const { eventType, data, webhookUrl, botUsername, embedColor, avatarUrl } = await req.json();
   
-  const WEBHOOK_URL = "https://discord.com/api/webhooks/1452048819985580279/aZa0V23lM0XSbVad4iP5j9yU8RnOFjpvYkbhTo_UGXWD6NBrPNv8Rny7VndJLPhaonae";
+  // Get settings from database if not provided
+  let finalWebhookUrl = webhookUrl;
+  let finalBotUsername = botUsername || 'O.M.N.I. S.C. REPORT';
+  let finalEmbedColor = embedColor || '#8B5CF6';
+  let finalAvatarUrl = avatarUrl;
+  
+  if (!webhookUrl) {
+    const settings = await base44.asServiceRole.entities.DiscordSettings.list();
+    if (settings.length === 0) {
+      return Response.json({ success: false, error: 'No Discord settings configured' });
+    }
+    
+    const setting = settings[0];
+    if (!setting.enabled) {
+      return Response.json({ success: false, error: 'Discord integration is disabled' });
+    }
+    
+    if (!setting.enabled_events?.includes(eventType)) {
+      return Response.json({ success: false, error: 'Event type not enabled in settings' });
+    }
+    
+    finalWebhookUrl = setting.webhook_url;
+    finalBotUsername = setting.bot_username || finalBotUsername;
+    finalEmbedColor = setting.embed_color || finalEmbedColor;
+    finalAvatarUrl = setting.avatar_url;
+  }
+  
+  const hexToDecimal = (hex) => parseInt(hex.replace('#', ''), 16);
   
   let embed = {};
   
@@ -109,34 +139,93 @@ export default async function notifyDiscord(params, context) {
       };
       break;
       
+    case 'achievement_unlocked':
+      embed = {
+        title: "🏆 Achievement Unlocked",
+        description: `**${data.characterName}** earned: **${data.achievementName}**`,
+        color: 0xFBBF24,
+        fields: [
+          { name: "Description", value: data.description || 'New achievement!', inline: false },
+          { name: "Campaign", value: data.campaignName, inline: true }
+        ],
+        timestamp: new Date().toISOString()
+      };
+      break;
+      
+    case 'item_acquired':
+      embed = {
+        title: "📦 Legendary Item Acquired",
+        description: `**${data.characterName}** obtained: **${data.itemName}**`,
+        color: 0xF97316,
+        fields: [
+          { name: "Rarity", value: data.rarity || 'Legendary', inline: true },
+          { name: "Campaign", value: data.campaignName, inline: true }
+        ],
+        timestamp: new Date().toISOString()
+      };
+      break;
+      
+    case 'party_wipe':
+      embed = {
+        title: "💀 PARTY WIPE",
+        description: `All heroes have fallen in **${data.campaignName}**`,
+        color: 0xDC2626,
+        fields: [
+          { name: "Encounter", value: data.encounterName || 'Unknown threat', inline: false },
+          { name: "Fallen Heroes", value: data.characters?.join(', ') || 'All', inline: false }
+        ],
+        timestamp: new Date().toISOString()
+      };
+      break;
+      
+    case 'test':
+      embed = {
+        title: "✅ Discord Webhook Test",
+        description: data.message || 'Test message from Catalyst Core',
+        color: hexToDecimal(finalEmbedColor),
+        fields: [
+          { name: "Status", value: "Connection successful!", inline: true },
+          { name: "Time", value: new Date().toLocaleString(), inline: true }
+        ],
+        timestamp: new Date().toISOString()
+      };
+      break;
+      
     default:
       embed = {
         title: "🎲 Game Event",
         description: data.message || 'An event occurred',
-        color: 0x8B5CF6,
+        color: hexToDecimal(finalEmbedColor),
         timestamp: new Date().toISOString()
       };
   }
   
   const payload = {
-    username: "O.M.N.I. S.C. REPORT",
+    username: finalBotUsername,
     embeds: [embed]
   };
   
+  if (finalAvatarUrl) {
+    payload.avatar_url = finalAvatarUrl;
+  }
+  
   try {
-    const response = await fetch(WEBHOOK_URL, {
+    const response = await fetch(finalWebhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     
     if (!response.ok) {
-      throw new Error(`Discord webhook failed: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Discord webhook failed: ${response.status} - ${errorText}`);
     }
     
-    return { success: true };
+    return Response.json({ success: true });
   } catch (error) {
     console.error('Discord notification error:', error);
-    return { success: false, error: error.message };
+    return Response.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+
+Deno.serve(notifyDiscord);
