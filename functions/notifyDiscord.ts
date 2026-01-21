@@ -13,22 +13,26 @@ export default async function notifyDiscord(req) {
   if (!webhookUrl) {
     const settings = await base44.asServiceRole.entities.DiscordSettings.list();
     if (settings.length === 0) {
-      return Response.json({ success: false, error: 'No Discord settings configured' });
+      // Fallback to environment variable
+      finalWebhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL');
+      if (!finalWebhookUrl) {
+        return Response.json({ success: false, error: 'No Discord settings configured' });
+      }
+    } else {
+      const setting = settings[0];
+      if (!setting.enabled) {
+        return Response.json({ success: false, error: 'Discord integration is disabled' });
+      }
+      
+      if (!setting.enabled_events?.includes(eventType)) {
+        return Response.json({ success: false, error: 'Event type not enabled in settings' });
+      }
+      
+      finalWebhookUrl = setting.webhook_url;
+      finalBotUsername = setting.bot_username || finalBotUsername;
+      finalEmbedColor = setting.embed_color || finalEmbedColor;
+      finalAvatarUrl = setting.avatar_url;
     }
-    
-    const setting = settings[0];
-    if (!setting.enabled) {
-      return Response.json({ success: false, error: 'Discord integration is disabled' });
-    }
-    
-    if (!setting.enabled_events?.includes(eventType)) {
-      return Response.json({ success: false, error: 'Event type not enabled in settings' });
-    }
-    
-    finalWebhookUrl = setting.webhook_url;
-    finalBotUsername = setting.bot_username || finalBotUsername;
-    finalEmbedColor = setting.embed_color || finalEmbedColor;
-    finalAvatarUrl = setting.avatar_url;
   }
   
   const hexToDecimal = (hex) => parseInt(hex.replace('#', ''), 16);
