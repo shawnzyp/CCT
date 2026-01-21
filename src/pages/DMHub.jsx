@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, Users, Zap, Settings, Coins, BookOpen,
-  Trophy, Package, Store, MapPin, Calendar, FileText, Radio, Webhook
+  Trophy, Package, Store, MapPin, Calendar, FileText, Radio, Webhook, Gift
 } from 'lucide-react';
 
 export default function DMHub() {
@@ -35,6 +35,7 @@ export default function DMHub() {
       color: 'violet',
       tools: [
         { name: 'Campaigns', path: 'Campaigns', icon: BookOpen, description: 'Manage your campaigns' },
+        { name: 'Quest Rewards', path: 'RewardCenter', icon: Gift, description: 'Create and distribute rewards to players' },
       ]
     },
     {

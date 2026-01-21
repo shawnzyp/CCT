@@ -169,6 +169,22 @@ export default async function notifyDiscord(req) {
       };
       break;
       
+    case 'reward_distributed':
+      embed = {
+        title: '🎁 Rewards Distributed!',
+        description: data.trigger 
+          ? `Rewards automatically distributed: **${data.trigger}**`
+          : `The DM has distributed rewards to the party!`,
+        color: 0x10B981,
+        fields: [
+          { name: 'Reward', value: data.reward_name, inline: true },
+          { name: 'Type', value: data.reward_type, inline: true },
+          ...(data.recipients ? [{ name: 'Recipients', value: data.recipients }] : [])
+        ],
+        timestamp: new Date().toISOString()
+      };
+      break;
+      
     case 'party_wipe':
       embed = {
         title: "💀 PARTY WIPE",

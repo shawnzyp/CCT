@@ -14,6 +14,7 @@ import PlayCampaign from './pages/PlayCampaign';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
 import DiscordSettings from './pages/DiscordSettings';
+import RewardCenter from './pages/RewardCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -34,6 +35,7 @@ export const PAGES = {
     "Rules": Rules,
     "Settings": Settings,
     "DiscordSettings": DiscordSettings,
+    "RewardCenter": RewardCenter,
 }
 
 export const pagesConfig = {
