@@ -1,3 +1,4 @@
+import AegisLogs from './pages/AegisLogs';
 import CampaignDetail from './pages/CampaignDetail';
 import Campaigns from './pages/Campaigns';
 import CharacterSheet from './pages/CharacterSheet';
@@ -12,11 +13,11 @@ import Home from './pages/Home';
 import PlayCampaign from './pages/PlayCampaign';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import AegisLogs from './pages/AegisLogs';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AegisLogs": AegisLogs,
     "CampaignDetail": CampaignDetail,
     "Campaigns": Campaigns,
     "CharacterSheet": CharacterSheet,
@@ -31,11 +32,10 @@ export const PAGES = {
     "PlayCampaign": PlayCampaign,
     "Rules": Rules,
     "Settings": Settings,
-    "AegisLogs": AegisLogs,
 }
 
 export const pagesConfig = {
-    mainPage: "Characters",
+    mainPage: "Home",
     Pages: PAGES,
     Layout: __Layout,
 };
