@@ -35,6 +35,10 @@ export default function EquipmentManager({ character, onUpdate }) {
     rarity: 'common',
     description: '',
     bonus: '',
+    damage_dice_count: 0,
+    damage_dice_type: 6,
+    damage_modifier: 0,
+    damage_type: '',
     magical_properties: [],
     value: 0,
     equipped: false
@@ -47,7 +51,7 @@ export default function EquipmentManager({ character, onUpdate }) {
     if (!newItem.name.trim()) return;
     
     onUpdate([...equipment, { ...newItem }]);
-    setNewItem({ name: '', type: 'weapon', rarity: 'common', description: '', bonus: '', magical_properties: [], value: 0, equipped: false });
+    setNewItem({ name: '', type: 'weapon', rarity: 'common', description: '', bonus: '', damage_dice_count: 0, damage_dice_type: 6, damage_modifier: 0, damage_type: '', magical_properties: [], value: 0, equipped: false });
     setShowAddDialog(false);
   };
   
@@ -130,7 +134,14 @@ export default function EquipmentManager({ character, onUpdate }) {
                             <p className="text-sm text-slate-400 mt-1">{item.description}</p>
                           )}
                           {item.bonus && (
-                            <p className="text-xs text-violet-400 mt-1 font-medium">{item.bonus}</p>
+                           <p className="text-xs text-violet-400 mt-1 font-medium">{item.bonus}</p>
+                          )}
+                          {item.damage_dice_count > 0 && (
+                           <p className="text-xs text-amber-400 mt-1 font-mono">
+                             {item.damage_dice_count}d{item.damage_dice_type}
+                             {item.damage_modifier !== 0 && ` ${item.damage_modifier >= 0 ? '+' : ''}${item.damage_modifier}`}
+                             {item.damage_type && ` ${item.damage_type}`}
+                           </p>
                           )}
                           {item.magical_properties?.length > 0 && (
                             <div className="flex items-center gap-1 mt-1 flex-wrap">
@@ -233,6 +244,63 @@ export default function EquipmentManager({ character, onUpdate }) {
                   className="bg-slate-800 border-slate-700 text-white mt-1"
                 />
               </div>
+              
+              {newItem.type === 'weapon' && (
+                <>
+                  <div>
+                    <Label className="text-slate-300">Damage Dice</Label>
+                    <div className="grid grid-cols-3 gap-2 mt-1">
+                      <Input
+                        type="number"
+                        min={0}
+                        max={10}
+                        placeholder="# dice"
+                        value={newItem.damage_dice_count || 0}
+                        onChange={(e) => setNewItem({ ...newItem, damage_dice_count: parseInt(e.target.value) || 0 })}
+                        className="bg-slate-800 border-slate-700 text-white"
+                      />
+                      <Select value={String(newItem.damage_dice_type || 6)} onValueChange={(v) => setNewItem({ ...newItem, damage_dice_type: parseInt(v) })}>
+                        <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="4">d4</SelectItem>
+                          <SelectItem value="6">d6</SelectItem>
+                          <SelectItem value="8">d8</SelectItem>
+                          <SelectItem value="10">d10</SelectItem>
+                          <SelectItem value="12">d12</SelectItem>
+                          <SelectItem value="20">d20</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="number"
+                        min={-10}
+                        max={20}
+                        placeholder="+mod"
+                        value={newItem.damage_modifier || 0}
+                        onChange={(e) => setNewItem({ ...newItem, damage_modifier: parseInt(e.target.value) || 0 })}
+                        className="bg-slate-800 border-slate-700 text-white"
+                      />
+                    </div>
+                    {newItem.damage_dice_count > 0 && (
+                      <p className="text-xs text-amber-400 mt-1 font-mono">
+                        {newItem.damage_dice_count}d{newItem.damage_dice_type}
+                        {newItem.damage_modifier !== 0 && ` ${newItem.damage_modifier >= 0 ? '+' : ''}${newItem.damage_modifier}`}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label className="text-slate-300">Damage Type</Label>
+                    <Input
+                      value={newItem.damage_type || ''}
+                      onChange={(e) => setNewItem({ ...newItem, damage_type: e.target.value })}
+                      placeholder="e.g., Slashing, Fire"
+                      className="bg-slate-800 border-slate-700 text-white mt-1"
+                    />
+                  </div>
+                </>
+              )}
+              
               <div className="flex gap-3 pt-2">
                 <Button
                   variant="outline"

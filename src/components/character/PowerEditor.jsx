@@ -118,6 +118,9 @@ export default function PowerEditor({ power, onSave, onClose, character }) {
     description: '',
     cooldown: 0,
     damage_type: '',
+    damage_dice_count: 2,
+    damage_dice_type: 6,
+    damage_modifier: 0,
     effect_tags: [],
     custom_effect_tags: [],
     requires_concentration: false,
@@ -243,15 +246,70 @@ export default function PowerEditor({ power, onSave, onClose, character }) {
             </Select>
           </div>
           
+          {/* Damage Dice */}
+          <div className="bg-slate-800/50 rounded-lg p-4 space-y-3">
+            <Label className="text-slate-300">Damage Dice (optional)</Label>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <Label className="text-xs text-slate-400">Number of Dice</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={10}
+                  value={data.damage_dice_count || 0}
+                  onChange={(e) => updateData('damage_dice_count', parseInt(e.target.value) || 0)}
+                  className="bg-slate-800 border-slate-700 text-white mt-1"
+                />
+              </div>
+              <div>
+                <Label className="text-xs text-slate-400">Dice Type</Label>
+                <Select value={String(data.damage_dice_type || 6)} onValueChange={(v) => updateData('damage_dice_type', parseInt(v))}>
+                  <SelectTrigger className="bg-slate-800 border-slate-700 text-white mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="4">d4</SelectItem>
+                    <SelectItem value="6">d6</SelectItem>
+                    <SelectItem value="8">d8</SelectItem>
+                    <SelectItem value="10">d10</SelectItem>
+                    <SelectItem value="12">d12</SelectItem>
+                    <SelectItem value="20">d20</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs text-slate-400">Modifier</Label>
+                <Input
+                  type="number"
+                  min={-10}
+                  max={20}
+                  value={data.damage_modifier || 0}
+                  onChange={(e) => updateData('damage_modifier', parseInt(e.target.value) || 0)}
+                  className="bg-slate-800 border-slate-700 text-white mt-1"
+                />
+              </div>
+            </div>
+            {(data.damage_dice_count > 0) && (
+              <div className="bg-violet-500/10 border border-violet-500/30 rounded p-2">
+                <p className="text-sm text-violet-300 font-mono">
+                  {data.damage_dice_count}d{data.damage_dice_type}
+                  {data.damage_modifier !== 0 && ` ${data.damage_modifier >= 0 ? '+' : ''}${data.damage_modifier}`}
+                  {data.damage_type && ` ${data.damage_type} damage`}
+                </p>
+              </div>
+            )}
+          </div>
+
           {/* Effect */}
           <div>
-            <Label className="text-slate-300">Effect *</Label>
+            <Label className="text-slate-300">Effect Description *</Label>
             <Textarea
               value={data.effect}
               onChange={(e) => updateData('effect', e.target.value)}
-              placeholder="e.g., Deal 2d6 fire damage + Burn effect"
+              placeholder="e.g., Strike target with flames + Burn effect"
               className="bg-slate-800 border-slate-700 text-white mt-1 h-20"
             />
+            <p className="text-xs text-slate-500 mt-1">Describe the power's mechanical effect and any additional effects</p>
           </div>
           
           {/* Description */}
