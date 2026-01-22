@@ -24,11 +24,22 @@ export default function Layout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentCharacter, setCurrentCharacter] = useState(null);
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
-  const [isDM, setIsDM] = useState(false);
+  const [isDM, setIsDM] = useState(() => {
+    return localStorage.getItem('isDM') === 'true';
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const { play } = useSoundEffects();
   const { settings } = useSettings();
+
+  useEffect(() => {
+    const handleDMStatusChange = () => {
+      setIsDM(localStorage.getItem('isDM') === 'true');
+    };
+
+    window.addEventListener('dm-status-changed', handleDMStatusChange);
+    return () => window.removeEventListener('dm-status-changed', handleDMStatusChange);
+  }, []);
 
   const { data: characters = [] } = useQuery({
     queryKey: ['characters'],

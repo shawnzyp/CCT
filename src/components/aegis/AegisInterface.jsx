@@ -21,16 +21,17 @@ const SPOILER_KEYWORDS = ['null protocol', 'morvox', 'silas vorr', 'director pei
 const CATALYST_CORE_RULEBOOK_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/62962428a_Catalyst_Core_Player_Guide.pdf";
 
 export default function AegisInterface() {
-  const [isDirector, setIsDirector] = useState(false);
+  const [isDirector, setIsDirector] = useState(() => {
+    return localStorage.getItem('isDM') === 'true';
+  });
   
   // Listen for Director login state changes
   useEffect(() => {
     const checkDirectorStatus = () => {
-      const directorStatus = window.sessionStorage.getItem('isDM') === 'true';
+      const directorStatus = localStorage.getItem('isDM') === 'true';
       setIsDirector(directorStatus);
     };
     
-    checkDirectorStatus();
     window.addEventListener('storage', checkDirectorStatus);
     window.addEventListener('dm-status-changed', checkDirectorStatus);
     
