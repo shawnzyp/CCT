@@ -132,78 +132,83 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                 { id: 'movement', label: 'Movement', icon: Move, desc: 'Move up to your speed' },
                 { id: 'bonus_action', label: 'Bonus Action', icon: BonusIcon, desc: 'Quick powers or abilities' },
                 { id: 'reaction', label: 'Reaction', icon: Shield, desc: 'Opportunity attacks, blocks' }
-              ].map(action => (
-                <Tooltip key={action.id}>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => toggleAction(action.id)}
-                      className={cn(
-                        "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
-                        usedActions[action.id]
-                          ? "border-slate-600 bg-slate-800/50"
-                          : "border-violet-500/50 bg-violet-500/10 hover:bg-violet-500/20"
-                      )}
-                    >
-                      <action.icon className={cn(
-                        "h-5 w-5",
-                        usedActions[action.id] ? "text-slate-500" : "text-violet-400"
-                      )} />
-                      <span className={cn(
-                        "text-xs font-semibold text-center",
-                        usedActions[action.id] ? "text-slate-500 line-through" : "text-white"
-                      )}>
-                        {action.label}
-                      </span>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{action.desc}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-            </div>
-            
-            <div className="mt-3 flex justify-center">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1 text-xs text-slate-400 cursor-help">
-                    <HelpCircle className="h-3 w-3" />
-                    <span>What can I do?</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent className="max-w-sm">
-                  <div className="space-y-2">
-                    <p className="font-semibold">Actions you can take on your turn:</p>
-                    {COMBAT_ACTIONS.map(action => (
-                      <div key={action.id} className="text-xs">
-                        <span className="font-medium">{action.name}:</span> {action.description}
-                      </div>
-                    ))}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Section 3: Combat Actions */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-white text-base">Combat Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-2">
-              {COMBAT_ACTIONS.slice(0, 8).map(action => (
-                <div key={action.id} className="p-2.5 bg-slate-700/30 rounded-lg flex items-center gap-2 hover:bg-slate-700/50 transition-colors">
-                  <action.icon className="h-4 w-4 text-violet-400 flex-shrink-0" />
-                  <span className="text-sm font-medium text-white">{action.name}</span>
+              ].map((action, idx) => (
+                <div key={action.id} className="flex flex-col items-center">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => toggleAction(action.id)}
+                        className={cn(
+                          "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all w-full",
+                          usedActions[action.id]
+                            ? "border-slate-600 bg-slate-800/50"
+                            : "border-violet-500/50 bg-violet-500/10 hover:bg-violet-500/20"
+                        )}
+                      >
+                        <action.icon className={cn(
+                          "h-5 w-5",
+                          usedActions[action.id] ? "text-slate-500" : "text-violet-400"
+                        )} />
+                        <span className={cn(
+                          "text-xs font-semibold text-center",
+                          usedActions[action.id] ? "text-slate-500 line-through" : "text-white"
+                        )}>
+                          {action.label}
+                        </span>
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{action.desc}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  
+                  {idx === 2 && (
+                    <div className="mt-2 flex justify-center">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1 text-xs text-slate-400 cursor-help">
+                            <HelpCircle className="h-3 w-3" />
+                            <span>What can I do?</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-md max-h-96 overflow-y-auto">
+                          <div className="space-y-3">
+                            <div>
+                              <p className="font-semibold text-violet-300 mb-1">Combat Actions:</p>
+                              {COMBAT_ACTIONS.map(action => (
+                                <div key={action.id} className="text-xs mb-1">
+                                  <span className="font-medium">{action.name}:</span> {action.description}
+                                </div>
+                              ))}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-orange-300 mb-1">Reactions:</p>
+                              {COMBAT_REACTIONS.map((reaction, i) => (
+                                <div key={i} className="text-xs mb-1">
+                                  <span className="font-medium">{reaction.name}:</span> {reaction.description}
+                                </div>
+                              ))}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-blue-300 mb-1">Bonus Actions:</p>
+                              {BONUS_ACTIONS.map((bonus, i) => (
+                                <div key={i} className="text-xs mb-1">
+                                  <span className="font-medium">{bonus.name}:</span> {bonus.description}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Section 4: Attack Bonuses */}
+        {/* Section 3: Attack Bonuses */}
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -322,62 +327,7 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
           </CardContent>
         </Card>
 
-        {/* Section 7: Reactions & Bonus Actions */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-white text-sm">Reactions</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p>Special actions outside your turn, once per round, triggered by conditions.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {COMBAT_REACTIONS.map((reaction, idx) => (
-                  <div key={idx} className="p-2 bg-orange-950/20 border border-orange-500/30 rounded text-xs">
-                    <div className="font-semibold text-orange-300">{reaction.name}</div>
-                    <div className="text-slate-400 mt-0.5">{reaction.description}</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-white text-sm">Bonus Actions</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p>Quick actions that don't use your main Action.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {BONUS_ACTIONS.map((bonus, idx) => (
-                  <div key={idx} className="p-2 bg-blue-950/20 border border-blue-500/30 rounded text-xs">
-                    <div className="font-semibold text-blue-300">{bonus.name}</div>
-                    <div className="text-slate-400 mt-0.5">{bonus.description}</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Section 8: Equipped Gear */}
+        {/* Section 7: Equipped Gear */}
         {character.equipment?.filter(e => e.equipped).length > 0 && (
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="pb-3">
