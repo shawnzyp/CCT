@@ -61,7 +61,7 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
             className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all">
 
               <LogOut className="h-4 w-4" />
-              Exit GM Mode
+              Exit Director Mode
             </Button> :
 
           <Button
@@ -69,7 +69,7 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
             className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/20 transition-all hover:shadow-violet-500/40">
 
               <Shield className="h-4 w-4" />
-              GM Access
+              Director Access
             </Button>
           }
         </div>

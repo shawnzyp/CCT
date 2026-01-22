@@ -137,7 +137,7 @@ export default function Layout({ children }) {
     {
       name: 'System',
       items: [
-        ...(isDM ? [{ name: 'GM Hub', path: 'DMHub', icon: Settings }] : []),
+        ...(isDM ? [{ name: 'Director Hub', path: 'DMHub', icon: Settings }] : []),
         { name: 'Settings', path: 'Settings', icon: Settings },
       ]
     }

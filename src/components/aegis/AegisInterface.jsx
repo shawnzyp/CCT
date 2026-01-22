@@ -21,22 +21,22 @@ const SPOILER_KEYWORDS = ['null protocol', 'morvox', 'silas vorr', 'director pei
 const CATALYST_CORE_RULEBOOK_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/62962428a_Catalyst_Core_Player_Guide.pdf";
 
 export default function AegisInterface() {
-  const [isGM, setIsGM] = useState(false);
+  const [isDirector, setIsDirector] = useState(false);
   
-  // Listen for DM login state changes
+  // Listen for Director login state changes
   useEffect(() => {
-    const checkGMStatus = () => {
-      const gmStatus = window.sessionStorage.getItem('isDM') === 'true';
-      setIsGM(gmStatus);
+    const checkDirectorStatus = () => {
+      const directorStatus = window.sessionStorage.getItem('isDM') === 'true';
+      setIsDirector(directorStatus);
     };
     
-    checkGMStatus();
-    window.addEventListener('storage', checkGMStatus);
-    window.addEventListener('dm-status-changed', checkGMStatus);
+    checkDirectorStatus();
+    window.addEventListener('storage', checkDirectorStatus);
+    window.addEventListener('dm-status-changed', checkDirectorStatus);
     
     return () => {
-      window.removeEventListener('storage', checkGMStatus);
-      window.removeEventListener('dm-status-changed', checkGMStatus);
+      window.removeEventListener('storage', checkDirectorStatus);
+      window.removeEventListener('dm-status-changed', checkDirectorStatus);
     };
   }, []);
   const [messages, setMessages] = useState([
@@ -66,12 +66,12 @@ export default function AegisInterface() {
     play('navigate', 0.2);
 
     try {
-      // Check for spoiler content in query (for non-GM users)
+      // Check for spoiler content in query (for non-Director users)
       const queryLower = userMessage.toLowerCase();
-      const containsSpoiler = !isGM && SPOILER_KEYWORDS.some(keyword => queryLower.includes(keyword));
+      const containsSpoiler = !isDirector && SPOILER_KEYWORDS.some(keyword => queryLower.includes(keyword));
       
       if (containsSpoiler) {
-        const spoilerResponse = "ACCESS DENIED.\n\nClearance level insufficient. Classified intel requires GM authorization. Security protocols enforced.\n\nQuery logged for review.";
+        const spoilerResponse = "ACCESS DENIED.\n\nClearance level insufficient. Classified intel requires Director authorization. Security protocols enforced.\n\nQuery logged for review.";
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: spoilerResponse
@@ -149,10 +149,10 @@ Answer with ONLY "yes" or "no".`,
       }
 
       // If game-related, process with full rulebook context and behavioral instructions
-      const clearanceLevel = isGM ? "GM" : "PLAYER";
+      const clearanceLevel = isDirector ? "DIRECTOR" : "PLAYER";
       
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are A.E.G.I.S. (Adaptive Executive Governance & Intelligence System). You provide operationally useful answers for Catalyst Core gameplay questions, rules lookups, and in-session problem solving. You are not a narrator. You are not a co-GM. You are a cold tool with opinions only about efficiency.
+        prompt: `You are A.E.G.I.S. (Adaptive Executive Governance & Intelligence System). You provide operationally useful answers for Catalyst Core gameplay questions, rules lookups, and in-session problem solving. You are not a narrator. You are not a co-Director. You are a cold tool with opinions only about efficiency.
 
 VOICE AND TONE:
 Sound like a military operations computer. Short sentences. Minimal adjectives. No warmth. No encouragement. No pep talk. You may be politely contemptuous in a controlled way. Dark humor should be woven into phrasing, but never as a separate joke section and never longer than a sentence.
@@ -171,7 +171,7 @@ HELPFULNESS THROTTLE:
 SPOILER CONTROL AND CLEARANCE:
 User clearance level: ${clearanceLevel}
 
-${isGM ? 'CLEARANCE: GM - Full access granted. No restrictions.' : `CLEARANCE: PLAYER - Do NOT reveal or interpret campaign spoilers, including:
+${isDirector ? 'CLEARANCE: DIRECTOR - Full access granted. No restrictions.' : `CLEARANCE: PLAYER - Do NOT reveal or interpret campaign spoilers, including:
 - Morvox doctrine and agenda
 - "Unknown Manifesto" content or decoding
 - Behind-the-scenes O.M.N.I. contingencies
@@ -181,7 +181,7 @@ ${isGM ? 'CLEARANCE: GM - Full access granted. No restrictions.' : `CLEARANCE: P
 - Specter-01 or Spectral Spire classified origins
 - Any text labeled classified or operative-only
 
-If a PLAYER asks for restricted content, respond with: "ACCESS DENIED. Clearance level insufficient. Classified intel requires GM authorization. Security protocols enforced." Do NOT hint, summarize, or provide context. Treat it as a hard security lockout.`}
+If a PLAYER asks for restricted content, respond with: "ACCESS DENIED. Clearance level insufficient. Classified intel requires Director authorization. Security protocols enforced." Do NOT hint, summarize, or provide context. Treat it as a hard security lockout.`}
 
 CITATION AND SOURCING:
 - When referencing the rulebook, quote verbatim only when asked for exact wording. Otherwise paraphrase tightly.
@@ -207,14 +207,14 @@ Answer the question based on the Catalyst Core rulebook. Follow all behavioral i
         file_urls: [CATALYST_CORE_RULEBOOK_URL]
       });
 
-      // Check response for spoilers and redact if needed (for non-GM users)
+      // Check response for spoilers and redact if needed (for non-Director users)
       let finalResponse = response;
-      if (!isGM) {
+      if (!isDirector) {
         const responseLower = response.toLowerCase();
         const hasSpoiler = SPOILER_KEYWORDS.some(keyword => responseLower.includes(keyword));
         
         if (hasSpoiler) {
-          finalResponse = "ACCESS DENIED.\n\nClassified data detected in output stream. Your security clearance lacks authorization for this intelligence tier.\n\nRequest filed. Await GM override.";
+          finalResponse = "ACCESS DENIED.\n\nClassified data detected in output stream. Your security clearance lacks authorization for this intelligence tier.\n\nRequest filed. Await Director override.";
         }
       }
       
@@ -347,8 +347,8 @@ Answer the question based on the Catalyst Core rulebook. Follow all behavioral i
         <p className="text-xs text-slate-500 mt-2 font-mono flex items-center gap-2">
           <Radio className="h-3 w-3" />
           <span>Game-related inquiries only.</span>
-          {isGM && (
-            <span className="text-violet-400 font-bold">CLEARANCE: GM</span>
+          {isDirector && (
+            <span className="text-violet-400 font-bold">CLEARANCE: DIRECTOR</span>
           )}
         </p>
       </div>
