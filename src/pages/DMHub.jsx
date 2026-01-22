@@ -9,6 +9,7 @@ import {
   Shield, Users, Zap, Settings, Coins, BookOpen,
   Trophy, Package, Store, MapPin, Calendar, FileText, Radio, Webhook, Gift
 } from 'lucide-react';
+import MedalsAchievementsManager from '@/components/dm/MedalsAchievementsManager';
 
 export default function DMHub() {
   const { data: campaigns = [] } = useQuery({
@@ -23,6 +24,7 @@ export default function DMHub() {
 
   const activeCampaigns = campaigns.filter(c => c.status === 'active');
   const totalSessions = campaigns.reduce((sum, c) => sum + (c.session_count || 0), 0);
+  const selectedCampaign = campaigns[0]?.id;
   
   // Count total achievements across all campaigns
   const totalAchievements = campaigns.reduce((sum, c) => {
@@ -207,6 +209,11 @@ export default function DMHub() {
               </Card>
             );
           })}
+        </div>
+
+        {/* Medals & Achievements Manager */}
+        <div className="mt-8">
+          <MedalsAchievementsManager campaignId={selectedCampaign} />
         </div>
 
         {/* Quick Actions */}
