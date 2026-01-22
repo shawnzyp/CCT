@@ -247,7 +247,7 @@ export default function AegisAssistant() {
                   }}
                   transition={{ 
                     scaleY: { duration: 0.3 },
-                    scaleX: { duration: 2, repeat: Infinity }
+                    scaleX: { duration: 2, repeat: expression === 'thinking' ? Infinity : 0 }
                   }}
                 />
                 <motion.div 
@@ -258,7 +258,7 @@ export default function AegisAssistant() {
                   }}
                   transition={{ 
                     scaleY: { duration: 0.3 },
-                    scaleX: { duration: 2, repeat: Infinity }
+                    scaleX: { duration: 2, repeat: expression === 'thinking' ? Infinity : 0 }
                   }}
                 />
               </motion.div>
@@ -274,14 +274,16 @@ export default function AegisAssistant() {
                   animate={{
                     d: isTalking 
                       ? [
-                          `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`,
-                          `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${10 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`,
-                          `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
+                          `M 2 6 Q 14 6 ${EXPRESSIONS[expression].mouthWidth} 6`,
+                          `M 2 6 Q 14 9 ${EXPRESSIONS[expression].mouthWidth} 6`,
+                          `M 2 6 Q 14 3 ${EXPRESSIONS[expression].mouthWidth} 6`,
+                          `M 2 6 Q 14 9 ${EXPRESSIONS[expression].mouthWidth} 6`,
+                          `M 2 6 Q 14 6 ${EXPRESSIONS[expression].mouthWidth} 6`
                         ]
                       : `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
                   }}
                   transition={{ 
-                    duration: isTalking ? 0.25 : 0.3,
+                    duration: isTalking ? 0.6 : 0.3,
                     repeat: isTalking ? Infinity : 0,
                     ease: "easeInOut"
                   }}
