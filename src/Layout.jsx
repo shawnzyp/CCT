@@ -2,14 +2,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { cn } from '@/lib/utils';
-import { Users, Zap, BookOpen, Menu, X, User, RefreshCw, Book, HelpCircle, Radio, Settings, Package } from 'lucide-react';
+import { Users, Zap, BookOpen, Menu, X, User, RefreshCw, Book, HelpCircle, Radio, Settings, Package, Save, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisAssistant from '@/components/aegis/AegisAssistant';
 import { AegisProvider } from '@/components/aegis/AegisContext';
@@ -17,6 +17,7 @@ import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
 import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
 import DMLoginFooter from '@/components/dm/DMLoginFooter';
 import { useSettings } from '@/components/utils/useSettings';
+import { toast } from 'sonner';
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -24,6 +25,8 @@ export default function Layout({ children }) {
   const [currentCharacter, setCurrentCharacter] = useState(null);
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
   const [isDM, setIsDM] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
   const { play } = useSoundEffects();
   const { settings } = useSettings();
 
@@ -54,6 +57,43 @@ export default function Layout({ children }) {
     window.addEventListener('characterChanged', handleCharacterChange);
     return () => window.removeEventListener('characterChanged', handleCharacterChange);
   }, []);
+
+  // Listen for save events from pages
+  useEffect(() => {
+    const handleSaveComplete = () => {
+      setLastSaved(new Date());
+    };
+
+    window.addEventListener('appSaved', handleSaveComplete);
+    return () => window.removeEventListener('appSaved', handleSaveComplete);
+  }, []);
+
+  const handleSave = () => {
+    setIsSaving(true);
+    
+    // Broadcast save event to all pages
+    window.dispatchEvent(new CustomEvent('triggerSave'));
+    
+    // Visual feedback
+    setTimeout(() => {
+      setIsSaving(false);
+      setLastSaved(new Date());
+      toast.success('Progress saved!');
+      play && play('resource_gain');
+    }, 500);
+  };
+
+  const formatLastSaved = () => {
+    if (!lastSaved) return 'Not saved yet';
+    
+    const now = new Date();
+    const diff = Math.floor((now - lastSaved) / 1000); // seconds
+    
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return lastSaved.toLocaleDateString();
+  };
 
   const handleCharacterSelect = (character) => {
     setCurrentCharacter(character);
@@ -204,29 +244,72 @@ export default function Layout({ children }) {
               ))}
             </nav>
 
-            {/* Current Character */}
-            <div className="hidden lg:flex items-center gap-2">
-              {currentCharacter ? (
+            {/* Current Character + Save Button */}
+            <div className="flex items-center gap-2">
+              <div className="hidden lg:flex items-center">
+                {currentCharacter ? (
+                  <Button
+                    variant="ghost"
+                    onClick={handleCharacterSwitch}
+                    className="gap-1.5 text-slate-400 hover:text-white text-xs lg:text-sm px-2 lg:px-4"
+                  >
+                    <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                    <span className="max-w-[100px] truncate">{currentCharacter.name}</span>
+                    <RefreshCw className="h-3 w-3" />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCharacterSelector(true)}
+                    className="gap-1.5 border-violet-500 text-violet-400 hover:bg-violet-500/20 text-xs lg:text-sm px-2 lg:px-4"
+                  >
+                    <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                    <span className="hidden xl:inline">Select Character</span>
+                    <span className="xl:hidden">Select</span>
+                  </Button>
+                )}
+              </div>
+
+              {/* Save Button */}
+              <div className="flex flex-col items-center">
                 <Button
-                  variant="ghost"
-                  onClick={handleCharacterSwitch}
-                  className="gap-1.5 text-slate-400 hover:text-white text-xs lg:text-sm px-2 lg:px-4"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className={cn(
+                    "gap-1.5 text-xs h-8 px-2.5 sm:px-3 transition-all",
+                    isSaving 
+                      ? "bg-green-600 hover:bg-green-600" 
+                      : "bg-violet-600 hover:bg-violet-700"
+                  )}
                 >
-                  <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-                  <span className="max-w-[100px] truncate">{currentCharacter.name}</span>
-                  <RefreshCw className="h-3 w-3" />
+                  <AnimatePresence mode="wait">
+                    {isSaving ? (
+                      <motion.div
+                        key="check"
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="save"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                      >
+                        <Save className="h-3.5 w-3.5" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <span className="hidden sm:inline">Save</span>
                 </Button>
-              ) : (
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCharacterSelector(true)}
-                  className="gap-1.5 border-violet-500 text-violet-400 hover:bg-violet-500/20 text-xs lg:text-sm px-2 lg:px-4"
-                >
-                  <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-                  <span className="hidden xl:inline">Select Character</span>
-                  <span className="xl:hidden">Select</span>
-                </Button>
-              )}
+                <span className="text-[9px] text-slate-500 mt-0.5 whitespace-nowrap">
+                  {formatLastSaved()}
+                </span>
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
