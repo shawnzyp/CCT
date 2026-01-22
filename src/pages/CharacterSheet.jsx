@@ -155,7 +155,7 @@ export default function CharacterSheet() {
   const dexMod = getModifier(character.ability_scores?.DEX || 10);
   const maxSP = 5 + conMod;
 
-  const rollDice = (bonus, label) => {
+  const rollDice = async (bonus, label) => {
     const roll = Math.floor(Math.random() * 20) + 1;
     const total = roll + bonus;
     const isCrit = roll === 20;
@@ -182,6 +182,24 @@ export default function CharacterSheet() {
       </div>,
       { duration: 4000 }
     );
+    
+    // Send to Discord
+    try {
+      await base44.functions.invoke('notifyDiscord', {
+        eventType: 'dice_roll',
+        data: {
+          message: `${character.name} rolled ${label}`,
+          character: character.name,
+          d20: roll,
+          total,
+          bonus,
+          isCrit,
+          isFail
+        }
+      });
+    } catch (error) {
+      console.error('Failed to send roll to Discord:', error);
+    }
   };
   
   const handleHPChange = (newHP) => {
