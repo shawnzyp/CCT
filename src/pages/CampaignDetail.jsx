@@ -6,7 +6,8 @@ import { createPageUrl } from '@/utils';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map, Shield } from "lucide-react";
+import { ArrowLeft, Users, BookOpen, Globe, Swords, ScrollText, Milestone, MessageSquare, LayoutDashboard, Map, Shield, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import CampaignJournal from "@/components/campaign/CampaignJournal";
 import CampaignCharacters from "@/components/campaign/CampaignCharacters";
@@ -75,8 +76,28 @@ export default function CampaignDetail({ currentCharacter }) {
     updateCampaign.mutate({ session_log: sessionLog });
   };
   
-  if (isLoading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Loading...</div>;
-  if (!campaign) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Campaign not found</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
+          <Zap className="h-8 w-8 text-violet-400" />
+        </motion.div>
+      </div>
+    );
+  }
+  
+  if (!campaign) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl text-white mb-4">Campaign not found</h2>
+          <Link to={createPageUrl('Campaigns')}>
+            <Button>Back to Campaigns</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
   
   const handleDMLogin = () => {
     setIsDM(true);

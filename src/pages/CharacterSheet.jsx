@@ -143,8 +143,8 @@ export default function CharacterSheet() {
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl text-white mb-4">Character not found</h2>
-          <Link to={createPageUrl('Characters')}>
-            <Button>Back to Roster</Button>
+          <Link to={createPageUrl('Home')}>
+            <Button>Back Home</Button>
           </Link>
         </div>
       </div>
@@ -232,7 +232,7 @@ export default function CharacterSheet() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3 mb-6">
-          <Link to={createPageUrl('Characters')}>
+          <Link to={createPageUrl('Home')}>
             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
               <ArrowLeft className="h-5 w-5" />
             </Button>

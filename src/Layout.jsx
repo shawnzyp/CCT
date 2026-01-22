@@ -30,7 +30,7 @@ export default function Layout({ children }) {
   const { data: characters = [] } = useQuery({
     queryKey: ['characters'],
     queryFn: () => base44.entities.Character.list('-created_date'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
 
@@ -38,11 +38,21 @@ export default function Layout({ children }) {
     const stored = localStorage.getItem('currentCharacter');
     if (stored) {
       try {
-        setCurrentCharacter(JSON.parse(stored));
+        const parsedChar = JSON.parse(stored);
+        setCurrentCharacter(parsedChar);
       } catch (e) {
         localStorage.removeItem('currentCharacter');
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const handleCharacterChange = (e) => {
+      setCurrentCharacter(e.detail);
+    };
+
+    window.addEventListener('characterChanged', handleCharacterChange);
+    return () => window.removeEventListener('characterChanged', handleCharacterChange);
   }, []);
 
   const handleCharacterSelect = (character) => {
@@ -60,7 +70,7 @@ export default function Layout({ children }) {
     {
       name: 'Character',
       items: [
-        { name: 'My Characters', path: 'Characters', icon: Users, action: 'characterSelector' },
+        { name: 'My Characters', path: 'Home', icon: Users, action: 'characterSelector' },
         { name: 'Create Character', path: 'CreateCharacter', icon: User },
       ]
     },

@@ -2,7 +2,6 @@ import AegisLogs from './pages/AegisLogs';
 import CampaignDetail from './pages/CampaignDetail';
 import Campaigns from './pages/Campaigns';
 import CharacterSheet from './pages/CharacterSheet';
-import Characters from './pages/Characters';
 import CreateCharacter from './pages/CreateCharacter';
 import DMHub from './pages/DMHub';
 import DMTools from './pages/DMTools';
@@ -11,7 +10,6 @@ import DiscordSettings from './pages/DiscordSettings';
 import Economy from './pages/Economy';
 import Help from './pages/Help';
 import Home from './pages/Home';
-import PlayCampaign from './pages/PlayCampaign';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
@@ -23,7 +21,6 @@ export const PAGES = {
     "CampaignDetail": CampaignDetail,
     "Campaigns": Campaigns,
     "CharacterSheet": CharacterSheet,
-    "Characters": Characters,
     "CreateCharacter": CreateCharacter,
     "DMHub": DMHub,
     "DMTools": DMTools,
@@ -32,7 +29,6 @@ export const PAGES = {
     "Economy": Economy,
     "Help": Help,
     "Home": Home,
-    "PlayCampaign": PlayCampaign,
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
