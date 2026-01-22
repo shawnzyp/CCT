@@ -2,23 +2,28 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 export default async function notifyDiscord(req) {
   const base44 = createClientFromRequest(req);
-  const { eventType, data, webhookUrl, botUsername, embedColor, avatarUrl } = await req.json();
+  const { 
+    eventType, 
+    data, 
+    embedColor, 
+    embedTitle, 
+    embedDescription, 
+    embedThumbnail, 
+    embedImage 
+  } = await req.json();
   
-  // Get settings from database if not provided
-  let finalWebhookUrl = webhookUrl;
-  let finalBotUsername = botUsername || 'O.M.N.I. S.C. REPORT';
+  // Always use environment variable for webhook URL
+  let finalWebhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL');
   let finalEmbedColor = embedColor || '#8B5CF6';
-  let finalAvatarUrl = avatarUrl;
+  let customTitle = embedTitle;
+  let customDescription = embedDescription;
+  let customThumbnail = embedThumbnail;
+  let customImage = embedImage;
   
-  if (!webhookUrl) {
+  // If not a test, check database settings
+  if (eventType !== 'test') {
     const settings = await base44.asServiceRole.entities.DiscordSettings.list();
-    if (settings.length === 0) {
-      // Fallback to environment variable
-      finalWebhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL');
-      if (!finalWebhookUrl) {
-        return Response.json({ success: false, error: 'No Discord settings configured' });
-      }
-    } else {
+    if (settings.length > 0) {
       const setting = settings[0];
       if (!setting.enabled) {
         return Response.json({ success: false, error: 'Discord integration is disabled' });
@@ -28,11 +33,16 @@ export default async function notifyDiscord(req) {
         return Response.json({ success: false, error: 'Event type not enabled in settings' });
       }
       
-      finalWebhookUrl = setting.webhook_url;
-      finalBotUsername = setting.bot_username || finalBotUsername;
       finalEmbedColor = setting.embed_color || finalEmbedColor;
-      finalAvatarUrl = setting.avatar_url;
+      customTitle = setting.embed_title || customTitle;
+      customDescription = setting.embed_description || customDescription;
+      customThumbnail = setting.embed_thumbnail || customThumbnail;
+      customImage = setting.embed_image || customImage;
     }
+  }
+  
+  if (!finalWebhookUrl) {
+    return Response.json({ success: false, error: 'DISCORD_WEBHOOK_URL not configured in environment variables' });
   }
   
   const hexToDecimal = (hex) => parseInt(hex.replace('#', ''), 16);
@@ -200,34 +210,50 @@ export default async function notifyDiscord(req) {
       
     case 'test':
       embed = {
-        title: "✅ Discord Webhook Test",
-        description: data.message || 'Test message from Catalyst Core',
+        title: customTitle || "✅ Discord Webhook Test",
+        description: customDescription || data.message || 'Test message from Catalyst Core',
         color: hexToDecimal(finalEmbedColor),
         fields: [
           { name: "Status", value: "Connection successful!", inline: true },
           { name: "Time", value: new Date().toLocaleString(), inline: true }
         ],
+        footer: {
+          text: "A.E.G.I.S. VERIFIED"
+        },
         timestamp: new Date().toISOString()
       };
+      if (customThumbnail) embed.thumbnail = { url: customThumbnail };
+      if (customImage) embed.image = { url: customImage };
       break;
       
     default:
       embed = {
-        title: "🎲 Game Event",
-        description: data.message || 'An event occurred',
+        title: customTitle || "🎲 Game Event",
+        description: customDescription || data.message || 'An event occurred',
         color: hexToDecimal(finalEmbedColor),
+        footer: {
+          text: "A.E.G.I.S. VERIFIED"
+        },
         timestamp: new Date().toISOString()
       };
+      if (customThumbnail) embed.thumbnail = { url: customThumbnail };
+      if (customImage) embed.image = { url: customImage };
   }
+  
+  // Add footer to all embeds if not already set
+  if (!embed.footer) {
+    embed.footer = { text: "A.E.G.I.S. VERIFIED" };
+  }
+  
+  // Apply custom overrides if set
+  if (customTitle && eventType !== 'test') embed.title = customTitle;
+  if (customDescription && eventType !== 'test') embed.description = customDescription;
+  if (customThumbnail && eventType !== 'test') embed.thumbnail = { url: customThumbnail };
+  if (customImage && eventType !== 'test') embed.image = { url: customImage };
   
   const payload = {
-    username: finalBotUsername,
     embeds: [embed]
   };
-  
-  if (finalAvatarUrl) {
-    payload.avatar_url = finalAvatarUrl;
-  }
   
   try {
     const response = await fetch(finalWebhookUrl, {
