@@ -109,12 +109,16 @@ const ENCOURAGEMENTS = [
 ];
 
 const EXPRESSIONS = {
-  neutral: { eyeScale: 1, mouthWidth: 24, mouthY: 0, mouthCurve: 0 },
-  happy: { eyeScale: 1, mouthWidth: 28, mouthY: 2, mouthCurve: 4 },
-  thinking: { eyeScale: 0.8, mouthWidth: 16, mouthY: 0, mouthCurve: -2 },
-  surprised: { eyeScale: 1.3, mouthWidth: 12, mouthY: 2, mouthCurve: 8 },
-  confident: { eyeScale: 0.7, mouthWidth: 26, mouthY: 1, mouthCurve: 3 },
-  analyzing: { eyeScale: 1.1, mouthWidth: 20, mouthY: 0, mouthCurve: 0 }
+  neutral: { eyeScale: 1, mouthWidth: 24, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
+  happy: { eyeScale: 1.1, mouthWidth: 28, mouthY: 2, mouthCurve: 4, eyeSpacing: 6 },
+  thinking: { eyeScale: 0.7, mouthWidth: 16, mouthY: 0, mouthCurve: -2, eyeSpacing: 5 },
+  surprised: { eyeScale: 1.4, mouthWidth: 12, mouthY: 2, mouthCurve: 8, eyeSpacing: 7 },
+  confident: { eyeScale: 0.8, mouthWidth: 26, mouthY: 1, mouthCurve: 3, eyeSpacing: 6 },
+  analyzing: { eyeScale: 1.1, mouthWidth: 20, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
+  determined: { eyeScale: 0.6, mouthWidth: 22, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
+  amused: { eyeScale: 0.9, mouthWidth: 24, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
+  skeptical: { eyeScale: 0.75, mouthWidth: 20, mouthY: -1, mouthCurve: -1, eyeSpacing: 5 },
+  concerned: { eyeScale: 1.2, mouthWidth: 18, mouthY: -1, mouthCurve: -3, eyeSpacing: 6 }
 };
 
 export default function AegisAssistant() {
@@ -123,19 +127,20 @@ export default function AegisAssistant() {
   const [currentMessage, setCurrentMessage] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [expression, setExpression] = useState('neutral');
+  const [isTalking, setIsTalking] = useState(false);
   const { play } = useSoundEffects();
   
-  // Random expression changes
+  // More frequent expression changes
   useEffect(() => {
     const changeExpression = () => {
-      const expressions = ['neutral', 'thinking', 'confident', 'analyzing'];
+      const expressions = ['neutral', 'thinking', 'confident', 'analyzing', 'amused', 'determined', 'happy'];
       const randomExp = expressions[Math.floor(Math.random() * expressions.length)];
       setExpression(randomExp);
       
-      setTimeout(() => setExpression('neutral'), 2000);
+      setTimeout(() => setExpression('neutral'), 2500);
     };
     
-    const expressionInterval = setInterval(changeExpression, 15000 + Math.random() * 10000);
+    const expressionInterval = setInterval(changeExpression, 8000 + Math.random() * 7000); // More frequent
     return () => clearInterval(expressionInterval);
   }, []);
   
@@ -164,13 +169,15 @@ export default function AegisAssistant() {
       const randomMessage = randomTemplate.replace(/#character/g, characterName);
       setCurrentMessage(randomMessage);
       setShowEncouragement(true);
+      setIsTalking(true);
       setExpression('happy');
       play('navigate', 0.1);
       
       setTimeout(() => {
         setShowEncouragement(false);
+        setIsTalking(false);
         setExpression('neutral');
-      }, 5000);
+      }, 7000); // Increased from 5000 to 7000 (2 seconds longer)
     };
     
     // Show first encouragement after 10 seconds
@@ -211,7 +218,7 @@ export default function AegisAssistant() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          {/* Animated Face Icon */}
+          {/* Animated Face Icon - Centered */}
           <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/50 flex items-center justify-center overflow-hidden">
             {/* Scanning effect */}
             <motion.div
@@ -220,44 +227,88 @@ export default function AegisAssistant() {
               className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-400/30 to-transparent"
             />
             
-            {/* Face - animated eyes and mouth */}
-            <div className="relative z-10">
-              {/* Eyes */}
+            {/* Face - animated eyes and mouth - CENTERED */}
+            <div className="relative z-10 flex flex-col items-center justify-center">
+              {/* Eyes with improved expressiveness */}
               <motion.div
                 animate={{
-                  scaleY: EXPRESSIONS[expression].eyeScale
+                  scaleY: EXPRESSIONS[expression].eyeScale,
+                  gap: EXPRESSIONS[expression].eyeSpacing
                 }}
                 transition={{ duration: 0.3 }}
-                className="flex gap-2 mb-1"
+                className="flex gap-1.5 mb-1.5"
+                style={{ gap: `${EXPRESSIONS[expression].eyeSpacing}px` }}
               >
-                <motion.div 
-                  className="w-2 h-2 bg-white rounded-full"
-                  animate={{
-                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <motion.div 
-                  className="w-2 h-2 bg-white rounded-full"
-                  animate={{
-                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
+                <div className="relative">
+                  <motion.div 
+                    className="w-2.5 h-2.5 bg-white rounded-full relative"
+                    animate={{
+                      scaleY: EXPRESSIONS[expression].eyeScale,
+                      scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                    }}
+                    transition={{ 
+                      scaleY: { duration: 0.3 },
+                      scaleX: { duration: 2, repeat: Infinity }
+                    }}
+                  >
+                    {/* Pupil */}
+                    <motion.div 
+                      className="absolute top-1/2 left-1/2 w-1 h-1 bg-violet-900 rounded-full"
+                      style={{ transform: 'translate(-50%, -50%)' }}
+                      animate={{
+                        scale: isTalking ? [1, 0.9, 1] : 1
+                      }}
+                      transition={{ duration: 0.2, repeat: isTalking ? Infinity : 0 }}
+                    />
+                  </motion.div>
+                </div>
+                <div className="relative">
+                  <motion.div 
+                    className="w-2.5 h-2.5 bg-white rounded-full relative"
+                    animate={{
+                      scaleY: EXPRESSIONS[expression].eyeScale,
+                      scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                    }}
+                    transition={{ 
+                      scaleY: { duration: 0.3 },
+                      scaleX: { duration: 2, repeat: Infinity }
+                    }}
+                  >
+                    {/* Pupil */}
+                    <motion.div 
+                      className="absolute top-1/2 left-1/2 w-1 h-1 bg-violet-900 rounded-full"
+                      style={{ transform: 'translate(-50%, -50%)' }}
+                      animate={{
+                        scale: isTalking ? [1, 0.9, 1] : 1
+                      }}
+                      transition={{ duration: 0.2, repeat: isTalking ? Infinity : 0 }}
+                    />
+                  </motion.div>
+                </div>
               </motion.div>
               
-              {/* Mouth - curved based on expression */}
-              <svg width="28" height="12" className="mx-auto" style={{ overflow: 'visible' }}>
+              {/* Mouth with talking animation */}
+              <svg width="28" height="12" style={{ overflow: 'visible' }}>
                 <motion.path
                   d={`M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`}
-                  stroke="rgba(255,255,255,0.7)"
-                  strokeWidth="2"
+                  stroke="rgba(255,255,255,0.8)"
+                  strokeWidth="2.5"
                   fill="none"
                   strokeLinecap="round"
                   animate={{
-                    d: `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
+                    d: isTalking 
+                      ? [
+                          `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`,
+                          `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${10 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`,
+                          `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
+                        ]
+                      : `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
                   }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ 
+                    duration: isTalking ? 0.25 : 0.3,
+                    repeat: isTalking ? Infinity : 0,
+                    ease: "easeInOut"
+                  }}
                 />
               </svg>
             </div>
