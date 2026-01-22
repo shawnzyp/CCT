@@ -129,24 +129,24 @@ export default function DiscordIntegration() {
   });
 
   const [formData, setFormData] = useState({
-    webhook_url: settings?.webhook_url || '',
-    bot_username: settings?.bot_username || 'O.M.N.I. S.C. REPORT',
     enabled_events: settings?.enabled_events || [],
     embed_color: settings?.embed_color || '#8B5CF6',
-    embed_footer: settings?.embed_footer || '',
-    avatar_url: settings?.avatar_url || '',
+    embed_title: settings?.embed_title || '',
+    embed_description: settings?.embed_description || '',
+    embed_thumbnail: settings?.embed_thumbnail || '',
+    embed_image: settings?.embed_image || '',
     enabled: settings?.enabled || false
   });
 
   React.useEffect(() => {
     if (settings) {
       setFormData({
-        webhook_url: settings.webhook_url || '',
-        bot_username: settings.bot_username || 'O.M.N.I. S.C. REPORT',
         enabled_events: settings.enabled_events || [],
         embed_color: settings.embed_color || '#8B5CF6',
-        embed_footer: settings.embed_footer || '',
-        avatar_url: settings.avatar_url || '',
+        embed_title: settings.embed_title || '',
+        embed_description: settings.embed_description || '',
+        embed_thumbnail: settings.embed_thumbnail || '',
+        embed_image: settings.embed_image || '',
         enabled: settings.enabled || false
       });
     }
@@ -192,19 +192,15 @@ export default function DiscordIntegration() {
   };
 
   const testWebhook = async () => {
-    if (!formData.webhook_url) {
-      toast.error('Please enter a webhook URL first');
-      return;
-    }
-
     setTestLoading(true);
     try {
       const response = await base44.functions.invoke('notifyDiscord', {
         eventType: 'test',
-        webhookUrl: formData.webhook_url,
-        botUsername: formData.bot_username,
         embedColor: formData.embed_color,
-        avatarUrl: formData.avatar_url,
+        embedTitle: formData.embed_title,
+        embedDescription: formData.embed_description,
+        embedThumbnail: formData.embed_thumbnail,
+        embedImage: formData.embed_image,
         data: {
           message: 'Discord webhook test successful! Your integration is working correctly.'
         }
@@ -265,52 +261,27 @@ export default function DiscordIntegration() {
         </CardHeader>
       </Card>
 
-      {/* Webhook Configuration */}
+      {/* Webhook Info */}
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Settings className="h-5 w-5 text-violet-400" />
-            Webhook Configuration
+            Webhook Setup
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <Label className="text-slate-300">Webhook URL *</Label>
-            <Input
-              value={formData.webhook_url}
-              onChange={(e) => setFormData({ ...formData, webhook_url: e.target.value })}
-              placeholder="https://discord.com/api/webhooks/..."
-              className="bg-slate-900 border-slate-700 text-white mt-1"
-            />
-            <p className="text-xs text-slate-500 mt-1">
-              Get this from Discord: Server Settings → Integrations → Webhooks
+          <div className="bg-violet-900/20 border border-violet-500/30 rounded-lg p-4">
+            <p className="text-sm text-slate-300 mb-2">
+              The webhook URL is configured in your app's environment secrets for security.
             </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="text-slate-300">Bot Username</Label>
-              <Input
-                value={formData.bot_username}
-                onChange={(e) => setFormData({ ...formData, bot_username: e.target.value })}
-                placeholder="O.M.N.I. S.C. REPORT"
-                className="bg-slate-900 border-slate-700 text-white mt-1"
-              />
-            </div>
-            <div>
-              <Label className="text-slate-300">Avatar URL (optional)</Label>
-              <Input
-                value={formData.avatar_url}
-                onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-                placeholder="https://..."
-                className="bg-slate-900 border-slate-700 text-white mt-1"
-              />
-            </div>
+            <p className="text-xs text-slate-400">
+              To update: Dashboard → Environment Variables → DISCORD_WEBHOOK_URL
+            </p>
           </div>
 
           <Button
             onClick={testWebhook}
-            disabled={!formData.webhook_url || testLoading}
+            disabled={testLoading}
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
             {testLoading ? (
@@ -328,52 +299,124 @@ export default function DiscordIntegration() {
         </CardContent>
       </Card>
 
-      {/* Embed Appearance */}
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <Palette className="h-5 w-5 text-violet-400" />
-            Embed Appearance
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="text-slate-300">Default Embed Color</Label>
-            <div className="flex gap-2 mt-2 flex-wrap">
-              {EMBED_PRESETS.map(preset => (
-                <button
-                  key={preset.name}
-                  onClick={() => setFormData({ ...formData, embed_color: preset.color })}
-                  className={cn(
-                    "w-16 h-10 rounded-lg border-2 transition-all",
-                    formData.embed_color === preset.color 
-                      ? "border-white scale-110" 
-                      : "border-slate-600 hover:border-slate-400"
-                  )}
-                  style={{ backgroundColor: preset.color }}
-                  title={preset.name}
+      {/* Embed Customization */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Palette className="h-5 w-5 text-violet-400" />
+              Embed Customization
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label className="text-slate-300">Embed Color</Label>
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {EMBED_PRESETS.map(preset => (
+                  <button
+                    key={preset.name}
+                    onClick={() => setFormData({ ...formData, embed_color: preset.color })}
+                    className={cn(
+                      "w-16 h-10 rounded-lg border-2 transition-all",
+                      formData.embed_color === preset.color 
+                        ? "border-white scale-110" 
+                        : "border-slate-600 hover:border-slate-400"
+                    )}
+                    style={{ backgroundColor: preset.color }}
+                    title={preset.name}
+                  />
+                ))}
+                <Input
+                  type="color"
+                  value={formData.embed_color}
+                  onChange={(e) => setFormData({ ...formData, embed_color: e.target.value })}
+                  className="w-16 h-10 p-1 bg-slate-900 border-slate-700"
                 />
-              ))}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-slate-300">Custom Title (optional)</Label>
               <Input
-                type="color"
-                value={formData.embed_color}
-                onChange={(e) => setFormData({ ...formData, embed_color: e.target.value })}
-                className="w-16 h-10 p-1 bg-slate-900 border-slate-700"
+                value={formData.embed_title}
+                onChange={(e) => setFormData({ ...formData, embed_title: e.target.value })}
+                placeholder="Leave blank for dynamic titles"
+                className="bg-slate-900 border-slate-700 text-white mt-1"
               />
             </div>
-          </div>
 
-          <div>
-            <Label className="text-slate-300">Footer Text (optional)</Label>
-            <Input
-              value={formData.embed_footer}
-              onChange={(e) => setFormData({ ...formData, embed_footer: e.target.value })}
-              placeholder="e.g., Catalyst Core Campaign System"
-              className="bg-slate-900 border-slate-700 text-white mt-1"
-            />
-          </div>
-        </CardContent>
-      </Card>
+            <div>
+              <Label className="text-slate-300">Custom Description (optional)</Label>
+              <Input
+                value={formData.embed_description}
+                onChange={(e) => setFormData({ ...formData, embed_description: e.target.value })}
+                placeholder="Leave blank for event-specific descriptions"
+                className="bg-slate-900 border-slate-700 text-white mt-1"
+              />
+            </div>
+
+            <div>
+              <Label className="text-slate-300">Thumbnail URL (optional)</Label>
+              <Input
+                value={formData.embed_thumbnail}
+                onChange={(e) => setFormData({ ...formData, embed_thumbnail: e.target.value })}
+                placeholder="https://... (small image top-right)"
+                className="bg-slate-900 border-slate-700 text-white mt-1"
+              />
+            </div>
+
+            <div>
+              <Label className="text-slate-300">Image URL (optional)</Label>
+              <Input
+                value={formData.embed_image}
+                onChange={(e) => setFormData({ ...formData, embed_image: e.target.value })}
+                placeholder="https://... (large image at bottom)"
+                className="bg-slate-900 border-slate-700 text-white mt-1"
+              />
+            </div>
+
+            <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-3">
+              <p className="text-xs text-slate-400">
+                <strong className="text-violet-400">Footer:</strong> A.E.G.I.S. VERIFIED (always displayed)
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Live Preview */}
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-white">Live Preview</CardTitle>
+            <CardDescription>How your embed will appear in Discord</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-slate-900 rounded-lg p-4 border-l-4" style={{ borderLeftColor: formData.embed_color }}>
+              {formData.embed_thumbnail && (
+                <div className="flex justify-end mb-2">
+                  <img src={formData.embed_thumbnail} alt="Thumbnail" className="w-16 h-16 rounded object-cover" />
+                </div>
+              )}
+              
+              <div className="text-white font-semibold mb-1">
+                {formData.embed_title || 'Event Title'}
+              </div>
+              
+              <div className="text-slate-300 text-sm mb-3">
+                {formData.embed_description || 'Event description will appear here based on the event type.'}
+              </div>
+              
+              {formData.embed_image && (
+                <img src={formData.embed_image} alt="Embed" className="w-full rounded mb-3" />
+              )}
+              
+              <div className="text-xs text-slate-500 flex items-center gap-1">
+                <Radio className="h-3 w-3" />
+                A.E.G.I.S. VERIFIED
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Event Selection */}
       <Card className="bg-slate-800/50 border-slate-700">
@@ -463,7 +506,7 @@ export default function DiscordIntegration() {
       <div className="flex justify-end gap-3">
         <Button
           onClick={handleSave}
-          disabled={!formData.webhook_url || saveMutation.isPending}
+          disabled={saveMutation.isPending}
           className="bg-violet-600 hover:bg-violet-700 px-8"
         >
           {saveMutation.isPending ? (
