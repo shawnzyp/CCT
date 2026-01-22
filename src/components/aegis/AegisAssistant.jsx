@@ -118,7 +118,17 @@ const EXPRESSIONS = {
   determined: { eyeScale: 0.6, mouthWidth: 22, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
   amused: { eyeScale: 0.9, mouthWidth: 24, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
   skeptical: { eyeScale: 0.75, mouthWidth: 20, mouthY: -1, mouthCurve: -1, eyeSpacing: 5 },
-  concerned: { eyeScale: 1.2, mouthWidth: 18, mouthY: -1, mouthCurve: -3, eyeSpacing: 6 }
+  concerned: { eyeScale: 1.2, mouthWidth: 18, mouthY: -1, mouthCurve: -3, eyeSpacing: 6 },
+  focused: { eyeScale: 0.5, mouthWidth: 22, mouthY: 0, mouthCurve: 0, eyeSpacing: 5 },
+  alert: { eyeScale: 1.3, mouthWidth: 20, mouthY: 0, mouthCurve: 1, eyeSpacing: 7 },
+  calm: { eyeScale: 0.8, mouthWidth: 24, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
+  curious: { eyeScale: 1.2, mouthWidth: 20, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
+  pleased: { eyeScale: 0.9, mouthWidth: 26, mouthY: 2, mouthCurve: 3, eyeSpacing: 6 },
+  serious: { eyeScale: 0.7, mouthWidth: 20, mouthY: -1, mouthCurve: 0, eyeSpacing: 5 },
+  observing: { eyeScale: 1.0, mouthWidth: 22, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
+  engaged: { eyeScale: 1.1, mouthWidth: 25, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
+  vigilant: { eyeScale: 1.2, mouthWidth: 18, mouthY: 0, mouthCurve: -1, eyeSpacing: 7 },
+  relaxed: { eyeScale: 0.85, mouthWidth: 24, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 }
 };
 
 export default function AegisAssistant() {
@@ -130,17 +140,17 @@ export default function AegisAssistant() {
   const [isTalking, setIsTalking] = useState(false);
   const { play } = useSoundEffects();
   
-  // More frequent expression changes
+  // Constantly cycle through expressions
   useEffect(() => {
-    const changeExpression = () => {
-      const expressions = ['neutral', 'thinking', 'confident', 'analyzing', 'amused', 'determined', 'happy'];
-      const randomExp = expressions[Math.floor(Math.random() * expressions.length)];
-      setExpression(randomExp);
-      
-      setTimeout(() => setExpression('neutral'), 2500);
+    const expressions = Object.keys(EXPRESSIONS);
+    let currentIndex = 0;
+    
+    const cycleExpression = () => {
+      setExpression(expressions[currentIndex]);
+      currentIndex = (currentIndex + 1) % expressions.length;
     };
     
-    const expressionInterval = setInterval(changeExpression, 8000 + Math.random() * 7000); // More frequent
+    const expressionInterval = setInterval(cycleExpression, 3000);
     return () => clearInterval(expressionInterval);
   }, []);
   
@@ -242,23 +252,19 @@ export default function AegisAssistant() {
                 <motion.div 
                   className="w-2.5 h-2.5 bg-white rounded-full"
                   animate={{
-                    scaleY: EXPRESSIONS[expression].eyeScale,
-                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                    scaleY: EXPRESSIONS[expression].eyeScale
                   }}
                   transition={{ 
-                    scaleY: { duration: 0.3 },
-                    scaleX: { duration: 2, repeat: expression === 'thinking' ? Infinity : 0 }
+                    scaleY: { duration: 0.5, ease: "easeInOut" }
                   }}
                 />
                 <motion.div 
                   className="w-2.5 h-2.5 bg-white rounded-full"
                   animate={{
-                    scaleY: EXPRESSIONS[expression].eyeScale,
-                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                    scaleY: EXPRESSIONS[expression].eyeScale
                   }}
                   transition={{ 
-                    scaleY: { duration: 0.3 },
-                    scaleX: { duration: 2, repeat: expression === 'thinking' ? Infinity : 0 }
+                    scaleY: { duration: 0.5, ease: "easeInOut" }
                   }}
                 />
               </motion.div>
