@@ -271,12 +271,12 @@ export default function Layout({ children }) {
               </div>
 
               {/* Save Button */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center justify-start">
                 <Button
                   onClick={handleSave}
                   disabled={isSaving}
                   className={cn(
-                    "gap-1.5 text-xs h-8 px-2.5 sm:px-3 transition-all",
+                    "gap-1.5 text-xs h-7 sm:h-8 px-2 sm:px-3 transition-all",
                     isSaving 
                       ? "bg-green-600 hover:bg-green-600" 
                       : "bg-violet-600 hover:bg-violet-700"
@@ -291,7 +291,7 @@ export default function Layout({ children }) {
                         exit={{ scale: 0 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15 }}
                       >
-                        <Check className="h-3.5 w-3.5" />
+                        <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                       </motion.div>
                     ) : (
                       <motion.div
@@ -300,13 +300,13 @@ export default function Layout({ children }) {
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
                       >
-                        <Save className="h-3.5 w-3.5" />
+                        <Save className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                       </motion.div>
                     )}
                   </AnimatePresence>
                   <span className="hidden sm:inline">Save</span>
                 </Button>
-                <span className="text-[9px] text-slate-500 mt-0.5 whitespace-nowrap">
+                <span className="text-[8px] text-slate-500 mt-0.5 whitespace-nowrap leading-none">
                   {formatLastSaved()}
                 </span>
               </div>
