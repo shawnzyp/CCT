@@ -26,9 +26,10 @@ export default function DMHub() {
   const totalSessions = campaigns.reduce((sum, c) => sum + (c.session_count || 0), 0);
   const selectedCampaign = campaigns[0]?.id;
   
-  // Count total achievements across all campaigns
-  const totalAchievements = campaigns.reduce((sum, c) => {
-    return sum + (c.achievement_definitions?.length || 0);
+  // Count total achievements awarded to characters
+  const totalAchievements = characters.reduce((sum, char) => {
+    const characterAchievements = (char.achievements?.length || 0) + (char.milestones?.length || 0);
+    return sum + characterAchievements;
   }, 0);
   const toolCategories = [
     {
