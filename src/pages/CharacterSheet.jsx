@@ -260,54 +260,57 @@ export default function CharacterSheet() {
       
       <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         {/* Header */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-          <Link to={createPageUrl('Home')}>
-            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3">
-              {/* Portrait */}
-              <div className={cn(
-                "w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0",
-                "bg-gradient-to-br from-violet-600 to-purple-700",
-                "flex items-center justify-center"
-              )}>
-                {character.portrait_url ? (
-                  <img src={character.portrait_url} alt={character.name} className="w-full h-full object-cover" />
-                ) : (
-                  <User className="h-6 w-6 sm:h-7 sm:w-7 text-white/60" />
-                )}
-              </div>
-              
-              <div className="min-w-0 flex-1">
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white truncate">{character.name}</h1>
-                <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1">
-                  <Badge variant="outline" className="border-violet-500/50 text-violet-400 text-xs">
-                    {CLASSIFICATION_LABELS[character.classification]}
-                  </Badge>
-                  <Badge variant="outline" className="border-amber-500/50 text-amber-400 text-xs">
-                    {TIER_LABELS[character.tier]}
-                  </Badge>
-                  <Badge variant="outline" className="border-slate-500/50 text-slate-400 text-xs">
-                    {ALIGNMENT_LABELS[character.alignment]}
-                  </Badge>
-                </div>
-              </div>
+        <div className="space-y-3 mb-4 sm:mb-6">
+          {/* Top row: Back button + Portrait + Name */}
+          <div className="flex items-start gap-2 sm:gap-3">
+            <Link to={createPageUrl('Home')} className="flex-shrink-0">
+              <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white h-8 w-8 sm:h-10 sm:w-10">
+                <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              </Button>
+            </Link>
+            
+            {/* Portrait */}
+            <div className={cn(
+              "w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0",
+              "bg-gradient-to-br from-violet-600 to-purple-700",
+              "flex items-center justify-center"
+            )}>
+              {character.portrait_url ? (
+                <img src={character.portrait_url} alt={character.name} className="w-full h-full object-cover" />
+              ) : (
+                <User className="h-6 w-6 sm:h-7 sm:w-7 text-white/60" />
+              )}
+            </div>
+            
+            {/* Name */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white truncate">{character.name}</h1>
             </div>
           </div>
 
+          {/* Second row: Badges */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <Badge variant="outline" className="border-violet-500/50 text-violet-400 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5">
+              {CLASSIFICATION_LABELS[character.classification]}
+            </Badge>
+            <Badge variant="outline" className="border-amber-500/50 text-amber-400 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5">
+              {TIER_LABELS[character.tier]}
+            </Badge>
+            <Badge variant="outline" className="border-slate-500/50 text-slate-400 text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5">
+              {ALIGNMENT_LABELS[character.alignment]}
+            </Badge>
+          </div>
+
+          {/* Third row: Action buttons */}
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             <Button
               onClick={() => setShowCharacterEditor(true)}
               variant="outline"
               size="sm"
-              className="border-violet-500 text-violet-400 hover:bg-violet-500/20 text-xs sm:text-sm"
+              className="border-violet-500 text-violet-400 hover:bg-violet-500/20 text-[10px] sm:text-xs h-7 sm:h-8 px-2 sm:px-3"
             >
-              <Settings className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Edit Character</span>
+              <Settings className="h-3 w-3 sm:h-3.5 sm:w-3.5 sm:mr-1.5" />
+              <span className="hidden sm:inline">Edit</span>
             </Button>
             <ExportCharacterPDF character={character} />
             <ImportExportCharacter character={character} onImport={handleImport} />
