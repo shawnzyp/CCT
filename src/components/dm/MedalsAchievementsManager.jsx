@@ -26,10 +26,8 @@ export default function MedalsAchievementsManager({ campaignId }) {
   const queryClient = useQueryClient();
 
   const { data: characters = [] } = useQuery({
-    queryKey: ['characters', campaignId],
-    queryFn: () => campaignId 
-      ? base44.entities.Character.filter({ campaign_id: campaignId })
-      : base44.entities.Character.list('-created_date')
+    queryKey: ['characters'],
+    queryFn: () => base44.entities.Character.list('-created_date')
   });
 
   const { data: campaign } = useQuery({
