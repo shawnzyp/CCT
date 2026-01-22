@@ -163,14 +163,26 @@ export default function Home() {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="flex flex-col gap-3 items-center w-full max-w-md mx-auto"
           >
-            <Button 
-              onClick={() => setShowCharacterSelector(true)}
-              variant="outline"
-              className="w-full border-violet-500 text-violet-400 hover:bg-violet-500/20 px-6 py-5 text-base"
-            >
-              <User className="h-4 w-4" />
-              Load Character
-            </Button>
+            {currentCharacter ? (
+              <Link to={createPageUrl(`CharacterSheet?id=${currentCharacter.id}`)} className="w-full">
+                <Button 
+                  variant="outline"
+                  className="w-full border-violet-500 text-violet-400 hover:bg-violet-500/20 px-6 py-5 text-base"
+                >
+                  <User className="h-4 w-4" />
+                  View Character Sheet
+                </Button>
+              </Link>
+            ) : (
+              <Button 
+                onClick={() => setShowCharacterSelector(true)}
+                variant="outline"
+                className="w-full border-violet-500 text-violet-400 hover:bg-violet-500/20 px-6 py-5 text-base"
+              >
+                <User className="h-4 w-4" />
+                Load Character
+              </Button>
+            )}
             <Link to={createPageUrl('CreateCharacter')} className="w-full">
               <Button className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 gap-2 px-6 py-5 text-base">
                 <Sparkles className="h-4 w-4" />
