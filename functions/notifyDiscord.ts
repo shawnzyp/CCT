@@ -23,32 +23,11 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
     
-    let finalEmbedColor = embedColor || '#8B5CF6';
-    let customTitle = embedTitle;
-    let customDescription = embedDescription;
-    let customThumbnail = embedThumbnail;
-    let customImage = embedImage;
-    
-    // If not a test, check database settings
-    if (eventType !== 'test') {
-      const settings = await base44.asServiceRole.entities.DiscordSettings.list();
-      if (settings.length > 0) {
-        const setting = settings[0];
-        if (!setting.enabled) {
-          return Response.json({ success: false, error: 'Discord integration is disabled' });
-        }
-        
-        if (!setting.enabled_events?.includes(eventType)) {
-          return Response.json({ success: false, error: 'Event type not enabled in settings' });
-        }
-        
-        finalEmbedColor = setting.embed_color || finalEmbedColor;
-        customTitle = setting.embed_title || customTitle;
-        customDescription = setting.embed_description || customDescription;
-        customThumbnail = setting.embed_thumbnail || customThumbnail;
-        customImage = setting.embed_image || customImage;
-      }
-    }
+    const finalEmbedColor = embedColor || '#8B5CF6';
+    const customTitle = embedTitle;
+    const customDescription = embedDescription;
+    const customThumbnail = embedThumbnail;
+    const customImage = embedImage;
     
     const hexToDecimal = (hex) => parseInt(hex.replace('#', ''), 16);
     
