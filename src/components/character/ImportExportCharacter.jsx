@@ -118,9 +118,10 @@ export default function ImportExportCharacter({ character, onImport }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="border-violet-500 text-violet-400 hover:bg-violet-500/20 gap-2">
+        <Button variant="outline" size="sm" className="border-violet-500 text-violet-400 hover:bg-violet-500/20 gap-2 text-xs sm:text-sm whitespace-nowrap">
           <FileJson className="h-4 w-4" />
-          Import/Export
+          <span className="hidden xs:inline">Import/Export</span>
+          <span className="xs:hidden">I/E</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-slate-800 border-slate-700 text-white">
