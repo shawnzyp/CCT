@@ -134,26 +134,26 @@ export default function Layout({ children }) {
       
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-lg border-b border-violet-500/30 shadow-lg shadow-violet-500/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
             <Link 
               to={createPageUrl('Home')} 
-              className="flex items-center gap-3"
+              className="flex items-center gap-2 sm:gap-3"
             >
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg" 
                   alt="DC Logo" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-white text-lg tracking-wider">CATALYST CORE</span>
-                  <Radio className="h-3 w-3 text-violet-400 animate-pulse" />
+              <div className="min-w-0">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <span className="font-bold text-white text-sm sm:text-base lg:text-lg tracking-wider truncate">CATALYST CORE</span>
+                  <Radio className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-violet-400 animate-pulse flex-shrink-0" />
                 </div>
-                <span className="hidden md:block text-[9px] text-violet-400 uppercase tracking-[0.2em] font-mono">
+                <span className="hidden md:block text-[8px] sm:text-[9px] text-violet-400 uppercase tracking-[0.2em] font-mono">
                   TACTICAL SYSTEM v2.0
                 </span>
               </div>
@@ -205,25 +205,26 @@ export default function Layout({ children }) {
             </nav>
 
             {/* Current Character */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
               {currentCharacter ? (
                 <Button
                   variant="ghost"
                   onClick={handleCharacterSwitch}
-                  className="gap-2 text-slate-400 hover:text-white"
+                  className="gap-1.5 text-slate-400 hover:text-white text-xs lg:text-sm px-2 lg:px-4"
                 >
-                  <User className="h-4 w-4" />
-                  {currentCharacter.name}
+                  <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                  <span className="max-w-[100px] truncate">{currentCharacter.name}</span>
                   <RefreshCw className="h-3 w-3" />
                 </Button>
               ) : (
                 <Button
                   variant="outline"
                   onClick={() => setShowCharacterSelector(true)}
-                  className="gap-2 border-violet-500 text-violet-400 hover:bg-violet-500/20"
+                  className="gap-1.5 border-violet-500 text-violet-400 hover:bg-violet-500/20 text-xs lg:text-sm px-2 lg:px-4"
                 >
-                  <User className="h-4 w-4" />
-                  Select Character
+                  <User className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                  <span className="hidden xl:inline">Select Character</span>
+                  <span className="xl:hidden">Select</span>
                 </Button>
               )}
             </div>
@@ -292,7 +293,7 @@ export default function Layout({ children }) {
       </header>
       
       {/* Main Content */}
-      <main className="pt-16 relative z-10">
+      <main className="pt-14 sm:pt-16 relative z-10">
         <div className="overflow-y-auto scroll-smooth">
           {children}
         </div>
