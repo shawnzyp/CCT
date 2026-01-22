@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { TrendingUp, Star } from "lucide-react";
+import { TrendingUp, Star, Award, Medal } from "lucide-react";
 
 const XP_PER_LEVEL = 1000;
 
@@ -26,8 +26,8 @@ export default function ProgressionBar({ character, onLevelUp }) {
   return (
     <Card className="bg-gradient-to-br from-violet-900/40 to-purple-900/40 border-violet-500/30">
       <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <div className="flex items-center gap-2 flex-1">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
@@ -48,6 +48,38 @@ export default function ProgressionBar({ character, onLevelUp }) {
                 {currentXP.toLocaleString()} / {xpForNextLevel.toLocaleString()} XP
               </p>
             </div>
+          </div>
+          
+          {/* Recent Achievements & Awards */}
+          <div className="flex flex-col gap-2">
+            {character.achievements?.slice(-3).length > 0 && (
+              <div className="flex gap-1 items-center">
+                <Award className="h-3 w-3 text-amber-400" />
+                {character.achievements.slice(-3).reverse().map((achievement, i) => (
+                  <div 
+                    key={i}
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold shadow-lg"
+                    title={achievement.name}
+                  >
+                    {achievement.icon || '🏆'}
+                  </div>
+                ))}
+              </div>
+            )}
+            {character.milestones?.slice(-3).length > 0 && (
+              <div className="flex gap-1 items-center">
+                <Medal className="h-3 w-3 text-violet-400" />
+                {character.milestones.slice(-3).reverse().map((milestone, i) => (
+                  <div 
+                    key={i}
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-lg"
+                    title={`Level ${milestone.level}: ${milestone.achievement}`}
+                  >
+                    {milestone.level}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           
           {canLevelUp && (
