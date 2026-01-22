@@ -107,7 +107,7 @@ export default function DMHub() {
               <Shield className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">GM Control Center</h1>
+              <h1 className="text-3xl font-bold text-white">Director Control Center</h1>
               <p className="text-slate-400">Full access to all campaign tools and settings</p>
             </div>
           </div>
