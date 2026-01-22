@@ -293,42 +293,6 @@ export default function CharacterSheet() {
           />
         </div>
         
-        {/* Quick Stats Bar */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardContent className="p-4">
-              <ResourceBar
-                label="Hit Points"
-                current={character.current_hp || character.max_hp}
-                max={character.max_hp}
-                color="red"
-                onChange={handleHPChange}
-              />
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-300 uppercase tracking-wider">Toughness Class</div>
-                <div className="text-3xl font-bold text-white">{character.toughness_class || 10}</div>
-              </div>
-              <Shield className="h-8 w-8 text-blue-400" />
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <div className="text-xs text-slate-300 uppercase tracking-wider">Stamina Points</div>
-                <div className="text-3xl font-bold text-white">{maxSP}</div>
-                <div className="text-xs text-slate-400">Regenerates each round</div>
-              </div>
-              <Zap className="h-8 w-8 text-violet-400" />
-            </CardContent>
-          </Card>
-        </div>
-        
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <Select value={activeTab} onValueChange={setActiveTab}>
