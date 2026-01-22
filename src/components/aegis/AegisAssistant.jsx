@@ -239,52 +239,28 @@ export default function AegisAssistant() {
                 className="flex gap-1.5 mb-1.5"
                 style={{ gap: `${EXPRESSIONS[expression].eyeSpacing}px` }}
               >
-                <div className="relative">
-                  <motion.div 
-                    className="w-2.5 h-2.5 bg-white rounded-full relative"
-                    animate={{
-                      scaleY: EXPRESSIONS[expression].eyeScale,
-                      scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
-                    }}
-                    transition={{ 
-                      scaleY: { duration: 0.3 },
-                      scaleX: { duration: 2, repeat: Infinity }
-                    }}
-                  >
-                    {/* Pupil */}
-                    <motion.div 
-                      className="absolute top-1/2 left-1/2 w-1 h-1 bg-violet-900 rounded-full"
-                      style={{ transform: 'translate(-50%, -50%)' }}
-                      animate={{
-                        scale: isTalking ? [1, 0.9, 1] : 1
-                      }}
-                      transition={{ duration: 0.2, repeat: isTalking ? Infinity : 0 }}
-                    />
-                  </motion.div>
-                </div>
-                <div className="relative">
-                  <motion.div 
-                    className="w-2.5 h-2.5 bg-white rounded-full relative"
-                    animate={{
-                      scaleY: EXPRESSIONS[expression].eyeScale,
-                      scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
-                    }}
-                    transition={{ 
-                      scaleY: { duration: 0.3 },
-                      scaleX: { duration: 2, repeat: Infinity }
-                    }}
-                  >
-                    {/* Pupil */}
-                    <motion.div 
-                      className="absolute top-1/2 left-1/2 w-1 h-1 bg-violet-900 rounded-full"
-                      style={{ transform: 'translate(-50%, -50%)' }}
-                      animate={{
-                        scale: isTalking ? [1, 0.9, 1] : 1
-                      }}
-                      transition={{ duration: 0.2, repeat: isTalking ? Infinity : 0 }}
-                    />
-                  </motion.div>
-                </div>
+                <motion.div 
+                  className="w-2.5 h-2.5 bg-white rounded-full"
+                  animate={{
+                    scaleY: EXPRESSIONS[expression].eyeScale,
+                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                  }}
+                  transition={{ 
+                    scaleY: { duration: 0.3 },
+                    scaleX: { duration: 2, repeat: Infinity }
+                  }}
+                />
+                <motion.div 
+                  className="w-2.5 h-2.5 bg-white rounded-full"
+                  animate={{
+                    scaleY: EXPRESSIONS[expression].eyeScale,
+                    scaleX: expression === 'thinking' ? [1, 0.5, 1] : 1
+                  }}
+                  transition={{ 
+                    scaleY: { duration: 0.3 },
+                    scaleX: { duration: 2, repeat: Infinity }
+                  }}
+                />
               </motion.div>
               
               {/* Mouth with talking animation */}
