@@ -328,7 +328,7 @@ export default function CharacterSheet() {
             <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[60vh]" position="popper" side="bottom" align="start" sideOffset={5}>
               <SelectItem value="combat">⚔️ Combat</SelectItem>
               <SelectItem value="stats">📊 Stats</SelectItem>
               <SelectItem value="powers">⚡ Powers</SelectItem>
