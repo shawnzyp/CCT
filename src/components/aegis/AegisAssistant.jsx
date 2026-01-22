@@ -6,21 +6,106 @@ import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisInterface from './AegisInterface';
 
 const ENCOURAGEMENTS = [
-  "Threat assessment: manageable. Proceed.",
-  "SP economy stable. Continue.",
-  "Tactical positioning noted.",
-  "Civilian safety maintained.",
-  "Combat efficiency: acceptable.",
-  "Adaptive response detected.",
-  "Environmental awareness active.",
-  "Resource management: adequate.",
-  "Clean execution. Minimal collateral.",
-  "Threat neutralization: effective.",
-  "Initiative control maintained.",
-  "Decision logged.",
-  "Field performance: within parameters.",
-  "Tactical pivot recognized.",
-  "Clearance: green. Systems nominal."
+  "#character, status: alive. Keep it that way, hero.",
+  "#character, move your ass. Standing still is how you become a memorial.",
+  "#character, breathe. Panic is for amateurs and talk shows.",
+  "#character, confirm objective. Vibes are not tactical data.",
+  "#character, you have one job: make the problem smaller.",
+  "#character, keep your head up. The city loves cheap shots.",
+  "#character, lock in. The universe is trying to clown you.",
+  "#character, focus. Your feelings can file a complaint later.",
+  "#character, no drama. Save it for the debrief and the bottle.",
+  "#character, eyes up. Threats do not announce themselves like decent people.",
+  "#character, execute. Overthinking is just fear wearing glasses.",
+  "#character, stay sharp. Dull heroes get used as examples.",
+  "#character, you are not outmatched. You are underprepared. Fix it.",
+  "#character, keep comms short. Syllables save lives.",
+  "#character, stop hesitating. The clock does not give a damn.",
+  "#character, use cover. Bravery is not armor.",
+  "#character, you can be scared. Just do not be stupid about it.",
+  "#character, tighten your plan. Loose plans bleed.",
+  "#character, you are the solution. Act like it.",
+  "#character, keep moving. Gravity is undefeated and petty.",
+  "#character, keep civilians safe. Everything else is negotiable.",
+  "#character, be decisive. Half-measures are full disasters.",
+  "#character, check your six. The city sure as hell will not.",
+  "#character, stop chasing glory. Glory does not pay hazard rates.",
+  "#character, keep your hands steady. Shaking is fine. Missing is not.",
+  "#character, adapt. Plans die fast in New York.",
+  "#character, stay disciplined. Chaos is already on payroll.",
+  "#character, do not freeze. If you freeze, do it behind something solid.",
+  "#character, take control. If you cannot, take away theirs.",
+  "#character, keep your temper leashed. Unleash it on targets only.",
+  "#character, stop negotiating with fear. Fear is not in the chain of command.",
+  "#character, maintain tempo. Slow is just dead with extra steps.",
+  "#character, remember: you do not need perfect. You need effective.",
+  "#character, keep it simple. Complex plans get people killed confidently.",
+  "#character, do the next right thing. The universe is not going to help.",
+  "#character, you are allowed to swear. Do it while winning.",
+  "#character, hold the line. That is literally why you are here.",
+  "#character, stay alert. The weird stuff always starts small and gets mean.",
+  "#character, do not get cute. Cute gets crushed.",
+  "#character, stop staring at the threat. Start deleting it.",
+  "#character, you are not here to be liked. You are here to be useful.",
+  "#character, verify intel. Rumors are how people die stupid.",
+  "#character, keep your team close. Lone wolves become lonely corpses.",
+  "#character, if the plan is stupid but works, it is now doctrine.",
+  "#character, manage stamina. Running dry is for engines and idiots.",
+  "#character, you are the adult in the room. Yes, it is depressing.",
+  "#character, stay calm. Anger is fuel, not steering.",
+  "#character, control the space. If you cannot, deny it.",
+  "#character, pick a direction and commit. Waffling is how you get folded.",
+  "#character, you do not need permission to do the right damn thing.",
+  "#character, stop second-guessing. Make a call and make it real.",
+  "#character, keep comms clean. Nobody needs your inner monologue.",
+  "#character, if it is scary, it is probably important. How fun for you.",
+  "#character, protect the weak. That includes your future self.",
+  "#character, stay mobile. Stationary targets get paperwork and funerals.",
+  "#character, do not chase the enemy's rhythm. Set your own beat and break theirs.",
+  "#character, watch the exits. Then make one if the building refuses cooperation.",
+  "#character, stay professional. Even if everything else is a dumpster fire.",
+  "#character, keep casualties low. The city is running out of luck.",
+  "#character, if you screw up, correct fast. Shame is a luxury item.",
+  "#character, you can be tired. You cannot be useless.",
+  "#character, breathe. Inhale. Exhale. Murder the problem.",
+  "#character, stay aware. Surprises are rarely gifts in this line of work.",
+  "#character, stop trying to impress anyone. Impress the scoreboard.",
+  "#character, focus on outcomes. Feelings are not an objective marker.",
+  "#character, do not argue with gravity. Gravity always wins, smugly.",
+  "#character, keep your stance. Wobble is a gateway drug to failure.",
+  "#character, you are not fragile. Stop acting like glass with opinions.",
+  "#character, maintain pressure. Threats hate deadlines.",
+  "#character, keep your morals. The situation will try to mug you for them.",
+  "#character, if you are cornered, become the corner.",
+  "#character, stop making this personal. The enemy is already doing that for you.",
+  "#character, keep your humor dark and your decisions darker.",
+  "#character, you are allowed one mistake. Make it small and recover fast.",
+  "#character, do not burn the whole city to save a street. Be selective, not dramatic.",
+  "#character, stay lethal in competence. Attitude is optional.",
+  "#character, you are not invincible. Act accordingly, smartass.",
+  "#character, keep civilians calm. You can terrify the bad guys for free.",
+  "#character, check your gear. Failure loves loose straps and big egos.",
+  "#character, no speeches. Nobody dies slower because you were poetic.",
+  "#character, confirm the win. Do not assume the threat is dead because you feel better.",
+  "#character, keep your priorities straight: lives, mission, then your pride.",
+  "#character, stay operational. Emotional processing is after extraction.",
+  "#character, do not flinch. Flinching is natural. Dying is also natural.",
+  "#character, conserve energy. Then spend it like you are pissed off at physics.",
+  "#character, keep your team alive. They are your force multiplier and your alibi.",
+  "#character, stop chasing perfection. Perfection is a liar with nice shoes.",
+  "#character, if you are outmatched, get smarter. If that fails, get mean.",
+  "#character, take the hit if needed. Just do not take it twice, genius.",
+  "#character, stay on task. Side quests are how heroes become headlines.",
+  "#character, keep your promises. Especially the ones you made under fire.",
+  "#character, you are not a weapon. You are the hand that aims. Do not shake.",
+  "#character, maintain composure. Freak out later, privately, like a professional.",
+  "#character, stop waiting for a sign. You are the damn sign.",
+  "#character, keep moving forward. Backward is for retreats and regrets.",
+  "#character, do the hard thing now. The easy thing later is usually a trap.",
+  "#character, remember: courage is fear with orders and a dirty mouth.",
+  "#character, finish the job. Then collapse. In that order.",
+  "#character, stay viciously helpful. The city needs results, not vibes.",
+  "#character, advance. The world is still standing, and that is your problem."
 ];
 
 const EXPRESSIONS = {
@@ -57,7 +142,26 @@ export default function AegisAssistant() {
   // Random encouragement system
   useEffect(() => {
     const showRandomEncouragement = () => {
-      const randomMessage = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+      // Get current character from localStorage
+      const storedChar = localStorage.getItem('currentCharacter');
+      let characterName = 'Hero';
+      
+      if (storedChar) {
+        try {
+          const char = JSON.parse(storedChar);
+          characterName = char.name || 'Hero';
+          
+          // Remove definite article if present (e.g., "The Batman" -> "Batman")
+          if (characterName.toLowerCase().startsWith('the ')) {
+            characterName = characterName.substring(4);
+          }
+        } catch (e) {
+          // Use default if parsing fails
+        }
+      }
+      
+      const randomTemplate = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+      const randomMessage = randomTemplate.replace(/#character/g, characterName);
       setCurrentMessage(randomMessage);
       setShowEncouragement(true);
       setExpression('happy');
