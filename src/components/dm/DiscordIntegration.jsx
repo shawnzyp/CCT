@@ -348,8 +348,8 @@ export default function DiscordIntegration() {
       const response = await base44.functions.invoke('notifyDiscord', {
         eventType: 'test',
         embedColor: formData.embed_color,
-        embedTitle: formData.embed_title,
-        embedDescription: formData.embed_description,
+        embedTitle: formData.embed_title || '✅ Discord Webhook Test',
+        embedDescription: formData.embed_description || 'Test message from Catalyst Core',
         embedThumbnail: formData.embed_thumbnail,
         embedImage: formData.embed_image,
         data: {
@@ -357,10 +357,16 @@ export default function DiscordIntegration() {
         }
       });
 
-      if (response.data.success) {
-        toast.success('Test message sent to Discord!');
+      if (response.data && response.data.success) {
+        toast.success('Test message sent to Discord! Check your server.');
+      } else if (response.data && response.data.error) {
+        if (response.data.error.includes('DISCORD_WEBHOOK_URL not configured')) {
+          toast.error('Webhook URL not configured. Set DISCORD_WEBHOOK_URL in environment variables.');
+        } else {
+          toast.error('Test failed: ' + response.data.error);
+        }
       } else {
-        toast.error('Test failed: ' + (response.data.error || 'Unknown error'));
+        toast.error('Test failed: Unknown error');
       }
     } catch (error) {
       toast.error('Test failed: ' + error.message);
