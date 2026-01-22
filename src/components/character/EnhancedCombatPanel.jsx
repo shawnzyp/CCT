@@ -126,14 +126,67 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { id: 'action', label: 'Action', icon: Swords, desc: 'Attack, power, dash, dodge, etc.' },
-                { id: 'movement', label: 'Movement', icon: Move, desc: 'Move up to your speed' },
-                { id: 'bonus_action', label: 'Bonus Action', icon: BonusIcon, desc: 'Quick powers or abilities' },
-                { id: 'reaction', label: 'Reaction', icon: Shield, desc: 'Opportunity attacks, blocks' }
-              ].map((action, idx) => (
-                <div key={action.id} className="flex flex-col items-center">
+                { 
+                  id: 'action', 
+                  label: 'Action', 
+                  icon: Swords, 
+                  desc: 'Attack, power, dash, dodge, etc.',
+                  details: [
+                    'Attack: Make a melee or ranged attack roll',
+                    'Use Power: Activate one of your powers (costs SP)',
+                    'Dash: Move up to 2x your speed this turn',
+                    'Dodge: Enemies have disadvantage to hit you',
+                    'Disengage: Move without provoking reactions',
+                    'Help: Give ally advantage on next check',
+                    'Hide: Make a Stealth check',
+                    'Ready: Prepare action for a trigger'
+                  ]
+                },
+                { 
+                  id: 'movement', 
+                  label: 'Movement', 
+                  icon: Move, 
+                  desc: 'Move up to your speed',
+                  details: [
+                    'Move up to your speed (30 ft base)',
+                    'Can be split before/after actions',
+                    'Difficult terrain costs 2 ft per 1 ft',
+                    'Dash action doubles movement',
+                    'Disengage prevents opportunity attacks',
+                    'Leaving enemy reach provokes attacks'
+                  ]
+                },
+                { 
+                  id: 'bonus_action', 
+                  label: 'Bonus Action', 
+                  icon: BonusIcon, 
+                  desc: 'Quick powers or abilities',
+                  details: [
+                    'Quick Power: Powers marked "Bonus Action"',
+                    'Second Wind: Some abilities use bonus actions',
+                    'Ready Attack: Prepare for next turn',
+                    'Only 1 bonus action per turn',
+                    'Some powers have bonus action costs'
+                  ]
+                },
+                { 
+                  id: 'reaction', 
+                  label: 'Reaction', 
+                  icon: Shield, 
+                  desc: 'Opportunity attacks, blocks',
+                  details: [
+                    'Opportunity Attack: When enemy leaves reach',
+                    'Counterspell: Negate another power',
+                    'Block/Parry: Reduce incoming damage',
+                    'Only 1 reaction per round',
+                    'Triggered by specific conditions',
+                    'Resets at start of your turn'
+                  ]
+                }
+              ].map((action) => (
+                <div key={action.id} className="flex flex-col items-center gap-2">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
@@ -162,46 +215,22 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                     </TooltipContent>
                   </Tooltip>
                   
-                  {idx === 2 && (
-                    <div className="mt-2 flex justify-center">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-1 text-xs text-slate-400 cursor-help">
-                            <HelpCircle className="h-3 w-3" />
-                            <span>What can I do?</span>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent className="max-w-md max-h-96 overflow-y-auto">
-                          <div className="space-y-3">
-                            <div>
-                              <p className="font-semibold text-violet-300 mb-1">Combat Actions:</p>
-                              {COMBAT_ACTIONS.map(action => (
-                                <div key={action.id} className="text-xs mb-1">
-                                  <span className="font-medium">{action.name}:</span> {action.description}
-                                </div>
-                              ))}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-orange-300 mb-1">Reactions:</p>
-                              {COMBAT_REACTIONS.map((reaction, i) => (
-                                <div key={i} className="text-xs mb-1">
-                                  <span className="font-medium">{reaction.name}:</span> {reaction.description}
-                                </div>
-                              ))}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-blue-300 mb-1">Bonus Actions:</p>
-                              {BONUS_ACTIONS.map((bonus, i) => (
-                                <div key={i} className="text-xs mb-1">
-                                  <span className="font-medium">{bonus.name}:</span> {bonus.description}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  )}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 text-xs text-slate-400 cursor-help">
+                        <HelpCircle className="h-3 w-3" />
+                        <span>Options</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-violet-300 text-xs mb-1.5">{action.label} Options:</p>
+                        {action.details.map((detail, i) => (
+                          <p key={i} className="text-xs text-slate-200">• {detail}</p>
+                        ))}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               ))}
             </div>
