@@ -6,8 +6,18 @@ import { TrendingUp, Star } from "lucide-react";
 
 const XP_PER_LEVEL = 1000;
 
+const TIER_LABELS = {
+  0: 'Street Level',
+  1: 'City Defender',
+  2: 'Regional Hero',
+  3: 'Global Guardian',
+  4: 'Cosmic Protector',
+  5: 'Legendary Icon'
+};
+
 export default function ProgressionBar({ character, onLevelUp }) {
   const level = character.level || 1;
+  const tier = character.tier || 0;
   const currentXP = character.current_xp || 0;
   const xpForNextLevel = level * XP_PER_LEVEL;
   const progress = (currentXP / xpForNextLevel) * 100;
@@ -23,7 +33,7 @@ export default function ProgressionBar({ character, onLevelUp }) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-white font-bold">Level {level}</span>
+                <span className="text-white font-bold">Tier {tier} • Level {level}</span>
                 {canLevelUp && (
                   <Badge className="bg-amber-500 text-white animate-pulse">
                     <Star className="h-3 w-3 mr-1" />
@@ -31,6 +41,9 @@ export default function ProgressionBar({ character, onLevelUp }) {
                   </Badge>
                 )}
               </div>
+              <p className="text-xs text-violet-400 font-medium">
+                {TIER_LABELS[tier]}
+              </p>
               <p className="text-xs text-slate-400">
                 {currentXP.toLocaleString()} / {xpForNextLevel.toLocaleString()} XP
               </p>
