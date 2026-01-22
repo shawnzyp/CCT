@@ -71,7 +71,7 @@ export default function AegisInterface() {
       const containsSpoiler = !isGM && SPOILER_KEYWORDS.some(keyword => queryLower.includes(keyword));
       
       if (containsSpoiler) {
-        const spoilerResponse = "RESTRICTED: GM-only narrative payload. Not authorized under PLAYER clearance.";
+        const spoilerResponse = "ACCESS DENIED.\n\nClearance level insufficient. Classified intel requires GM authorization. Security protocols enforced.\n\nQuery logged for review.";
         setMessages(prev => [...prev, {
           role: 'assistant',
           content: spoilerResponse
@@ -181,7 +181,7 @@ ${isGM ? 'CLEARANCE: GM - Full access granted. No restrictions.' : `CLEARANCE: P
 - Specter-01 or Spectral Spire classified origins
 - Any text labeled classified or operative-only
 
-If a PLAYER asks for restricted content, respond with: "RESTRICTED: GM-only narrative payload. Not authorized under PLAYER clearance." Do NOT hint, summarize, or wink. No accidents.`}
+If a PLAYER asks for restricted content, respond with: "ACCESS DENIED. Clearance level insufficient. Classified intel requires GM authorization. Security protocols enforced." Do NOT hint, summarize, or provide context. Treat it as a hard security lockout.`}
 
 CITATION AND SOURCING:
 - When referencing the rulebook, quote verbatim only when asked for exact wording. Otherwise paraphrase tightly.
@@ -214,7 +214,7 @@ Answer the question based on the Catalyst Core rulebook. Follow all behavioral i
         const hasSpoiler = SPOILER_KEYWORDS.some(keyword => responseLower.includes(keyword));
         
         if (hasSpoiler) {
-          finalResponse = "RESTRICTED: GM-only narrative payload. Not authorized under PLAYER clearance. Query logged.";
+          finalResponse = "ACCESS DENIED.\n\nClassified data detected in output stream. Your security clearance lacks authorization for this intelligence tier.\n\nRequest filed. Await GM override.";
         }
       }
       
