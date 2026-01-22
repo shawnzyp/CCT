@@ -20,15 +20,17 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
     const storedPIN = localStorage.getItem('dm_pin') || '0000';
     
     if (pin === storedPIN) {
+      window.sessionStorage.setItem('isDM', 'true');
+      window.dispatchEvent(new Event('dm-status-changed'));
       onDMLogin();
       setShowPINDialog(false);
       setPin('');
       haptic('success');
       play('success', 0.5);
-      toast.success('DM Access Granted', {
+      toast.success('GM Access Granted', {
         description: 'You now have full control over the campaign'
       });
-      // Navigate to DM Hub
+      // Navigate to GM Hub
       navigate(createPageUrl('DMHub'));
     } else {
       haptic('error');
@@ -39,10 +41,12 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
   };
 
   const handleLogout = () => {
+    window.sessionStorage.setItem('isDM', 'false');
+    window.dispatchEvent(new Event('dm-status-changed'));
     onDMLogout();
     haptic('medium');
     play('click', 0.3);
-    toast.info('DM Session Ended');
+    toast.info('GM Session Ended');
   };
 
   return (
@@ -57,7 +61,7 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
               className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all"
             >
               <LogOut className="h-4 w-4" />
-              Exit DM Mode
+              Exit GM Mode
             </Button>
           ) : (
             <Button
@@ -65,7 +69,7 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
               className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/20 transition-all hover:shadow-violet-500/40"
             >
               <Shield className="h-4 w-4" />
-              DM Access
+              GM Access
             </Button>
           )}
         </div>
@@ -77,14 +81,14 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-violet-400">
               <Lock className="h-5 w-5" />
-              DM Authentication Required
+              GM Authentication Required
             </DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="p-4 bg-violet-900/20 border border-violet-500/30 rounded-lg">
               <p className="text-sm text-slate-300">
-                Enter your 4-digit PIN to access DM tools and full campaign control.
+                Enter your 4-digit PIN to access GM tools and full campaign control.
               </p>
               <p className="text-xs text-slate-400 mt-2">
                 Default PIN: 0000 (Change it in Settings)
