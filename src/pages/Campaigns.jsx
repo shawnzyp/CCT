@@ -46,21 +46,21 @@ export default function Campaigns() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </div>
       
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-violet-500/20">
-                <BookOpen className="h-7 w-7 text-violet-400" />
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-violet-500/20">
+                <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-violet-400" />
               </div>
               Campaigns
             </h1>
-            <p className="text-slate-400 mt-1">Manage your adventures and stories</p>
+            <p className="text-sm sm:text-base text-slate-400 mt-1">Manage your adventures and stories</p>
           </div>
           
-          <Button onClick={() => setShowCreate(true)} className="bg-violet-600 hover:bg-violet-700 gap-2">
+          <Button onClick={() => setShowCreate(true)} className="bg-violet-600 hover:bg-violet-700 gap-1.5 sm:gap-2 text-sm sm:text-base w-full sm:w-auto">
             <Plus className="h-4 w-4" />
-            New Campaign
+            <span>New Campaign</span>
           </Button>
         </div>
         
@@ -76,7 +76,7 @@ export default function Campaigns() {
         </div>
         
         {filteredCampaigns.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filteredCampaigns.map((campaign, index) => {
               const StatusIcon = STATUS_ICONS[campaign.status];
               return (

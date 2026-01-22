@@ -117,19 +117,19 @@ export default function Home() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 pb-24">
+      <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-8 sm:py-12 lg:py-20 pb-20 sm:pb-24">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
-            className="w-24 h-24 mx-auto mb-6 rounded-2xl flex items-center justify-center overflow-hidden"
+            className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-4 sm:mb-6 rounded-xl sm:rounded-2xl flex items-center justify-center overflow-hidden"
           >
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg" 
@@ -142,7 +142,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4"
           >
             Catalyst Core
           </motion.h1>
@@ -151,7 +151,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl text-slate-400 max-w-2xl mx-auto mb-8"
+            className="text-sm sm:text-base lg:text-xl text-slate-400 max-w-2xl mx-auto mb-6 sm:mb-8 px-2"
           >
             The ultimate character tracker for tabletop RPG vigilante heroes. 
             Create characters, manage campaigns, and run epic battles.
@@ -199,7 +199,7 @@ export default function Home() {
         </motion.div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -213,12 +213,12 @@ export default function Home() {
                   onClick={feature.action}
                   className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all h-full group cursor-pointer"
                 >
-                  <CardContent className="p-4">
-                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                      <feature.icon className="h-5 w-5 text-white" />
+                  <CardContent className="p-2 sm:p-3 lg:p-4">
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform`}>
+                      <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
-                    <h3 className="text-sm font-semibold text-white mb-1">{feature.title}</h3>
-                    <p className="text-xs text-slate-400 line-clamp-2">{feature.description}</p>
+                    <h3 className="text-xs sm:text-sm font-semibold text-white mb-0.5 sm:mb-1 line-clamp-1">{feature.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-slate-400 line-clamp-2">{feature.description}</p>
                   </CardContent>
                 </Card>
               ) : feature.link ? (
@@ -253,7 +253,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto"
+          className="mt-8 sm:mt-12 lg:mt-16 grid grid-cols-3 gap-3 sm:gap-6 lg:gap-8 max-w-3xl mx-auto"
         >
           {[
             { label: 'Power Styles', value: '7+' },
@@ -267,8 +267,8 @@ export default function Home() {
               transition={{ delay: 1.4 + index * 0.1, type: 'spring', stiffness: 200 }}
               className="text-center"
             >
-              <div className="text-3xl font-bold text-violet-400 mb-1">{stat.value}</div>
-              <div className="text-sm text-slate-500">{stat.label}</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-violet-400 mb-0.5 sm:mb-1">{stat.value}</div>
+              <div className="text-xs sm:text-sm text-slate-500">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>

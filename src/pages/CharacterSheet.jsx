@@ -258,9 +258,9 @@ export default function CharacterSheet() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </div>
       
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6">
+      <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         {/* Header */}
-        <div className="flex flex-wrap items-center gap-3 mb-6">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <Link to={createPageUrl('Home')}>
             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
               <ArrowLeft className="h-5 w-5" />
@@ -271,20 +271,20 @@ export default function CharacterSheet() {
             <div className="flex items-center gap-3">
               {/* Portrait */}
               <div className={cn(
-                "w-14 h-14 rounded-xl overflow-hidden flex-shrink-0",
+                "w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0",
                 "bg-gradient-to-br from-violet-600 to-purple-700",
                 "flex items-center justify-center"
               )}>
                 {character.portrait_url ? (
                   <img src={character.portrait_url} alt={character.name} className="w-full h-full object-cover" />
                 ) : (
-                  <User className="h-7 w-7 text-white/60" />
+                  <User className="h-6 w-6 sm:h-7 sm:w-7 text-white/60" />
                 )}
               </div>
               
-              <div>
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white truncate">{character.name}</h1>
-                <div className="flex flex-wrap items-center gap-2 mt-1">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white truncate">{character.name}</h1>
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1">
                   <Badge variant="outline" className="border-violet-500/50 text-violet-400 text-xs">
                     {CLASSIFICATION_LABELS[character.classification]}
                   </Badge>
@@ -299,15 +299,15 @@ export default function CharacterSheet() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             <Button
               onClick={() => setShowCharacterEditor(true)}
               variant="outline"
               size="sm"
-              className="border-violet-500 text-violet-400 hover:bg-violet-500/20"
+              className="border-violet-500 text-violet-400 hover:bg-violet-500/20 text-xs sm:text-sm"
             >
-              <Settings className="h-4 w-4 mr-2" />
-              Edit Character
+              <Settings className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Edit Character</span>
             </Button>
             <ExportCharacterPDF character={character} />
             <ImportExportCharacter character={character} onImport={handleImport} />

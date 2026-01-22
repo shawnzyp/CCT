@@ -32,15 +32,15 @@ export default function CreateCharacter() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </div>
       
-      <div className="relative z-10 max-w-2xl mx-auto px-4 py-8">
+      <div className="relative z-10 max-w-2xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
         <Link to={createPageUrl('Characters')}>
-          <Button variant="ghost" className="text-slate-400 hover:text-white mb-4">
+          <Button variant="ghost" className="text-slate-400 hover:text-white mb-3 sm:mb-4 text-sm sm:text-base">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Roster
+            <span>Back to Roster</span>
           </Button>
         </Link>
         
-        <h1 className="text-3xl font-bold text-white mb-6">Create Your Vigilante</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">Create Your Vigilante</h1>
         
         <CreateCharacterForm 
           onSubmit={(data) => createMutation.mutate(data)}

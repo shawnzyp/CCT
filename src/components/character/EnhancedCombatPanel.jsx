@@ -107,9 +107,9 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
 
   return (
     <TooltipProvider>
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Section 1: Resources */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           {/* HP Tracker */}
           <CalculatorResourceTracker
             icon={Heart}
@@ -137,10 +137,10 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
 
         {/* Section 2: Action Economy */}
         <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
+          <CardHeader className="pb-2 sm:pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="flex items-center gap-2">
-                <CardTitle className="text-white text-base">Action Economy</CardTitle>
+                <CardTitle className="text-white text-sm sm:text-base">Action Economy</CardTitle>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
@@ -150,13 +150,13 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              <Button size="sm" variant="outline" onClick={resetActions} className="h-7 text-xs">
+              <Button size="sm" variant="outline" onClick={resetActions} className="h-7 text-xs w-full sm:w-auto">
                 Reset Turn
               </Button>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               {[
                 { 
                   id: 'action', 
@@ -222,18 +222,18 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                       <button
                         onClick={() => toggleAction(action.id)}
                         className={cn(
-                          "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all w-full",
+                          "flex flex-col items-center gap-1.5 sm:gap-2 p-2 sm:p-3 rounded-lg border-2 transition-all w-full",
                           usedActions[action.id]
                             ? "border-slate-600 bg-slate-800/50"
                             : "border-violet-500/50 bg-violet-500/10 hover:bg-violet-500/20"
                         )}
                       >
                         <action.icon className={cn(
-                          "h-5 w-5",
+                          "h-4 w-4 sm:h-5 sm:w-5",
                           usedActions[action.id] ? "text-slate-500" : "text-violet-400"
                         )} />
                         <span className={cn(
-                          "text-xs font-semibold text-center",
+                          "text-[10px] sm:text-xs font-semibold text-center",
                           usedActions[action.id] ? "text-slate-500 line-through" : "text-white"
                         )}>
                           {action.label}
@@ -269,9 +269,9 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
 
         {/* Section 3: Attack Bonuses */}
         <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-2 sm:pb-3">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-white text-base">Attack Bonuses</CardTitle>
+              <CardTitle className="text-white text-sm sm:text-base">Attack Bonuses</CardTitle>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
@@ -283,14 +283,14 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-3">
-              <div className="p-4 bg-gradient-to-br from-red-950/30 to-red-900/10 border border-red-900/50 rounded-lg">
+            <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
+              <div className="p-3 sm:p-4 bg-gradient-to-br from-red-950/30 to-red-900/10 border border-red-900/50 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <div>
-                    <div className="text-slate-300 text-sm font-semibold">Melee Attack</div>
-                    <div className="text-xs text-slate-500 mt-0.5">STR modifier</div>
+                    <div className="text-slate-300 text-xs sm:text-sm font-semibold">Melee Attack</div>
+                    <div className="text-[10px] sm:text-xs text-slate-500 mt-0.5">STR modifier</div>
                   </div>
-                  <div className="text-3xl font-bold text-red-300">
+                  <div className="text-2xl sm:text-3xl font-bold text-red-300">
                     {formatModifier(strMod)}
                   </div>
                 </div>
@@ -303,13 +303,13 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                   Roll Attack
                 </Button>
               </div>
-              <div className="p-4 bg-gradient-to-br from-blue-950/30 to-blue-900/10 border border-blue-900/50 rounded-lg">
+              <div className="p-3 sm:p-4 bg-gradient-to-br from-blue-950/30 to-blue-900/10 border border-blue-900/50 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <div>
-                    <div className="text-slate-300 text-sm font-semibold">Ranged Attack</div>
-                    <div className="text-xs text-slate-500 mt-0.5">DEX modifier</div>
+                    <div className="text-slate-300 text-xs sm:text-sm font-semibold">Ranged Attack</div>
+                    <div className="text-[10px] sm:text-xs text-slate-500 mt-0.5">DEX modifier</div>
                   </div>
-                  <div className="text-3xl font-bold text-blue-300">
+                  <div className="text-2xl sm:text-3xl font-bold text-blue-300">
                     {formatModifier(dexMod)}
                   </div>
                 </div>
@@ -329,9 +329,9 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
         {/* Section 5: Powers */}
         {character.powers?.length > 0 && (
           <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-2 sm:pb-3">
               <div className="flex items-center gap-2">
-                <CardTitle className="text-white text-base">Your Powers</CardTitle>
+                <CardTitle className="text-white text-sm sm:text-base">Your Powers</CardTitle>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
@@ -343,9 +343,9 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
                 {character.powers.map((power, idx) => (
-                  <div key={idx} className="p-3 bg-gradient-to-br from-violet-950/30 to-purple-900/10 border border-violet-900/50 rounded-lg">
+                  <div key={idx} className="p-2.5 sm:p-3 bg-gradient-to-br from-violet-950/30 to-purple-900/10 border border-violet-900/50 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-2">
                         <Zap className="h-4 w-4 text-violet-400" />
@@ -435,7 +435,7 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
               <CardTitle className="text-white text-base">Equipped Gear</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-2">
+              <div className="grid sm:grid-cols-2 gap-1.5 sm:gap-2">
                 {character.equipment.filter(e => e.equipped).map((item, idx) => (
                   <div key={idx} className="p-2.5 bg-slate-700/30 rounded flex justify-between items-center">
                     <div className="flex items-center gap-2">
