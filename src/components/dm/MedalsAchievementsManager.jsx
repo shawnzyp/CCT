@@ -10,6 +10,7 @@ import { Award, Medal, Plus, Trash2, Calendar, User, Check, X } from 'lucide-rea
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 export default function MedalsAchievementsManager({ campaignId }) {
   const [showCreate, setShowCreate] = useState(false);
