@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Dices, TrendingUp, TrendingDown, Minus, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 
 const DIFFICULTY_CLASSES = [
   { label: 'Easy', dc: 10, color: 'text-green-400' },
@@ -16,6 +18,26 @@ const DIFFICULTY_CLASSES = [
 export default function SkillCheckDialog({ skill, bonus, character, onClose }) {
   const [result, setResult] = useState(null);
   const [rolling, setRolling] = useState(false);
+  
+  const sendToDiscord = async (d20, total, isCritSuccess, isCritFail) => {
+    try {
+      await base44.functions.invoke('notifyDiscord', {
+        eventType: 'skill_check',
+        data: {
+          message: `${character.name} rolled ${skill.label}`,
+          character: character.name,
+          skill: skill.label,
+          d20,
+          total,
+          bonus,
+          isCritSuccess,
+          isCritFail
+        }
+      });
+    } catch (error) {
+      console.error('Failed to send skill check to Discord:', error);
+    }
+  };
   
   const rollCheck = () => {
     setRolling(true);
@@ -29,6 +51,9 @@ export default function SkillCheckDialog({ skill, bonus, character, onClose }) {
       
       setResult({ d20, total, isCritSuccess, isCritFail });
       setRolling(false);
+      
+      // Send to Discord
+      sendToDiscord(d20, total, isCritSuccess, isCritFail);
     }, 600);
   };
   
