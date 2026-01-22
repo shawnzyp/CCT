@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-export default async function notifyDiscord(req) {
+async function notifyDiscord(req) {
   const base44 = createClientFromRequest(req);
   const { 
     eventType, 
