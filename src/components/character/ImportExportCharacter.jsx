@@ -118,7 +118,7 @@ export default function ImportExportCharacter({ character, onImport }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="border-violet-500 text-violet-400 hover:bg-violet-500/20 gap-2">
+        <Button variant="outline" size="sm" className="border-violet-500 text-violet-400 hover:bg-violet-500/20 gap-2">
           <FileJson className="h-4 w-4" />
           Import/Export
         </Button>
