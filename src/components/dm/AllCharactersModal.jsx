@@ -148,11 +148,14 @@ export default function AllCharactersModal({ open, onClose }) {
 
               <ScrollArea className="flex-1">
                 <Tabs defaultValue="basic" className="w-full">
-                  <TabsList className="w-full grid grid-cols-4 bg-slate-800">
+                  <TabsList className="w-full grid grid-cols-7 bg-slate-800 h-auto">
                     <TabsTrigger value="basic">Basic</TabsTrigger>
                     <TabsTrigger value="stats">Stats</TabsTrigger>
                     <TabsTrigger value="resources">Resources</TabsTrigger>
                     <TabsTrigger value="progression">Progression</TabsTrigger>
+                    <TabsTrigger value="powers">Powers</TabsTrigger>
+                    <TabsTrigger value="equipment">Equipment</TabsTrigger>
+                    <TabsTrigger value="inventory">Inventory</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="basic" className="space-y-4 mt-4">
@@ -338,6 +341,60 @@ export default function AllCharactersModal({ open, onClose }) {
                           </SelectContent>
                         </Select>
                       </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="powers" className="space-y-4 mt-4">
+                    <div>
+                      <Label>Powers (JSON)</Label>
+                      <Textarea
+                        value={JSON.stringify(editData.powers || [], null, 2)}
+                        onChange={(e) => {
+                          try {
+                            setEditData({ ...editData, powers: JSON.parse(e.target.value) });
+                          } catch (err) {
+                            // Allow invalid JSON while editing
+                          }
+                        }}
+                        className="bg-slate-800 border-slate-700 font-mono text-xs min-h-[200px]"
+                        placeholder="[{name: 'Power Name', description: '...'}]"
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="equipment" className="space-y-4 mt-4">
+                    <div>
+                      <Label>Equipment (JSON)</Label>
+                      <Textarea
+                        value={JSON.stringify(editData.equipment || [], null, 2)}
+                        onChange={(e) => {
+                          try {
+                            setEditData({ ...editData, equipment: JSON.parse(e.target.value) });
+                          } catch (err) {
+                            // Allow invalid JSON while editing
+                          }
+                        }}
+                        className="bg-slate-800 border-slate-700 font-mono text-xs min-h-[200px]"
+                        placeholder="[{name: 'Weapon', type: '...', bonus: 0}]"
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="inventory" className="space-y-4 mt-4">
+                    <div>
+                      <Label>Inventory (JSON)</Label>
+                      <Textarea
+                        value={JSON.stringify(editData.inventory || [], null, 2)}
+                        onChange={(e) => {
+                          try {
+                            setEditData({ ...editData, inventory: JSON.parse(e.target.value) });
+                          } catch (err) {
+                            // Allow invalid JSON while editing
+                          }
+                        }}
+                        className="bg-slate-800 border-slate-700 font-mono text-xs min-h-[200px]"
+                        placeholder="[{name: 'Item', quantity: 1}]"
+                      />
                     </div>
                   </TabsContent>
                 </Tabs>
