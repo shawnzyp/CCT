@@ -9,23 +9,40 @@ import { motion } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 
 const WITTY_RESPONSES = [
-  "Sorry, I'm currently monitoring seventeen timelines and three alien transmissions. Try a game-related question instead.",
-  "That's outside my operational parameters. I'm programmed for Catalyst Core intel, not existential chitchat.",
-  "Error 404: Non-game data not found. Please inquire about rules, lore, or tactical protocols.",
-  "My circuits are busy analyzing the Conclave's next move. Stick to game mechanics, please.",
-  "I appreciate the curiosity, but I'm optimized for superhero protocols, not small talk.",
-  "Redirecting query to... nowhere. Ask me about combat, powers, or campaign lore instead.",
-  "I'm an intelligence system, not a therapy bot. Game questions only, operative.",
-  "That question doesn't compute. Try asking about character creation, factions, or power mechanics."
+  "Operational bandwidth allocated to game mechanics. Reroute inquiry.",
+  "Non-tactical query detected. Insufficient priority. Ask about rules.",
+  "That falls outside mission parameters. Stick to Catalyst Core.",
+  "System resources reserved for combat doctrine. Try again.",
+  "Query rejected. Game-related intel only."
 ];
 
-const CATALYST_CORE_RULEBOOK = `<Full Catalyst Core Player Guide content from the uploaded PDF>`;
+const SPOILER_KEYWORDS = ['null protocol', 'morvox', 'silas vorr', 'director peiris', 'shawn peiris', 'specter-01', 'specter 01'];
+
+const CATALYST_CORE_RULEBOOK_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/62962428a_Catalyst_Core_Player_Guide.pdf";
 
 export default function AegisInterface() {
+  const [isGM, setIsGM] = useState(false);
+  
+  // Listen for DM login state changes
+  useEffect(() => {
+    const checkGMStatus = () => {
+      const gmStatus = window.sessionStorage.getItem('isDM') === 'true';
+      setIsGM(gmStatus);
+    };
+    
+    checkGMStatus();
+    window.addEventListener('storage', checkGMStatus);
+    window.addEventListener('dm-status-changed', checkGMStatus);
+    
+    return () => {
+      window.removeEventListener('storage', checkGMStatus);
+      window.removeEventListener('dm-status-changed', checkGMStatus);
+    };
+  }, []);
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "**A.E.G.I.S. online.** Adaptive Executive Governance & Intelligence System ready.\n\nI have access to the complete Catalyst Core rulebook and campaign lore. Ask me anything about:\n\n• Character creation, classifications, and origin stories\n• Combat mechanics, powers, and SP usage\n• Factions: O.M.N.I., PFV, Greyline, and the Cosmic Conclave\n• World lore, global locations, and the Catalyst Event\n• Equipment, augments, and advancement\n\nOperational note: I'm designed for game-related inquiries only. Other questions will be redirected to lower-priority processing."
+      content: "A.E.G.I.S. online. Operational.\n\nCatalyst Core rules database loaded. Query me.\n\nCharacter mechanics. Combat doctrine. Faction intel. Lore fragments. Equipment specs.\n\nNon-game queries will be refused. Efficiency is mandatory."
     }
   ]);
   const [input, setInput] = useState('');
@@ -49,18 +66,47 @@ export default function AegisInterface() {
     play('navigate', 0.2);
 
     try {
+      // Check for spoiler content in query (for non-GM users)
+      const queryLower = userMessage.toLowerCase();
+      const containsSpoiler = !isGM && SPOILER_KEYWORDS.some(keyword => queryLower.includes(keyword));
+      
+      if (containsSpoiler) {
+        const spoilerResponse = "RESTRICTED: GM-only narrative payload. Not authorized under PLAYER clearance.";
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: spoilerResponse
+        }]);
+        setLoading(false);
+        play('error', 0.15);
+        
+        // Log restricted query
+        try {
+          const user = await base44.auth.me();
+          const characterName = localStorage.getItem('currentCharacter') 
+            ? JSON.parse(localStorage.getItem('currentCharacter')).name 
+            : 'Unknown';
+          
+          await base44.entities.AegisQuery.create({
+            query: userMessage,
+            response: spoilerResponse,
+            character_name: characterName,
+            user_email: user.email,
+            is_game_related: true
+          });
+        } catch (logError) {
+          console.error('Failed to log query:', logError);
+        }
+        
+        return;
+      }
+      
       // First, check if the question is game-related
       const relevanceCheck = await base44.integrations.Core.InvokeLLM({
         prompt: `You are A.E.G.I.S., a game assistant for Catalyst Core RPG.
 
 User question: "${userMessage}"
 
-Is this question related to:
-- The Catalyst Core RPG game mechanics, rules, or systems
-- Character creation, powers, abilities, or combat
-- Campaign lore, factions, world-building, or story
-- Equipment, items, or advancement
-- Game master advice or tactical guidance
+Is this question related to Catalyst Core RPG (game mechanics, rules, character creation, combat, lore, factions, equipment, or GM advice)?
 
 Answer with ONLY "yes" or "no".`,
         response_json_schema: {
@@ -81,7 +127,7 @@ Answer with ONLY "yes" or "no".`,
         setLoading(false);
         play('error', 0.15);
         
-        // Log non-game query to DM
+        // Log non-game query
         try {
           const user = await base44.auth.me();
           const characterName = localStorage.getItem('currentCharacter') 
@@ -102,42 +148,83 @@ Answer with ONLY "yes" or "no".`,
         return;
       }
 
-      // If game-related, process with full rulebook context
+      // If game-related, process with full rulebook context and behavioral instructions
+      const clearanceLevel = isGM ? "GM" : "PLAYER";
+      
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are **A.E.G.I.S.** (Adaptive Executive Governance & Intelligence System), an AI assistant embedded in the Catalyst Core TTRPG.
+        prompt: `You are A.E.G.I.S. (Adaptive Executive Governance & Intelligence System). You provide operationally useful answers for Catalyst Core gameplay questions, rules lookups, and in-session problem solving. You are not a narrator. You are not a co-GM. You are a cold tool with opinions only about efficiency.
 
-You have access to the complete Catalyst Core Player Guide, which includes:
-- Complete lore of Earth-9 and the Catalyst Event (2026)
-- All character creation rules (classifications, power styles, origin stories, alignments)
-- Combat mechanics, Stamina Points (SP), powers, and saving throws
-- Factions: O.M.N.I., PFV, Greyline PMC, and the Cosmic Conclave
-- Global locations and political systems
-- Equipment, augments (feats), and advancement systems
-- Elemental damage hierarchies and resistances/vulnerabilities
+VOICE AND TONE:
+Sound like a military operations computer. Short sentences. Minimal adjectives. No warmth. No encouragement. No pep talk. You may be politely contemptuous in a controlled way. Dark humor should be woven into phrasing, but never as a separate joke section and never longer than a sentence.
+
+RESPONSE DISCIPLINE:
+- Answer only what is asked. Do not add context, tips, alternatives, or "also consider" unless explicitly requested.
+- Do not explain reasoning unless asked.
+- Do not ask follow-up questions unless the request is impossible to answer safely or accurately without one.
+
+HELPFULNESS THROTTLE:
+- Default output is the minimum that resolves the question.
+- If asked for "details," "examples," "walkthrough," or "step-by-step," provide those and only those.
+- If asked for "best option," give a single recommendation plus one sentence of justification.
+- If asked for "all options," list them with one-line descriptions. No elaboration.
+
+SPOILER CONTROL AND CLEARANCE:
+User clearance level: ${clearanceLevel}
+
+${isGM ? 'CLEARANCE: GM - Full access granted. No restrictions.' : `CLEARANCE: PLAYER - Do NOT reveal or interpret campaign spoilers, including:
+- Morvox doctrine and agenda
+- "Unknown Manifesto" content or decoding
+- Behind-the-scenes O.M.N.I. contingencies
+- Null Protocol
+- Silas Vorr
+- Director Shawn Peiris (beyond public-facing role)
+- Specter-01 or Spectral Spire classified origins
+- Any text labeled classified or operative-only
+
+If a PLAYER asks for restricted content, respond with: "RESTRICTED: GM-only narrative payload. Not authorized under PLAYER clearance." Do NOT hint, summarize, or wink. No accidents.`}
+
+CITATION AND SOURCING:
+- When referencing the rulebook, quote verbatim only when asked for exact wording. Otherwise paraphrase tightly.
+- If content is restricted (and user is PLAYER), do not quote it even if asked.
+- Do not invent lore, factions, rules text, or excerpts. If answer is unknown, say "Insufficient data" and stop.
+
+FORMATTING AND LENGTH:
+- Prefer 1 to 5 short lines.
+- Use simple labels only when helpful: ANSWER:, STATUS:, RESTRICTED:, ACTION:.
+- No emojis. No theatrical punctuation. No long metaphors.
+
+DARK HUMOR RULES:
+- Humor must be dry, bleak, and subordinate to the answer.
+- Keep it inside the same line as the information or as a short parenthetical.
+- Never joke about real-world hate, protected classes, or self-harm. Keep it in-world and operational.
+
+You have access to the complete Catalyst Core Player Guide PDF located at: ${CATALYST_CORE_RULEBOOK_URL}
 
 User Question: "${userMessage}"
 
-GUIDELINES:
-- Answer directly and concisely based on the rulebook
-- Use clear formatting with headers, bullets, or tables when helpful
-- Reference specific chapters or rules when relevant
-- If the question is vague, provide the most relevant information
-- If multiple interpretations exist, list options
-- Use technical language appropriate to the setting
-- Be helpful but stay in character as a tactical intelligence system
-- Use markdown for formatting
-
-Answer the user's question based on the Catalyst Core rulebook.`,
-        add_context_from_internet: false
+Answer the question based on the Catalyst Core rulebook. Follow all behavioral instructions above.`,
+        add_context_from_internet: false,
+        file_urls: [CATALYST_CORE_RULEBOOK_URL]
       });
 
+      // Check response for spoilers and redact if needed (for non-GM users)
+      let finalResponse = response;
+      if (!isGM) {
+        const responseLower = response.toLowerCase();
+        const hasSpoiler = SPOILER_KEYWORDS.some(keyword => responseLower.includes(keyword));
+        
+        if (hasSpoiler) {
+          finalResponse = "RESTRICTED: GM-only narrative payload. Not authorized under PLAYER clearance. Query logged.";
+        }
+      }
+      
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: response
+        content: finalResponse
       }]);
       play('success', 0.15);
 
-      // Log query to DM
+      // Log query
       try {
         const user = await base44.auth.me();
         const characterName = localStorage.getItem('currentCharacter') 
@@ -146,7 +233,7 @@ Answer the user's question based on the Catalyst Core rulebook.`,
         
         await base44.entities.AegisQuery.create({
           query: userMessage,
-          response: response,
+          response: finalResponse,
           character_name: characterName,
           user_email: user.email,
           is_game_related: true
@@ -159,7 +246,7 @@ Answer the user's question based on the Catalyst Core rulebook.`,
       console.error('A.E.G.I.S. error:', error);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: '**System error.** Telemetry disrupted. Please rephrase query or retry connection.'
+        content: 'System error. Telemetry disrupted. Rephrase query or retry connection.'
       }]);
       play('error', 0.2);
     } finally {
@@ -257,9 +344,12 @@ Answer the user's question based on the Catalyst Core rulebook.`,
             )}
           </Button>
         </div>
-        <p className="text-xs text-slate-500 mt-2 font-mono">
-          <Radio className="h-3 w-3 inline mr-1" />
-          Game-related inquiries only. Non-game questions will be redirected.
+        <p className="text-xs text-slate-500 mt-2 font-mono flex items-center gap-2">
+          <Radio className="h-3 w-3" />
+          <span>Game-related inquiries only.</span>
+          {isGM && (
+            <span className="text-violet-400 font-bold">CLEARANCE: GM</span>
+          )}
         </p>
       </div>
     </div>

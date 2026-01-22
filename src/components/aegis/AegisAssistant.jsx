@@ -6,21 +6,21 @@ import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisInterface from './AegisInterface';
 
 const ENCOURAGEMENTS = [
-  "Threat assessment: manageable. You've got this, operative.",
-  "SP economy looking optimal. Push when it matters.",
-  "Tactical positioning noted. Solid work.",
-  "Civilian safety maintained. Excellent judgment call.",
-  "Combat efficiency: above average. Keep pressure steady.",
-  "Adaptive response detected. That's doctrine-compliant thinking.",
-  "Environmental awareness active. Stay sharp.",
-  "Resource management on point. O.M.N.I. approves.",
-  "Clean execution. Minimal collateral. Well done.",
-  "Threat neutralization protocol: effective.",
-  "Initiative control maintained. Momentum is yours.",
-  "Decision logged. Consequences: favorable.",
-  "Field performance: exemplary. Command is watching.",
-  "Tactical pivot recognized. Smart adaptation.",
-  "Clearance check: green. All systems nominal."
+  "Threat assessment: manageable. Proceed.",
+  "SP economy stable. Continue.",
+  "Tactical positioning noted.",
+  "Civilian safety maintained.",
+  "Combat efficiency: acceptable.",
+  "Adaptive response detected.",
+  "Environmental awareness active.",
+  "Resource management: adequate.",
+  "Clean execution. Minimal collateral.",
+  "Threat neutralization: effective.",
+  "Initiative control maintained.",
+  "Decision logged.",
+  "Field performance: within parameters.",
+  "Tactical pivot recognized.",
+  "Clearance: green. Systems nominal."
 ];
 
 const EXPRESSIONS = {
