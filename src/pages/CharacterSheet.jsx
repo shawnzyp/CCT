@@ -12,7 +12,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Shield, Zap, Heart, User, Swords, 
-  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package, FileText
+  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package, FileText, Dices
 } from "lucide-react";
 
 import StatBlock, { getModifier, formatModifier } from "@/components/character/StatBlock";
@@ -154,6 +154,35 @@ export default function CharacterSheet() {
   const conMod = getModifier(character.ability_scores?.CON || 10);
   const dexMod = getModifier(character.ability_scores?.DEX || 10);
   const maxSP = 5 + conMod;
+
+  const rollDice = (bonus, label) => {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const total = roll + bonus;
+    const isCrit = roll === 20;
+    const isFail = roll === 1;
+    
+    toast(
+      <div className="flex flex-col gap-1">
+        <div className="font-semibold">{label}</div>
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "text-lg font-bold",
+            isCrit && "text-green-400",
+            isFail && "text-red-400"
+          )}>
+            {roll}
+          </span>
+          <span className="text-slate-400">+</span>
+          <span className="text-slate-300">{bonus}</span>
+          <span className="text-slate-400">=</span>
+          <span className="text-lg font-bold text-violet-400">{total}</span>
+        </div>
+        {isCrit && <span className="text-xs text-green-400">Critical Success!</span>}
+        {isFail && <span className="text-xs text-red-400">Critical Failure!</span>}
+      </div>,
+      { duration: 4000 }
+    );
+  };
   
   const handleHPChange = (newHP) => {
     updateMutation.mutate({ current_hp: newHP });
@@ -349,7 +378,7 @@ export default function CharacterSheet() {
                   {['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'].map(stat => {
                     const mod = getModifier(character.ability_scores?.[stat] || 10);
                     return (
-                      <div key={stat} className="flex items-center justify-between bg-slate-700/50 rounded-lg px-3 py-2">
+                      <div key={stat} className="flex items-center justify-between gap-2 bg-slate-700/50 rounded-lg px-3 py-2">
                         <span className="text-sm text-slate-300 font-medium">{stat}</span>
                         <span className={cn(
                           "font-bold text-base",
@@ -357,6 +386,14 @@ export default function CharacterSheet() {
                         )}>
                           {formatModifier(mod)}
                         </span>
+                        <Button
+                          onClick={() => rollDice(mod, `${stat} Save`)}
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 text-violet-400 hover:text-violet-300 hover:bg-violet-500/20"
+                        >
+                          <Dices className="h-3 w-3" />
+                        </Button>
                       </div>
                     );
                   })}

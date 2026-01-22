@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { 
   Shield, Heart, Zap, Sword, Target, Move, HelpCircle, Swords, 
   Eye, HandMetal, Shield as ShieldIcon, TrendingUp, Crosshair,
-  Activity, Zap as BonusIcon, ArrowRight
+  Activity, Zap as BonusIcon, ArrowRight, Dices
 } from "lucide-react";
 import { getModifier, formatModifier } from "./StatBlock";
 import { cn } from '@/lib/utils';
@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { toast } from 'sonner';
 
 const COMBAT_ACTIONS = [
   { id: 'attack', name: 'Attack', description: 'Make a melee or ranged attack roll against an enemy\'s TC', icon: Sword },
@@ -73,6 +74,35 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
       bonus_action: false,
       reaction: false
     });
+  };
+
+  const rollDice = (bonus, label) => {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const total = roll + bonus;
+    const isCrit = roll === 20;
+    const isFail = roll === 1;
+    
+    toast(
+      <div className="flex flex-col gap-1">
+        <div className="font-semibold">{label}</div>
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "text-lg font-bold",
+            isCrit && "text-green-400",
+            isFail && "text-red-400"
+          )}>
+            {roll}
+          </span>
+          <span className="text-slate-400">+</span>
+          <span className="text-slate-300">{bonus}</span>
+          <span className="text-slate-400">=</span>
+          <span className="text-lg font-bold text-violet-400">{total}</span>
+        </div>
+        {isCrit && <span className="text-xs text-green-400">Critical Success!</span>}
+        {isFail && <span className="text-xs text-red-400">Critical Failure!</span>}
+      </div>,
+      { duration: 4000 }
+    );
   };
 
   return (
@@ -255,7 +285,7 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-3">
               <div className="p-4 bg-gradient-to-br from-red-950/30 to-red-900/10 border border-red-900/50 rounded-lg">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-2">
                   <div>
                     <div className="text-slate-300 text-sm font-semibold">Melee Attack</div>
                     <div className="text-xs text-slate-500 mt-0.5">STR modifier</div>
@@ -264,9 +294,17 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                     {formatModifier(strMod)}
                   </div>
                 </div>
+                <Button
+                  onClick={() => rollDice(strMod, 'Melee Attack')}
+                  size="sm"
+                  className="w-full bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 text-red-200"
+                >
+                  <Dices className="h-3 w-3 mr-1" />
+                  Roll Attack
+                </Button>
               </div>
               <div className="p-4 bg-gradient-to-br from-blue-950/30 to-blue-900/10 border border-blue-900/50 rounded-lg">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-2">
                   <div>
                     <div className="text-slate-300 text-sm font-semibold">Ranged Attack</div>
                     <div className="text-xs text-slate-500 mt-0.5">DEX modifier</div>
@@ -275,6 +313,14 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                     {formatModifier(dexMod)}
                   </div>
                 </div>
+                <Button
+                  onClick={() => rollDice(dexMod, 'Ranged Attack')}
+                  size="sm"
+                  className="w-full bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/50 text-blue-200"
+                >
+                  <Dices className="h-3 w-3 mr-1" />
+                  Roll Attack
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -322,11 +368,11 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
           </Card>
         )}
 
-        {/* Section 6: Combat Skills */}
+        {/* Section 6: All Skills */}
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-white text-base">Combat Skills</CardTitle>
+              <CardTitle className="text-white text-base">Skills</CardTitle>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-4 w-4 text-slate-400 cursor-help" />
@@ -342,16 +388,42 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
               {[
                 { name: 'Athletics', stat: 'STR', skill: 'athletics' },
                 { name: 'Acrobatics', stat: 'DEX', skill: 'acrobatics' },
+                { name: 'Sleight of Hand', stat: 'DEX', skill: 'sleight_of_hand' },
                 { name: 'Stealth', stat: 'DEX', skill: 'stealth' },
-                { name: 'Perception', stat: 'WIS', skill: 'perception' }
-              ].map(({ name, stat, skill }) => (
-                <div key={skill} className="p-2.5 bg-slate-700/30 rounded flex justify-between items-center">
-                  <span className="text-slate-200 text-sm font-medium">{name} ({stat})</span>
-                  <Badge variant="outline" className="font-mono text-base text-white border-violet-500/50">
-                    {formatModifier(getSkillBonus(skill, stat))}
-                  </Badge>
-                </div>
-              ))}
+                { name: 'Arcana', stat: 'INT', skill: 'arcana' },
+                { name: 'History', stat: 'INT', skill: 'history' },
+                { name: 'Investigation', stat: 'INT', skill: 'investigation' },
+                { name: 'Nature', stat: 'INT', skill: 'nature' },
+                { name: 'Religion', stat: 'INT', skill: 'religion' },
+                { name: 'Technology', stat: 'INT', skill: 'technology' },
+                { name: 'Animal Handling', stat: 'WIS', skill: 'animal_handling' },
+                { name: 'Insight', stat: 'WIS', skill: 'insight' },
+                { name: 'Medicine', stat: 'WIS', skill: 'medicine' },
+                { name: 'Perception', stat: 'WIS', skill: 'perception' },
+                { name: 'Survival', stat: 'WIS', skill: 'survival' },
+                { name: 'Deception', stat: 'CHA', skill: 'deception' },
+                { name: 'Intimidation', stat: 'CHA', skill: 'intimidation' },
+                { name: 'Performance', stat: 'CHA', skill: 'performance' },
+                { name: 'Persuasion', stat: 'CHA', skill: 'persuasion' }
+              ].map(({ name, stat, skill }) => {
+                const bonus = getSkillBonus(skill, stat);
+                return (
+                  <div key={skill} className="p-2 bg-slate-700/30 rounded flex justify-between items-center gap-2">
+                    <span className="text-slate-200 text-sm font-medium flex-1">{name}</span>
+                    <Badge variant="outline" className="font-mono text-sm text-white border-violet-500/50 min-w-[3rem] justify-center">
+                      {formatModifier(bonus)}
+                    </Badge>
+                    <Button
+                      onClick={() => rollDice(bonus, `${name} (${stat})`)}
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-violet-400 hover:text-violet-300 hover:bg-violet-500/20"
+                    >
+                      <Dices className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
