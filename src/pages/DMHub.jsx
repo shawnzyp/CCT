@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
@@ -10,8 +10,10 @@ import {
   Trophy, Package, Store, MapPin, Calendar, FileText, Radio, Webhook, Gift
 } from 'lucide-react';
 import MedalsAchievementsManager from '@/components/dm/MedalsAchievementsManager';
+import AllCharactersModal from '@/components/dm/AllCharactersModal';
 
 export default function DMHub() {
+  const [showAllCharacters, setShowAllCharacters] = useState(false);
   const { data: campaigns = [] } = useQuery({
     queryKey: ['campaigns'],
     queryFn: () => base44.entities.Campaign.list('-created_date')
@@ -46,7 +48,7 @@ export default function DMHub() {
       icon: Users,
       color: 'blue',
       tools: [
-        { name: 'All Characters', path: 'Characters', icon: Users, description: 'View all characters' },
+        { name: 'All Characters', action: 'showCharacters', icon: Users, description: 'View and edit all characters' },
       ]
     },
     {
@@ -181,28 +183,40 @@ export default function DMHub() {
                 <CardContent className="space-y-3">
                   {category.tools.map((tool) => {
                     const ToolIcon = tool.icon;
-                    return (
-                      <Link key={tool.name} to={createPageUrl(tool.path)}>
-                        <div className={`p-4 rounded-lg border ${colors.border} ${colors.bg} hover:bg-opacity-30 transition-all group cursor-pointer`}>
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-start gap-3 flex-1">
-                              <div className={`w-10 h-10 rounded-lg ${colors.button} flex items-center justify-center flex-shrink-0`}>
-                                <ToolIcon className="h-5 w-5 text-white" />
-                              </div>
-                              <div>
-                                <h3 className="text-white font-semibold group-hover:text-opacity-80 transition-colors">
-                                  {tool.name}
-                                </h3>
-                                <p className="text-xs text-slate-400 mt-1">{tool.description}</p>
-                              </div>
+                    const handleClick = tool.action === 'showCharacters' 
+                      ? () => setShowAllCharacters(true)
+                      : undefined;
+                    
+                    const content = (
+                      <div className={`p-4 rounded-lg border ${colors.border} ${colors.bg} hover:bg-opacity-30 transition-all group cursor-pointer`}>
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-start gap-3 flex-1">
+                            <div className={`w-10 h-10 rounded-lg ${colors.button} flex items-center justify-center flex-shrink-0`}>
+                              <ToolIcon className="h-5 w-5 text-white" />
                             </div>
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Button size="sm" className={colors.button}>
-                                Open
-                              </Button>
+                            <div>
+                              <h3 className="text-white font-semibold group-hover:text-opacity-80 transition-colors">
+                                {tool.name}
+                              </h3>
+                              <p className="text-xs text-slate-400 mt-1">{tool.description}</p>
                             </div>
                           </div>
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button size="sm" className={colors.button}>
+                              Open
+                            </Button>
+                          </div>
                         </div>
+                      </div>
+                    );
+
+                    return tool.action ? (
+                      <div key={tool.name} onClick={handleClick}>
+                        {content}
+                      </div>
+                    ) : (
+                      <Link key={tool.name} to={createPageUrl(tool.path)}>
+                        {content}
                       </Link>
                     );
                   })}
@@ -254,6 +268,11 @@ export default function DMHub() {
           </Card>
         </div>
       </div>
+
+      <AllCharactersModal 
+        open={showAllCharacters} 
+        onClose={() => setShowAllCharacters(false)} 
+      />
     </div>
   );
 }
