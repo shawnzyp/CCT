@@ -18,7 +18,7 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
 
   const handlePINSubmit = () => {
     const storedPIN = localStorage.getItem('dm_pin') || '0000';
-    
+
     if (pin === storedPIN) {
       window.sessionStorage.setItem('isDM', 'true');
       window.dispatchEvent(new Event('dm-status-changed'));
@@ -54,24 +54,24 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
       {/* Footer Button */}
       <div className="w-full bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30 mt-12">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
-          {isDM ? (
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all"
-            >
+          {isDM ?
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all">
+
               <LogOut className="h-4 w-4" />
               Exit GM Mode
-            </Button>
-          ) : (
-            <Button
-              onClick={() => setShowPINDialog(true)}
-              className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/20 transition-all hover:shadow-violet-500/40"
-            >
+            </Button> :
+
+          <Button
+            onClick={() => setShowPINDialog(true)}
+            className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/20 transition-all hover:shadow-violet-500/40">
+
               <Shield className="h-4 w-4" />
               GM Access
             </Button>
-          )}
+          }
         </div>
       </div>
 
@@ -90,8 +90,8 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
               <p className="text-sm text-slate-300">
                 Enter your 4-digit PIN to access GM tools and full campaign control.
               </p>
-              <p className="text-xs text-slate-400 mt-2">
-                Default PIN: 0000 (Change it in Settings)
+              <p className="text-xs text-slate-400 mt-2">Change your PIN in settings.
+
               </p>
             </div>
 
@@ -104,8 +104,8 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
                 placeholder="Enter PIN"
                 maxLength={4}
                 className="bg-slate-800 border-violet-500/30 text-white text-center text-2xl tracking-[0.5em] font-mono"
-                autoFocus
-              />
+                autoFocus />
+
             </div>
 
             <div className="flex gap-3">
@@ -115,15 +115,15 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
                   setPin('');
                 }}
                 variant="outline"
-                className="flex-1"
-              >
+                className="flex-1">
+
                 Cancel
               </Button>
               <Button
                 onClick={handlePINSubmit}
                 disabled={pin.length !== 4}
-                className="flex-1 bg-violet-600 hover:bg-violet-700"
-              >
+                className="flex-1 bg-violet-600 hover:bg-violet-700">
+
                 <Shield className="h-4 w-4 mr-2" />
                 Authenticate
               </Button>
@@ -131,6 +131,6 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
           </div>
         </DialogContent>
       </Dialog>
-    </>
-  );
+    </>);
+
 }
