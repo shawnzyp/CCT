@@ -11,12 +11,13 @@ import { base44 } from '@/api/base44Client';
 import { 
   Radio, Check, X, AlertCircle, Zap, Users, Trophy, 
   Heart, Swords, Dice6, Scroll, Sparkles, Package, Crown,
-  Settings, Palette, Send, Loader2
+  Settings, Palette, Send, Loader2, Coins, Store
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 const EVENT_TYPES = [
+  // Combat
   {
     id: 'combat_start',
     name: 'Combat Started',
@@ -42,13 +43,63 @@ const EVENT_TYPES = [
     category: 'Combat'
   },
   {
+    id: 'party_wipe',
+    name: 'Party Wipe',
+    description: 'When all characters fall in combat',
+    icon: X,
+    color: 'text-red-600',
+    category: 'Combat'
+  },
+  {
+    id: 'enemy_defeated',
+    name: 'Enemy Defeated',
+    description: 'When a major enemy is taken down',
+    icon: Swords,
+    color: 'text-green-400',
+    category: 'Combat'
+  },
+  {
+    id: 'healing_performed',
+    name: 'Major Healing',
+    description: 'When significant healing is performed',
+    icon: Heart,
+    color: 'text-pink-400',
+    category: 'Combat'
+  },
+  // Dice & Rolls
+  {
     id: 'critical_roll',
     name: 'Critical Rolls',
     description: 'Natural 20s and Natural 1s',
     icon: Dice6,
     color: 'text-amber-400',
-    category: 'Dice'
+    category: 'Dice & Rolls'
   },
+  {
+    id: 'dice_roll',
+    name: 'All Dice Rolls',
+    description: 'Every dice roll made in the app',
+    icon: Dice6,
+    color: 'text-slate-400',
+    category: 'Dice & Rolls'
+  },
+  {
+    id: 'skill_check',
+    name: 'Skill Checks',
+    description: 'When skill checks are made',
+    icon: Zap,
+    color: 'text-blue-400',
+    category: 'Dice & Rolls'
+  },
+  {
+    id: 'attack_roll',
+    name: 'Attack Rolls',
+    description: 'When attack rolls are made',
+    icon: Swords,
+    color: 'text-red-400',
+    category: 'Dice & Rolls'
+  },
+  // Progression
   {
     id: 'level_up',
     name: 'Level Up',
@@ -57,6 +108,31 @@ const EVENT_TYPES = [
     color: 'text-yellow-400',
     category: 'Progression'
   },
+  {
+    id: 'achievement_unlocked',
+    name: 'Achievement Unlocked',
+    description: 'When a player earns an achievement',
+    icon: Trophy,
+    color: 'text-amber-400',
+    category: 'Progression'
+  },
+  {
+    id: 'xp_gained',
+    name: 'XP Gained',
+    description: 'When characters earn experience points',
+    icon: Sparkles,
+    color: 'text-violet-400',
+    category: 'Progression'
+  },
+  {
+    id: 'power_unlocked',
+    name: 'Power Unlocked',
+    description: 'When new powers are acquired',
+    icon: Zap,
+    color: 'text-purple-400',
+    category: 'Progression'
+  },
+  // Story
   {
     id: 'quest_complete',
     name: 'Quest Completed',
@@ -74,6 +150,56 @@ const EVENT_TYPES = [
     category: 'Story'
   },
   {
+    id: 'quest_started',
+    name: 'Quest Started',
+    description: 'When a new quest begins',
+    icon: Scroll,
+    color: 'text-cyan-400',
+    category: 'Story'
+  },
+  {
+    id: 'npc_interaction',
+    name: 'NPC Interaction',
+    description: 'When players interact with important NPCs',
+    icon: Users,
+    color: 'text-emerald-400',
+    category: 'Story'
+  },
+  // Loot & Economy
+  {
+    id: 'item_acquired',
+    name: 'Legendary Item Acquired',
+    description: 'When a legendary or epic item is obtained',
+    icon: Package,
+    color: 'text-orange-400',
+    category: 'Loot & Economy'
+  },
+  {
+    id: 'credits_gained',
+    name: 'Credits Gained',
+    description: 'When characters earn currency',
+    icon: Coins,
+    color: 'text-yellow-400',
+    category: 'Loot & Economy'
+  },
+  {
+    id: 'trade_completed',
+    name: 'Trade Completed',
+    description: 'When players complete trades',
+    icon: Package,
+    color: 'text-blue-400',
+    category: 'Loot & Economy'
+  },
+  {
+    id: 'vendor_purchase',
+    name: 'Vendor Purchase',
+    description: 'When items are bought from vendors',
+    icon: Store,
+    color: 'text-green-400',
+    category: 'Loot & Economy'
+  },
+  // Special Events
+  {
     id: 'deck_draw',
     name: 'Deck of Fates Draw',
     description: 'When a player draws from the Deck of Fates',
@@ -82,28 +208,53 @@ const EVENT_TYPES = [
     category: 'Special Events'
   },
   {
-    id: 'achievement_unlocked',
-    name: 'Achievement Unlocked',
-    description: 'When a player earns an achievement',
-    icon: Trophy,
-    color: 'text-amber-400',
-    category: 'Progression'
+    id: 'echo_event',
+    name: 'Echo Event',
+    description: 'When an Echo Event occurs',
+    icon: Radio,
+    color: 'text-cyan-400',
+    category: 'Special Events'
   },
   {
-    id: 'item_acquired',
-    name: 'Legendary Item Acquired',
-    description: 'When a legendary or epic item is obtained',
-    icon: Package,
-    color: 'text-orange-400',
-    category: 'Loot'
+    id: 'shard_drawn',
+    name: 'Shard of Many Fates',
+    description: 'When a Shard is drawn',
+    icon: Sparkles,
+    color: 'text-pink-400',
+    category: 'Special Events'
+  },
+  // Social & Session
+  {
+    id: 'character_created',
+    name: 'Character Created',
+    description: 'When a new character is created',
+    icon: Users,
+    color: 'text-green-400',
+    category: 'Social & Session'
   },
   {
-    id: 'party_wipe',
-    name: 'Party Wipe',
-    description: 'When all characters fall in combat',
-    icon: X,
-    color: 'text-red-600',
-    category: 'Combat'
+    id: 'session_start',
+    name: 'Session Started',
+    description: 'When a game session begins',
+    icon: Radio,
+    color: 'text-violet-400',
+    category: 'Social & Session'
+  },
+  {
+    id: 'session_end',
+    name: 'Session Ended',
+    description: 'When a game session concludes',
+    icon: Check,
+    color: 'text-slate-400',
+    category: 'Social & Session'
+  },
+  {
+    id: 'rest_taken',
+    name: 'Rest Taken',
+    description: 'When characters take a rest',
+    icon: Heart,
+    color: 'text-blue-400',
+    category: 'Social & Session'
   }
 ];
 
