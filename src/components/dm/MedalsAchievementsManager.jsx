@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 
 export default function MedalsAchievementsManager({ campaignId }) {
   const [showCreate, setShowCreate] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
   const [newItem, setNewItem] = useState({
     type: 'achievement',
     name: '',
@@ -71,6 +72,61 @@ export default function MedalsAchievementsManager({ campaignId }) {
     }
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async ({ characterId, itemIndex, itemType }) => {
+      const chars = await base44.entities.Character.filter({ id: characterId });
+      const character = chars[0];
+      
+      if (itemType === 'achievement') {
+        const achievements = character.achievements || [];
+        return base44.entities.Character.update(characterId, {
+          achievements: achievements.filter((_, i) => i !== itemIndex)
+        });
+      } else {
+        const milestones = character.milestones || [];
+        return base44.entities.Character.update(characterId, {
+          milestones: milestones.filter((_, i) => i !== itemIndex)
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['characters']);
+      toast.success('Removed successfully!');
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ characterId, itemIndex, itemType, itemData }) => {
+      const chars = await base44.entities.Character.filter({ id: characterId });
+      const character = chars[0];
+      
+      if (itemType === 'achievement') {
+        const achievements = character.achievements || [];
+        achievements[itemIndex] = { ...itemData, date: itemData.date || new Date().toISOString() };
+        return base44.entities.Character.update(characterId, {
+          achievements
+        });
+      } else {
+        const milestones = character.milestones || [];
+        milestones[itemIndex] = {
+          level: character.level,
+          achievement: itemData.name,
+          description: itemData.description,
+          icon: itemData.icon,
+          date: itemData.date || new Date().toISOString()
+        };
+        return base44.entities.Character.update(characterId, {
+          milestones
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['characters']);
+      toast.success('Updated successfully!');
+      setEditingItem(null);
+    }
+  });
+
   const handleAward = () => {
     if (!newItem.name || newItem.character_ids.length === 0) {
       toast.error('Please fill in name and select characters');
@@ -90,6 +146,39 @@ export default function MedalsAchievementsManager({ campaignId }) {
       character_ids: []
     });
     setShowCreate(false);
+  };
+
+  const handleEdit = (item) => {
+    setEditingItem(item);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingItem.name) {
+      toast.error('Name is required');
+      return;
+    }
+
+    updateMutation.mutate({
+      characterId: editingItem.characterId,
+      itemIndex: editingItem.index,
+      itemType: editingItem.type,
+      itemData: {
+        name: editingItem.name,
+        description: editingItem.description,
+        icon: editingItem.icon,
+        date: editingItem.date
+      }
+    });
+  };
+
+  const handleDelete = (item) => {
+    if (confirm(`Remove "${item.name}" from ${item.characterName}?`)) {
+      deleteMutation.mutate({
+        characterId: item.characterId,
+        itemIndex: item.index,
+        itemType: item.type
+      });
+    }
   };
 
   const iconOptions = newItem.type === 'achievement' 
@@ -237,6 +326,75 @@ export default function MedalsAchievementsManager({ campaignId }) {
           </Dialog>
         </div>
       </CardHeader>
+      
+      {/* Edit Dialog */}
+      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+        <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-white">Edit {editingItem?.type === 'achievement' ? 'Achievement' : 'Medal'}</DialogTitle>
+          </DialogHeader>
+          
+          {editingItem && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-slate-400 mb-2 block">Icon</label>
+                <div className="flex gap-2 flex-wrap">
+                  {(editingItem.type === 'achievement' 
+                    ? ['🏆', '⭐', '🎖️', '👑', '💎', '🔥', '⚡', '🌟', '💪', '🎯']
+                    : ['🥇', '🥈', '🥉', '🏅', '🎗️', '🌠', '✨', '💫', '🔱', '⚔️']
+                  ).map(icon => (
+                    <button
+                      key={icon}
+                      onClick={() => setEditingItem({...editingItem, icon})}
+                      className={cn(
+                        "w-10 h-10 rounded-lg border-2 transition-all text-xl",
+                        editingItem.icon === icon 
+                          ? "border-violet-500 bg-violet-500/20" 
+                          : "border-slate-700 bg-slate-800 hover:border-slate-600"
+                      )}
+                    >
+                      {icon}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm text-slate-400 mb-2 block">Name</label>
+                <Input
+                  value={editingItem.name}
+                  onChange={(e) => setEditingItem({...editingItem, name: e.target.value})}
+                  className="bg-slate-800 border-slate-700"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-slate-400 mb-2 block">Description</label>
+                <Textarea
+                  value={editingItem.description || ''}
+                  onChange={(e) => setEditingItem({...editingItem, description: e.target.value})}
+                  className="bg-slate-800 border-slate-700 h-20"
+                />
+              </div>
+
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setEditingItem(null)}>
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleSaveEdit}
+                  className="bg-violet-600 hover:bg-violet-700"
+                  disabled={updateMutation.isPending}
+                >
+                  <Check className="h-4 w-4 mr-2" />
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       <CardContent>
         <div className="space-y-4">
           {/* Recent Awards */}
@@ -244,39 +402,64 @@ export default function MedalsAchievementsManager({ campaignId }) {
             <h3 className="text-sm font-semibold text-violet-400 mb-2">Recent Awards</h3>
             <div className="space-y-2">
               {characters.flatMap(char => 
-                (char.achievements || []).slice(-3).map((achievement, i) => ({
+                (char.achievements || []).map((achievement, i) => ({
                   ...achievement,
                   characterName: char.name,
                   characterId: char.id,
                   type: 'achievement',
+                  index: i,
                   key: `${char.id}-achievement-${i}`
                 }))
               ).concat(
                 characters.flatMap(char => 
-                  (char.milestones || []).slice(-3).map((milestone, i) => ({
+                  (char.milestones || []).map((milestone, i) => ({
                     ...milestone,
                     name: milestone.achievement,
                     characterName: char.name,
                     characterId: char.id,
                     type: 'milestone',
+                    index: i,
                     key: `${char.id}-milestone-${i}`
                   }))
                 )
-              ).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10).map((item) => (
-                <div key={item.key} className="flex items-center justify-between p-2 bg-slate-700/30 rounded">
-                  <div className="flex items-center gap-2">
+              ).sort((a, b) => new Date(b.date) - new Date(a.date)).map((item) => (
+                <div key={item.key} className="flex items-center justify-between p-3 bg-slate-700/30 rounded hover:bg-slate-700/50 transition-colors group">
+                  <div className="flex items-center gap-3 flex-1">
                     <span className="text-xl">{item.icon}</span>
-                    <div>
+                    <div className="flex-1">
                       <div className="text-sm text-white font-medium">{item.name}</div>
                       <div className="text-xs text-slate-400">
                         Awarded to {item.characterName}
                         {item.date && ` • ${new Date(item.date).toLocaleDateString()}`}
                       </div>
+                      {item.description && (
+                        <div className="text-xs text-slate-500 mt-1">{item.description}</div>
+                      )}
                     </div>
                   </div>
-                  <Badge variant="outline" className="text-xs capitalize">
-                    {item.type}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs capitalize">
+                      {item.type}
+                    </Badge>
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-violet-400 hover:text-violet-300 hover:bg-violet-500/20"
+                        onClick={() => handleEdit(item)}
+                      >
+                        <Pencil className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-red-400 hover:text-red-300 hover:bg-red-500/20"
+                        onClick={() => handleDelete(item)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
