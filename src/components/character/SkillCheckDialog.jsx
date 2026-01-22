@@ -43,6 +43,11 @@ export default function SkillCheckDialog({ skill, bonus, character, onClose }) {
     setRolling(true);
     setResult(null);
     
+    // Play sound
+    const audio = new Audio('https://cdn.freesound.org/previews/703/703980_9014050-lq.mp3');
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+    
     setTimeout(() => {
       const d20 = Math.floor(Math.random() * 20) + 1;
       const total = d20 + bonus;
@@ -51,6 +56,17 @@ export default function SkillCheckDialog({ skill, bonus, character, onClose }) {
       
       setResult({ d20, total, isCritSuccess, isCritFail });
       setRolling(false);
+      
+      // Play success/fail sound
+      if (isCritSuccess) {
+        const successAudio = new Audio('https://cdn.freesound.org/previews/541/541319_6174968-lq.mp3');
+        successAudio.volume = 0.4;
+        successAudio.play().catch(() => {});
+      } else if (isCritFail) {
+        const failAudio = new Audio('https://cdn.freesound.org/previews/519/519400_5647833-lq.mp3');
+        failAudio.volume = 0.3;
+        failAudio.play().catch(() => {});
+      }
       
       // Send to Discord
       sendToDiscord(d20, total, isCritSuccess, isCritFail);
