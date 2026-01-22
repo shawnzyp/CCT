@@ -109,9 +109,9 @@ export default function RewardManager({ campaignId }) {
           <div>
             <CardTitle className="text-violet-400 flex items-center gap-2">
               <Gift className="h-5 w-5" />
-              Reward Manager
+              Quest Rewards
             </CardTitle>
-            <CardDescription>Set up and distribute rewards for players</CardDescription>
+            <CardDescription>Set up and distribute rewards for vigilantes</CardDescription>
           </div>
           <Button onClick={() => setShowCreate(true)} className="gap-2">
             <Plus className="h-4 w-4" />

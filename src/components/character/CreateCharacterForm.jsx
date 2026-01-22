@@ -24,7 +24,7 @@ const CLASSIFICATIONS = [
 const POWER_STYLES = [
   { value: 'physical_powerhouse', label: 'Physical Powerhouse', perk: 'Cut one attack by half once per combat' },
   { value: 'energy_manipulator', label: 'Energy Manipulator', perk: 'Reroll 1s once per turn' },
-  { value: 'speedster', label: 'Speedster', perk: '+10 ft movement and +1 AC while moving 20+ ft' },
+  { value: 'speedster', label: 'Speedster', perk: '+10 ft movement and +1 TC while moving 20+ ft' },
   { value: 'telekinetic_psychic', label: 'Telekinetic/Psychic', perk: 'Force enemies to reroll rolls above 17 once per rest' },
   { value: 'illusionist', label: 'Illusionist', perk: 'Create a 1-min decoy illusion once per combat' },
   { value: 'shape_shifter', label: 'Shape-shifter', perk: 'Advantage on Deception, disguise freely' },

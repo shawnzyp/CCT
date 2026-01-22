@@ -87,7 +87,7 @@ export default function Layout({ children }) {
     {
       name: 'System',
       items: [
-        ...(isDM ? [{ name: 'DM Hub', path: 'DMHub', icon: Settings }] : []),
+        ...(isDM ? [{ name: 'GM Hub', path: 'DMHub', icon: Settings }] : []),
         { name: 'Settings', path: 'Settings', icon: Settings },
       ]
     }
@@ -287,7 +287,7 @@ export default function Layout({ children }) {
           {children}
         </div>
         
-        {/* DM Login Footer - at bottom of page flow */}
+        {/* GM Login Footer - at bottom of page flow */}
         <DMLoginFooter 
           isDM={isDM}
           onDMLogin={() => setIsDM(true)}

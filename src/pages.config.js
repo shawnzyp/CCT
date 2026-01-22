@@ -7,14 +7,14 @@ import CreateCharacter from './pages/CreateCharacter';
 import DMHub from './pages/DMHub';
 import DMTools from './pages/DMTools';
 import DiceRoller from './pages/DiceRoller';
+import DiscordSettings from './pages/DiscordSettings';
 import Economy from './pages/Economy';
 import Help from './pages/Help';
 import Home from './pages/Home';
 import PlayCampaign from './pages/PlayCampaign';
+import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import DiscordSettings from './pages/DiscordSettings';
-import RewardCenter from './pages/RewardCenter';
 import __Layout from './Layout.jsx';
 
 
@@ -28,14 +28,14 @@ export const PAGES = {
     "DMHub": DMHub,
     "DMTools": DMTools,
     "DiceRoller": DiceRoller,
+    "DiscordSettings": DiscordSettings,
     "Economy": Economy,
     "Help": Help,
     "Home": Home,
     "PlayCampaign": PlayCampaign,
+    "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
-    "DiscordSettings": DiscordSettings,
-    "RewardCenter": RewardCenter,
 }
 
 export const pagesConfig = {

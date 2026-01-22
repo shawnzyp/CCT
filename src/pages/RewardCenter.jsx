@@ -25,7 +25,7 @@ export default function RewardCenter() {
           <Link to={createPageUrl('DMHub')}>
             <Button variant="ghost" className="gap-2 text-slate-400 hover:text-white">
               <ArrowLeft className="h-4 w-4" />
-              Back to DM Hub
+              Back to GM Hub
             </Button>
           </Link>
         </div>
@@ -37,7 +37,7 @@ export default function RewardCenter() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Quest Reward Center</h1>
-              <p className="text-slate-400">Create and distribute rewards to your players</p>
+              <p className="text-slate-400">Create and distribute rewards to your vigilantes</p>
             </div>
           </div>
         </div>

@@ -137,7 +137,7 @@ export default function Rules() {
                 {[
                   { name: 'Physical Powerhouse', perk: 'Cut one attack by half once per combat encounter' },
                   { name: 'Energy Manipulator', perk: 'Reroll 1s once per turn' },
-                  { name: 'Speedster', perk: '+10 ft movement and +1 AC while moving 20+ ft' },
+                  { name: 'Speedster', perk: '+10 ft movement and +1 TC while moving 20+ ft' },
                   { name: 'Telekinetic/Psychic', perk: 'Force enemies to reroll all rolls above 17 once per rest' },
                   { name: 'Illusionist', perk: 'Create a 1-min decoy illusion once per combat encounter' },
                   { name: 'Shape-shifter', perk: 'Advantage on Deception, disguise freely' },
@@ -155,7 +155,7 @@ export default function Rules() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-white">Step 3: Origin Story</CardTitle>
-                <p className="text-sm text-slate-400">What influenced you becoming a superhero</p>
+                <p className="text-sm text-slate-400">What influenced you becoming a vigilante</p>
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
