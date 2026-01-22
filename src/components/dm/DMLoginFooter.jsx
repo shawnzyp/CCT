@@ -20,17 +20,17 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
     const storedPIN = localStorage.getItem('dm_pin') || '0000';
 
     if (pin === storedPIN) {
-      window.sessionStorage.setItem('isDM', 'true');
+      localStorage.setItem('isDM', 'true');
       window.dispatchEvent(new Event('dm-status-changed'));
       onDMLogin();
       setShowPINDialog(false);
       setPin('');
       haptic('success');
       play('success', 0.5);
-      toast.success('GM Access Granted', {
+      toast.success('Director Access Granted', {
         description: 'You now have full control over the campaign'
       });
-      // Navigate to GM Hub
+      // Navigate to Director Hub
       navigate(createPageUrl('DMHub'));
     } else {
       haptic('error');
@@ -41,12 +41,12 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
   };
 
   const handleLogout = () => {
-    window.sessionStorage.setItem('isDM', 'false');
+    localStorage.removeItem('isDM');
     window.dispatchEvent(new Event('dm-status-changed'));
     onDMLogout();
     haptic('medium');
     play('click', 0.3);
-    toast.info('GM Session Ended');
+    toast.info('Director Session Ended');
   };
 
   return (
@@ -81,18 +81,16 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-violet-400">
               <Lock className="h-5 w-5" />
-              GM Authentication Required
+              Director Authentication Required
             </DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="p-4 bg-violet-900/20 border border-violet-500/30 rounded-lg">
               <p className="text-sm text-slate-300">
-                Enter your 4-digit PIN to access GM tools and full campaign control.
+                Enter your 4-digit PIN to access Director tools and full campaign control.
               </p>
-              <p className="text-xs text-slate-400 mt-2">Change your PIN in settings.
-
-              </p>
+              <p className="text-xs text-slate-400 mt-2">Change your PIN in settings.</p>
             </div>
 
             <div>
