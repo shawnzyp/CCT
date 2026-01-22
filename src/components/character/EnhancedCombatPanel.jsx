@@ -162,14 +162,8 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                 </Tooltip>
               ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Section 3: Combat Actions */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-white text-base">Combat Actions</CardTitle>
+            
+            <div className="mt-3 flex justify-center">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="flex items-center gap-1 text-xs text-slate-400 cursor-help">
@@ -189,6 +183,13 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                 </TooltipContent>
               </Tooltip>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Section 3: Combat Actions */}
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white text-base">Combat Actions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-2">
