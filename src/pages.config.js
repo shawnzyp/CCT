@@ -59,10 +59,10 @@ import DiscordSettings from './pages/DiscordSettings';
 import Economy from './pages/Economy';
 import Help from './pages/Help';
 import Home from './pages/Home';
+import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import OperationsMap from './pages/OperationsMap';
 import __Layout from './Layout.jsx';
 
 
@@ -79,10 +79,10 @@ export const PAGES = {
     "Economy": Economy,
     "Help": Help,
     "Home": Home,
+    "OperationsMap": OperationsMap,
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
-    "OperationsMap": OperationsMap,
 }
 
 export const pagesConfig = {

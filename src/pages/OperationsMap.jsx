@@ -7,6 +7,7 @@ import OperationsMapView from '@/components/operationsMap/OperationsMapView';
 import GMDrawer from '@/components/operationsMap/GMDrawer';
 import FeatureFormModal from '@/components/operationsMap/FeatureFormModal';
 import FeaturePopup from '@/components/operationsMap/FeaturePopup';
+import FilterBar from '@/components/operationsMap/FilterBar';
 
 export default function OperationsMap() {
   const isDM = localStorage.getItem('isDM') === 'true';
