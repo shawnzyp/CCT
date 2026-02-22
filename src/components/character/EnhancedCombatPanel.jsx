@@ -129,8 +129,8 @@ function CombatStatus({ character, onUpdate }) {
         {/* AC */}
         <div className="rounded-xl p-3 flex flex-col items-center gap-1 relative group"
           style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.15)' }}>
-          <Shield className="h-4 w-4 text-blue-400" />
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Armor Class</span>
+          <Shield className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
+          <span className="hud-label">Armor Class</span>
           {editingAC ? (
             <Input
               autoFocus
