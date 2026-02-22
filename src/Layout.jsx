@@ -439,8 +439,13 @@ export default function Layout({ children }) {
       
       {/* Mobile Bottom Navigation */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl border-t"
+        style={{ 
+          background: 'rgba(10,13,16,0.96)', 
+          borderColor: 'rgba(0,212,255,0.12)',
+          boxShadow: '0 -1px 0 rgba(0,212,255,0.08)',
+          paddingBottom: 'env(safe-area-inset-bottom)' 
+        }}
       >
         <div className="flex items-center justify-around h-16">
           {bottomNavItems.map(item => {
@@ -450,13 +455,18 @@ export default function Layout({ children }) {
                 key={item.path}
                 to={createPageUrl(item.path)}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 transition-colors",
-                  active ? "text-violet-400" : "text-slate-500"
+                  "flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 transition-all relative",
+                  active ? "nav-icon-active" : "text-slate-600 hover:text-slate-400"
                 )}
               >
-                <item.icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_rgba(139,92,246,0.8)]")} />
-                <span className="text-[10px] font-medium">{item.label}</span>
-                {active && <span className="absolute bottom-0 w-8 h-0.5 bg-violet-500 rounded-full" />}
+                <item.icon className="h-5 w-5" />
+                <span className={cn("text-[9px] font-bold tracking-wider uppercase font-mono", active ? "" : "text-slate-600")}>
+                  {item.label}
+                </span>
+                {active && (
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full"
+                    style={{ background: 'var(--omni-cyan)', boxShadow: '0 0 8px var(--omni-cyan)' }} />
+                )}
               </Link>
             );
           })}
