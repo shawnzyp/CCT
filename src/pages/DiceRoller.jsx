@@ -10,6 +10,7 @@ import { Dices, Plus, Minus, RotateCcw, TrendingUp, TrendingDown, Coins } from "
 import { motion, AnimatePresence } from "framer-motion";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import { useHaptic } from '@/components/utils/useHaptic';
+import { postRollToDiscord } from '@/components/utils/postRollToDiscord';
 
 export default function DiceRoller() {
   const [numDice, setNumDice] = useState(1);
