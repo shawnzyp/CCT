@@ -137,6 +137,7 @@ export default function Layout({ children }) {
       items: [
         { name: 'Dice Roller', path: 'DiceRoller', icon: Zap },
         { name: 'Economy', path: 'Economy', icon: Package },
+        { name: 'Operations Map', path: 'OperationsMap', icon: Map },
       ]
     },
     {
