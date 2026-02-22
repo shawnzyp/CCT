@@ -112,6 +112,10 @@ export default function useOperationsState(isDM) {
     setState(prev => ({ ...prev, revealHidden: !prev.revealHidden }));
   }, []);
 
+  const setUrgencyFilter = useCallback((minUrgency) => {
+    setState(prev => ({ ...prev, urgencyFilter: minUrgency }));
+  }, []);
+
   const exportData = useCallback(() => {
     const bundle = {
       version: 1,
