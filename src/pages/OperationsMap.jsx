@@ -147,6 +147,14 @@ export default function OperationsMap() {
           />
         )}
 
+        {/* Filter bar — always visible */}
+        <FilterBar
+          state={state}
+          onToggleLayer={toggleLayer}
+          urgencyFilter={state.urgencyFilter}
+          onUrgencyFilter={setUrgencyFilter}
+        />
+
         {/* Tool hint */}
         {dmStatus && activeTool === 'place' && !showModal && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 border border-violet-500/30 rounded-full px-4 py-2 text-xs text-slate-400 pointer-events-none whitespace-nowrap">
