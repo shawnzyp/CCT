@@ -122,10 +122,10 @@ Deno.serve(async (req) => {
       rest_taken: 'Rest Taken'
     };
     
-    const emoji = eventEmojis[eventType] || '🎲';
-    const titleBase = eventTitles[eventType] || 'Game Event';
+    const emoji = eventEmojis[resolvedEventType] || '🎲';
+    const titleBase = eventTitles[resolvedEventType] || 'Game Event';
     
-    if (eventType === 'test') {
+    if (resolvedEventType === 'test') {
       embed.title = customTitle || `${emoji} ${titleBase}`;
       embed.description = customDescription || data.message || 'Test message from Catalyst Core';
       embed.fields = [
