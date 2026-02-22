@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Settings as SettingsIcon, Volume2, Play } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { useSettings } from '@/components/utils/useSettings';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import { base44 } from '@/api/base44Client';
 
 export default function Settings() {
   const { settings, updateSettings } = useSettings();
