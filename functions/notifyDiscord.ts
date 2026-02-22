@@ -5,13 +5,31 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const { 
       eventType, 
+      event_type,
       data = {}, 
+      embed: prebuiltEmbed,
       embedColor, 
       embedTitle, 
       embedDescription, 
       embedThumbnail, 
       embedImage 
     } = await req.json();
+    
+    // Support both camelCase and snake_case event_type
+    const resolvedEventType = eventType || event_type || 'dice_roll';
+    
+    // If a fully pre-built embed is provided, send it directly
+    if (prebuiltEmbed) {
+      const webhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL');
+      if (!webhookUrl) return Response.json({ success: false, error: 'DISCORD_WEBHOOK_URL not configured' }, { status: 400 });
+      const res = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ embeds: [prebuiltEmbed] })
+      });
+      if (!res.ok) return Response.json({ success: false, error: `Discord error: ${res.status}` }, { status: 500 });
+      return Response.json({ success: true });
+    }
     
     // Always use environment variable for webhook URL
     const webhookUrl = Deno.env.get('DISCORD_WEBHOOK_URL');
