@@ -534,14 +534,12 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
     <TooltipProvider>
       <div className="space-y-4">
         {/* Combat Status - top priority */}
-        <Card className="bg-slate-800/50 border-slate-700 border-violet-500/30">
-          <CardContent className="pt-4">
-            <CombatStatus character={character} onUpdate={onUpdate} />
-          </CardContent>
-        </Card>
+        <div className="hud-panel p-4">
+          <CombatStatus character={character} onUpdate={onUpdate} />
+        </div>
 
         {/* SP Tracker */}
-        <Card className="bg-blue-950/20 border-blue-900/50">
+        <div className="hud-panel p-4" style={{ borderColor: 'rgba(0,212,255,0.2)' }}>
           <CardContent className="pt-4 pb-4 space-y-2">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="h-4 w-4 text-blue-400" />
