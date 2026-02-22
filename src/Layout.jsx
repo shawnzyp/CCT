@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 
 export default function Layout({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentCharacter, setCurrentCharacter] = useState(null);
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
