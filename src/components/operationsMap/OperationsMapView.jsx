@@ -160,9 +160,8 @@ export default function OperationsMapView({
       onMapClick([e.lngLat.lng, e.lngLat.lat]);
     });
 
-      return () => { cancelled = true; map.current?.remove(); map.current = null; };
     })();
-    return () => { cancelled = true; };
+    return () => { cancelled = true; if (map.current) { map.current.remove(); map.current = null; } };
   }, []);
 
   // Update cursor based on tool
