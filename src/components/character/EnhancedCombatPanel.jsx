@@ -200,7 +200,8 @@ function CombatStatus({ character, onUpdate }) {
         </div>
 
         {/* Initiative */}
-        <div className="bg-slate-800/70 border border-slate-700 rounded-xl p-3 flex flex-col items-center gap-1">
+        <div className="rounded-xl p-3 flex flex-col items-center gap-1"
+          style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.15)' }}>
           <Dices className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
           <span className="hud-label">Initiative</span>
           {editingInit ? (
