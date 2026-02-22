@@ -415,12 +415,80 @@ export default function Settings() {
               </CardContent>
             </Card>
             
+        {/* Account Security */}
+        <Card className="bg-slate-800 border-red-900/50 mt-4">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <ShieldAlert className="h-5 w-5 text-red-400" />
+              Account Security
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-red-950/20 border border-red-900/40 rounded-lg">
+              <div>
+                <Label className="text-slate-300">Delete Account</Label>
+                <p className="text-xs text-slate-500">Permanently delete your account and all data. This cannot be undone.</p>
+              </div>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setShowDeleteModal(true)}
+                className="ml-3 flex-shrink-0"
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Delete
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="mt-6 p-4 bg-slate-800/50 border border-violet-500/30 rounded-xl">
           <p className="text-sm text-slate-400 text-center">
             ✨ Settings are automatically saved as you change them
           </p>
         </div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <DialogContent className="bg-slate-900 border-red-500 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-red-400 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              Delete Account
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-3 bg-red-950/30 border border-red-900/50 rounded-lg">
+              <p className="text-sm text-slate-300">
+                This will permanently delete your account and <strong className="text-red-400">all associated data</strong> including characters, campaigns, and settings. This action <strong className="text-red-400">cannot be undone</strong>.
+              </p>
+            </div>
+            <div>
+              <Label className="text-slate-400 text-xs">Type <strong className="text-red-400">DELETE</strong> to confirm</Label>
+              <Input
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type DELETE here"
+                className="mt-1 bg-slate-800 border-red-900/50 text-white"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => { setShowDeleteModal(false); setDeleteConfirmText(''); }} className="flex-1 border-slate-600">
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmText !== 'DELETE' || isDeleting}
+                className="flex-1"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Account'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
