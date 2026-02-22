@@ -90,6 +90,25 @@ export default function CharacterSheet() {
   
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.Character.update(characterId, data),
+    onMutate: async (newData) => {
+      // Optimistic update
+      await queryClient.cancelQueries(['character', characterId]);
+      const previous = queryClient.getQueryData(['character', characterId]);
+      queryClient.setQueryData(['character', characterId], (old) => {
+        if (!old) return old;
+        // Find and update the first matching character
+        if (Array.isArray(old)) {
+          return old.map(c => c.id === characterId ? { ...c, ...newData } : c);
+        }
+        return { ...old, ...newData };
+      });
+      return { previous };
+    },
+    onError: (_err, _newData, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['character', characterId], context.previous);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['character', characterId]);
       setLastSaved(new Date());
