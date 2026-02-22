@@ -135,6 +135,7 @@ export default function Campaigns() {
         )}
       </div>
       
+      </PullToRefresh>
       {showCreate && <CreateCampaignDialog onClose={() => setShowCreate(false)} />}
     </div>
   );
