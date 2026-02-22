@@ -287,6 +287,6 @@ export default function Home() {
           onClose={() => setShowCharacterSelector(false)}
         />
       )}
-    </div>
+    </PullToRefresh>
   );
 }
