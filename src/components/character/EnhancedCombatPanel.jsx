@@ -569,8 +569,8 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                 </button>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         <ActionEconomy character={character} />
         <AttackBonuses character={character} />
