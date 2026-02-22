@@ -351,7 +351,7 @@ export default function CharacterSheet() {
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full">
+            <SelectTrigger className="w-full" style={{ background: 'var(--omni-panel)', border: '1px solid var(--omni-border)', color: 'var(--omni-text)' }}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-[60vh]" position="popper" side="bottom" align="start" sideOffset={5}>
