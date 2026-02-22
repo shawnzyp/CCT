@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, BookOpen, Play, Pause, CheckCircle } from "lucide-react";
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import CreateCampaignDialog from "@/components/campaign/CreateCampaignDialog";
+import PullToRefresh from "@/components/utils/PullToRefresh";
 
 const STATUS_ICONS = {
   planning: Pause,
