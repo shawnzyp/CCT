@@ -154,6 +154,7 @@ export default function useOperationsState(isDM) {
     deleteFeature,
     toggleLayer,
     toggleRevealHidden,
+    setUrgencyFilter,
     exportData,
     getVisibleFeatures,
   };
