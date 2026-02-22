@@ -412,8 +412,8 @@ export default function Layout({ children }) {
       </header>
       
       {/* Main Content */}
-      <main className="pt-14 sm:pt-16 relative z-10">
-        <div className="overflow-y-auto scroll-smooth">
+      <main className="pt-14 sm:pt-16 relative z-10 pb-16 md:pb-0" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+        <div className="overflow-y-auto scroll-smooth md:pb-0">
           {children}
         </div>
         
@@ -424,6 +424,32 @@ export default function Layout({ children }) {
           onDMLogout={() => setIsDM(false)}
         />
       </main>
+      
+      {/* Mobile Bottom Navigation */}
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="flex items-center justify-around h-16">
+          {bottomNavItems.map(item => {
+            const active = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={createPageUrl(item.path)}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 transition-colors",
+                  active ? "text-violet-400" : "text-slate-500"
+                )}
+              >
+                <item.icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_rgba(139,92,246,0.8)]")} />
+                <span className="text-[10px] font-medium">{item.label}</span>
+                {active && <span className="absolute bottom-0 w-8 h-0.5 bg-violet-500 rounded-full" />}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
 
       {showCharacterSelector && (
         <CharacterSelector
