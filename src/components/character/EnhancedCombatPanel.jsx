@@ -542,9 +542,9 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
         <div className="hud-panel p-4" style={{ borderColor: 'rgba(0,212,255,0.2)' }}>
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-1">
-              <Zap className="h-4 w-4 text-blue-400" />
-              <span className="text-xs font-bold text-blue-300 uppercase tracking-wider">Stamina Points</span>
-              <span className="ml-auto text-white font-bold font-mono text-lg">
+              <Zap className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
+              <span className="hud-label" style={{ color: 'var(--omni-cyan-dim)' }}>Stamina Points</span>
+              <span className="ml-auto font-bold font-mono text-lg" style={{ color: 'var(--omni-cyan)' }}>
                 {character.current_sp ?? character.max_sp ?? 0} / {character.max_sp ?? 0}
               </span>
             </div>
