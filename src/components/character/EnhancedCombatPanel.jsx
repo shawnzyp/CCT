@@ -127,7 +127,8 @@ function CombatStatus({ character, onUpdate }) {
       {/* Main combat stats row: AC | HP | Initiative */}
       <div className="grid grid-cols-3 gap-3">
         {/* AC */}
-        <div className="bg-slate-800/70 border border-slate-700 rounded-xl p-3 flex flex-col items-center gap-1 relative group">
+        <div className="rounded-xl p-3 flex flex-col items-center gap-1 relative group"
+          style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.15)' }}>
           <Shield className="h-4 w-4 text-blue-400" />
           <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Armor Class</span>
           {editingAC ? (
