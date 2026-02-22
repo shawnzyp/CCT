@@ -43,11 +43,24 @@ export default function OperationsMapView({
   const map = useRef(null);
   const markersRef = useRef({});
   const [mapReady, setMapReady] = useState(false);
+  const [tokenError, setTokenError] = useState(false);
 
   // Init map
   useEffect(() => {
     if (map.current) return;
-    mapboxgl.accessToken = MAPBOX_TOKEN;
+
+    let cancelled = false;
+    (async () => {
+      let token = '';
+      try {
+        const res = await base44.functions.invoke('getMapToken', {});
+        token = res.data?.token || '';
+      } catch {
+        setTokenError(true);
+        return;
+      }
+      if (cancelled || !token) { setTokenError(true); return; }
+      mapboxgl.accessToken = token;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
