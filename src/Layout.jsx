@@ -201,6 +201,17 @@ export default function Layout({ children }) {
         style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16">
+            {/* Back button on sub-pages (mobile) */}
+            {isSubPage && (
+              <button
+                onClick={() => navigate(-1)}
+                className="md:hidden flex-shrink-0 h-11 w-11 flex items-center justify-center text-slate-400 hover:text-white -ml-1"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
+
             {/* Logo */}
             <Link 
               to={createPageUrl('Home')} 
