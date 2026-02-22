@@ -255,6 +255,18 @@ export default function OperationsMapView({
     });
   }, [mapReady, state.layers, state.visibleLayers, state.mode, state.revealHidden]);
 
+  if (tokenError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-slate-950">
+        <div className="text-center text-slate-500">
+          <div className="text-4xl mb-3">🗺️</div>
+          <p className="text-sm">Map unavailable — Mapbox token not configured.</p>
+          <p className="text-xs mt-1">Please set MAPBOX_TOKEN in app secrets.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <style>{`
