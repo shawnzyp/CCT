@@ -162,7 +162,7 @@ export default function Layout({ children }) {
   
   // Detect sub-pages (any page with query params or not the root pages)
   const isSubPage = location.search.length > 0 || 
-    (location.pathname !== '/' && !['Home', 'Campaigns', 'Settings', 'CreateCharacter'].some(p => location.pathname.includes(p)));
+    (location.pathname !== '/' && !['Home', 'Campaigns', 'Settings', 'CreateCharacter', 'OperationsMap'].some(p => location.pathname.includes(p)));
   
   // Bottom nav items for mobile
   const bottomNavItems = [
