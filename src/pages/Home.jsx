@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart, Settings, Scroll, DollarSign, BookMarked, Award, MessageSquare } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
+import PullToRefresh from '@/components/utils/PullToRefresh';
 
 export default function Home() {
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
