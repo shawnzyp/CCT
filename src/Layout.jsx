@@ -190,10 +190,16 @@ export default function Layout({ children }) {
           {/* Scanline effect */}
           {settings.scanlineEffect && <div className="scanline" />}
 
-      {/* Military grid background */}
-      {settings.particleEffects && (
-        <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
-      )}
+      {/* HUD animated grid background */}
+      <div className="fixed inset-0 hud-grid pointer-events-none" />
+
+      {/* Ambient glow blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/3 w-[600px] h-[300px] rounded-full opacity-[0.04]"
+          style={{ background: 'radial-gradient(ellipse, #00D4FF, transparent)', filter: 'blur(60px)' }} />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.03]"
+          style={{ background: 'radial-gradient(ellipse, #7C3AED, transparent)', filter: 'blur(80px)' }} />
+      </div>
       
 
       
