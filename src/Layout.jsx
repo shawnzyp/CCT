@@ -204,7 +204,8 @@ export default function Layout({ children }) {
 
       
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-lg border-b border-violet-500/30 shadow-lg shadow-violet-500/10"
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b"
+        style={{ background: 'rgba(12,15,18,0.92)', borderColor: 'rgba(0,212,255,0.15)', boxShadow: '0 1px 0 rgba(0,212,255,0.08), 0 4px 20px rgba(0,0,0,0.5)' }}
         style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16">
