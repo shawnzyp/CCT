@@ -265,10 +265,8 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
   return (
     <div className="space-y-4">
       {/* Weight Summary Bar */}
-      <div className={cn(
-        "rounded-xl border p-4 flex flex-wrap items-center gap-4",
-        overEncumbered ? "border-red-500/50 bg-red-950/20" : "border-slate-700 bg-slate-800/50"
-      )}>
+      <div className={cn("rounded-xl p-4 flex flex-wrap items-center gap-4 hud-panel", overEncumbered && "hud-panel-danger")}
+        style={overEncumbered ? {} : { borderColor: 'rgba(0,212,255,0.2)' }}>
         <div className="flex items-center gap-2">
           <Weight className={cn("h-5 w-5", overEncumbered ? "text-red-400" : "text-violet-400")} />
           <div>
