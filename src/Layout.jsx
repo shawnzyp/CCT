@@ -225,7 +225,8 @@ export default function Layout({ children }) {
               to={createPageUrl('Home')} 
               className="flex items-center gap-2 sm:gap-3"
             >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0"
+                style={{ boxShadow: '0 0 12px rgba(0,212,255,0.25)', border: '1px solid rgba(0,212,255,0.2)' }}>
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg" 
                   alt="DC Logo" 
@@ -234,11 +235,14 @@ export default function Layout({ children }) {
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <span className="font-bold text-white text-sm sm:text-base lg:text-lg tracking-wider truncate">CATALYST CORE</span>
-                  <Radio className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-violet-400 animate-pulse flex-shrink-0" />
+                  <span className="font-bold text-sm sm:text-base lg:text-lg tracking-[0.12em] truncate"
+                    style={{ color: 'var(--omni-cyan)', textShadow: '0 0 12px rgba(0,212,255,0.4)' }}>
+                    CATALYST CORE
+                  </span>
+                  <Radio className="h-2.5 w-2.5 sm:h-3 sm:w-3 animate-pulse flex-shrink-0" style={{ color: 'var(--omni-cyan)' }} />
                 </div>
-                <span className="hidden md:block text-[8px] sm:text-[9px] text-violet-400 uppercase tracking-[0.2em] font-mono">
-                  TACTICAL SYSTEM v2.0
+                <span className="hidden md:block hud-label" style={{ color: 'var(--omni-cyan-dim)' }}>
+                  O.M.N.I. TACTICAL SYSTEM · BEACON SYNC ONLINE
                 </span>
               </div>
             </Link>
