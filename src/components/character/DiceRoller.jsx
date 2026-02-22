@@ -46,6 +46,20 @@ export default function DiceRoller({ onRoll, modifier = 0, label = "" }) {
       setRolling(false);
       
       if (onRoll) onRoll(finalResult);
+
+      // Post to Discord
+      const storedChar = localStorage.getItem('currentCharacter');
+      const charName = storedChar ? JSON.parse(storedChar).name : undefined;
+      postRollToDiscord({
+        characterName: charName,
+        diceLabel: `${count}d${sides}`,
+        rolls: finalResult.rolls,
+        modifier,
+        total: finalResult.final,
+        label,
+        isCrit: finalResult.isCrit,
+        isFail: finalResult.isFail,
+      });
     }, 600);
   };
   
