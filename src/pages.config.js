@@ -62,6 +62,7 @@ import Home from './pages/Home';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
+import OperationsMap from './pages/OperationsMap';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
+    "OperationsMap": OperationsMap,
 }
 
 export const pagesConfig = {
