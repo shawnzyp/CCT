@@ -540,7 +540,7 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
 
         {/* SP Tracker */}
         <div className="hud-panel p-4" style={{ borderColor: 'rgba(0,212,255,0.2)' }}>
-          <CardContent className="pt-4 pb-4 space-y-2">
+          <div className="space-y-2">
             <div className="flex items-center gap-2 mb-1">
               <Zap className="h-4 w-4 text-blue-400" />
               <span className="text-xs font-bold text-blue-300 uppercase tracking-wider">Stamina Points</span>
