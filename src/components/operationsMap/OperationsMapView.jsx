@@ -7,8 +7,7 @@ import {
   FACTION_COLORS, URGENCY_COLORS, LAYER_TYPES,
 } from './mapConfig';
 import { cn } from '@/lib/utils';
-
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFzZTQ0IiwiYSI6ImNtOGFybnc3djAyNWoya3B3ZHpndGV2MnkifQ.T7MkPPyMJMHCHbwvjFBsNQ';
+import { base44 } from '@/api/base44Client';
 
 // Marker emoji per type
 const TYPE_EMOJI = {
