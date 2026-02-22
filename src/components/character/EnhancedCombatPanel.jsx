@@ -578,6 +578,7 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
           </div>
         </div>
 
+
         <ActionEconomy character={character} />
         <AttackBonuses character={character} />
         <PowersRef character={character} />
