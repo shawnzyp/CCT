@@ -159,6 +159,18 @@ export default function Layout({ children }) {
     return location.pathname.includes(path);
   };
   
+  // Detect sub-pages (any page with query params or not the root pages)
+  const isSubPage = location.search.length > 0 || 
+    (location.pathname !== '/' && !['Home', 'Campaigns', 'Settings', 'CreateCharacter'].some(p => location.pathname.includes(p)));
+  
+  // Bottom nav items for mobile
+  const bottomNavItems = [
+    { label: 'Home', path: 'Home', icon: Home },
+    { label: 'Characters', path: 'CreateCharacter', icon: User },
+    { label: 'Campaigns', path: 'Campaigns', icon: BookOpen },
+    { label: 'Settings', path: 'Settings', icon: Settings },
+  ];
+  
   const fontSizeClass = {
     small: 'text-sm',
     medium: '',
