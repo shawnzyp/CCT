@@ -289,10 +289,14 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
           <span><span className="text-violet-300 font-semibold">{equippedCount}</span> equipped</span>
         </div>
         {carryCapacity > 0 && (
-          <div className="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
             <div 
-              className={cn("h-full rounded-full transition-all", overEncumbered ? "bg-red-500" : "bg-violet-500")}
-              style={{ width: `${Math.min(100, (totalWeight / carryCapacity) * 100)}%` }}
+              className="h-full rounded-full transition-all duration-500"
+              style={{ 
+                width: `${Math.min(100, (totalWeight / carryCapacity) * 100)}%`,
+                background: overEncumbered ? 'var(--omni-red)' : 'var(--omni-cyan)',
+                boxShadow: overEncumbered ? '0 0 8px var(--omni-red-glow)' : '0 0 6px var(--omni-cyan-glow)'
+              }}
             />
           </div>
         )}
