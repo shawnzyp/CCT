@@ -30,11 +30,16 @@ const STATUS_COLORS = {
 export default function Campaigns() {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
+  const queryClient = useQueryClient();
   
   const { data: campaigns = [], isLoading } = useQuery({
     queryKey: ['campaigns'],
     queryFn: () => base44.entities.Campaign.list('-created_date')
   });
+
+  const handleRefresh = async () => {
+    await queryClient.refetchQueries({ queryKey: ['campaigns'] });
+  };
   
   const filteredCampaigns = campaigns.filter(c => 
     c.name?.toLowerCase().includes(search.toLowerCase())
