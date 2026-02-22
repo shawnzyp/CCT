@@ -183,10 +183,10 @@ export default function Layout({ children }) {
     <TutorialProvider>
       <AegisProvider>
         <div className={cn(
-          "min-h-screen bg-slate-950 overflow-x-hidden relative",
+          "min-h-screen overflow-x-hidden relative",
           fontSizeClass,
           settings.highContrast && "contrast-125"
-        )}>
+        )} style={{ background: 'var(--omni-bg)' }}>
           {/* Scanline effect */}
           {settings.scanlineEffect && <div className="scanline" />}
 
