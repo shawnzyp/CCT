@@ -261,7 +261,7 @@ function CombatStatus({ character, onUpdate }) {
 
       {/* Roll Initiative Button */}
       <Button onClick={rollInitiative}
-        className="w-full bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/50 text-emerald-200 gap-2">
+        className="w-full btn-cyan gap-2">
         <Dices className="h-4 w-4" />
         Roll Initiative {formatModifier(initiativeMod)}
       </Button>
