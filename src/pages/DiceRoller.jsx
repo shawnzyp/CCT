@@ -91,13 +91,31 @@ export default function DiceRoller() {
       };
       setHistory(prev => [historyEntry, ...prev].slice(0, 20));
 
+      const isCrit = config.sides === 20 && rolls.some(r => r.kept && r.value === 20);
+      const isFail = config.sides === 20 && rolls.some(r => r.kept && r.value === 1);
+
       // Check for critical
-      if (config.sides === 20 && rolls.some(r => r.kept && r.value === 20)) {
+      if (isCrit) {
         play('critical_hit');
         haptic('success');
-      } else if (config.sides === 20 && rolls.some(r => r.kept && r.value === 1)) {
+      } else if (isFail) {
         play('error');
       }
+
+      // Post to Discord
+      const storedChar = localStorage.getItem('currentCharacter');
+      const charName = storedChar ? JSON.parse(storedChar).name : undefined;
+      postRollToDiscord({
+        characterName: charName,
+        diceLabel: `${numDice}×${config.label}`,
+        rolls: rolls.filter(r => r.kept).map(r => r.value),
+        modifier: parseInt(modifier || 0),
+        total: finalTotal,
+        isCrit,
+        isFail,
+        advantage,
+        disadvantage,
+      });
     }, 600);
   };
 
