@@ -52,15 +52,30 @@
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
+    -webkit-tap-highlight-color: transparent;
   }
   
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent text selection on interactive UI elements */
+  button, [role="button"], nav, .nav-item {
+    user-select: none;
+    -webkit-user-select: none;
   }
   
   /* Military-themed animations */
