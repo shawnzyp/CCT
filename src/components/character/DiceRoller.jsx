@@ -5,6 +5,7 @@ import { Dices, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import { useHaptic } from '@/components/utils/useHaptic';
+import { postRollToDiscord } from '@/components/utils/postRollToDiscord';
 
 export default function DiceRoller({ onRoll, modifier = 0, label = "" }) {
   const [result, setResult] = useState(null);
