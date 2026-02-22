@@ -22,16 +22,12 @@ import { postRollToDiscord } from '@/components/utils/postRollToDiscord';
 // ─── HP Bar ──────────────────────────────────────────────────────────────────
 function HPBar({ current, max }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
-  const color = current <= 0
-    ? 'bg-red-600 animate-pulse'
-    : pct <= 39 ? 'bg-red-500'
-    : pct <= 74 ? 'bg-yellow-500'
-    : 'bg-emerald-500';
+  const barClass = current <= 0 ? 'hp-bar-dead' : pct <= 39 ? 'hp-bar-low' : pct <= 74 ? 'hp-bar-mid' : 'hp-bar-healthy';
 
   return (
-    <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden">
+    <div className="w-full h-3 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
       <div
-        className={cn("h-full rounded-full transition-all duration-300", color)}
+        className={cn("h-full rounded-full hp-bar-fill", barClass)}
         style={{ width: `${pct}%` }}
       />
     </div>
