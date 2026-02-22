@@ -16,6 +16,9 @@ import { base44 } from '@/api/base44Client';
 export default function Settings() {
   const { settings, updateSettings } = useSettings();
   const { play } = useSoundEffects();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const updateSetting = (key, value) => {
     updateSettings({ [key]: value });
@@ -24,6 +27,24 @@ export default function Settings() {
   
   const testSound = () => {
     play('click');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'DELETE') {
+      toast.error('Type DELETE to confirm');
+      return;
+    }
+    setIsDeleting(true);
+    try {
+      // Clear all local data
+      localStorage.clear();
+      // Log out
+      await base44.auth.logout('/');
+      toast.success('Account deleted');
+    } catch (error) {
+      toast.error('Failed to delete account. Contact support.');
+    }
+    setIsDeleting(false);
   };
 
   return (
