@@ -12,6 +12,7 @@ import PullToRefresh from '@/components/utils/PullToRefresh';
 
 export default function Home() {
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: characters = [] } = useQuery({
     queryKey: ['characters'],
@@ -19,6 +20,10 @@ export default function Home() {
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
+
+  const handleRefresh = async () => {
+    await queryClient.refetchQueries({ queryKey: ['characters'] });
+  };
 
   const handleCharacterSelect = (character) => {
     localStorage.setItem('currentCharacter', JSON.stringify(character));
