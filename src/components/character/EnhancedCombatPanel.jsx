@@ -548,9 +548,13 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                 {character.current_sp ?? character.max_sp ?? 0} / {character.max_sp ?? 0}
               </span>
             </div>
-            <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 rounded-full transition-all"
-                style={{ width: `${((character.current_sp ?? character.max_sp ?? 0) / Math.max(1, character.max_sp ?? 1)) * 100}%` }} />
+            <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
+              <div className="h-full rounded-full transition-all duration-500"
+                style={{ 
+                  width: `${((character.current_sp ?? character.max_sp ?? 0) / Math.max(1, character.max_sp ?? 1)) * 100}%`,
+                  background: 'var(--omni-cyan)',
+                  boxShadow: '0 0 8px var(--omni-cyan-glow)'
+                }} />
             </div>
             <div className="grid grid-cols-6 gap-1 pt-1">
               {[-3, -2, -1, +1, +2, +3].map(v => (
