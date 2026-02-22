@@ -99,6 +99,13 @@ export default function Home() {
       description: 'Customize your experience',
       link: 'Settings',
       color: 'from-rose-500 to-pink-600'
+    },
+    {
+      icon: Map,
+      title: 'Operations Map',
+      description: 'Manhattan tactical theater',
+      link: 'OperationsMap',
+      color: 'from-cyan-500 to-teal-600'
     }
   ];
 
