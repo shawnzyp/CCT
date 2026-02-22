@@ -133,13 +133,19 @@ export default function useOperationsState(isDM) {
   }, [state.layers]);
 
   const getVisibleFeatures = useCallback((layerKey) => {
-    const features = state.layers[layerKey] || [];
+    let features = state.layers[layerKey] || [];
+    // Visibility filter
     if (state.mode === 'gm') {
-      if (state.revealHidden) return features;
-      return features.filter(f => f.visibility !== 'hidden');
+      if (!state.revealHidden) features = features.filter(f => f.visibility !== 'hidden');
+    } else {
+      features = features.filter(f => f.visibility === 'player');
     }
-    return features.filter(f => f.visibility === 'player');
-  }, [state.mode, state.revealHidden, state.layers]);
+    // Urgency filter (for missions/sos/drops)
+    if (state.urgencyFilter > 0 && ['missions', 'sos', 'drops'].includes(layerKey)) {
+      features = features.filter(f => (f.metadata?.urgency ?? 0) >= state.urgencyFilter);
+    }
+    return features;
+  }, [state.mode, state.revealHidden, state.layers, state.urgencyFilter]);
 
   return {
     state,
