@@ -19,6 +19,7 @@ export default function OperationsMap() {
     deleteFeature,
     toggleLayer,
     toggleRevealHidden,
+    setUrgencyFilter,
     exportData,
     getVisibleFeatures,
   } = useOperationsState(isDM);
