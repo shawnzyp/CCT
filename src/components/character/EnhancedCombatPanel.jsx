@@ -201,8 +201,8 @@ function CombatStatus({ character, onUpdate }) {
 
         {/* Initiative */}
         <div className="bg-slate-800/70 border border-slate-700 rounded-xl p-3 flex flex-col items-center gap-1">
-          <Dices className="h-4 w-4 text-emerald-400" />
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Initiative</span>
+          <Dices className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
+          <span className="hud-label">Initiative</span>
           {editingInit ? (
             <Input
               autoFocus
