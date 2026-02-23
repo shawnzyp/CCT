@@ -54,39 +54,78 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 p-6">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen p-4 sm:p-6">
+      <div className="max-w-2xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <SettingsIcon className="h-8 w-8 text-violet-400" />
-            Settings
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 font-mono tracking-wider"
+            style={{ color: theme?.colors?.text0 || '#E6F1FF' }}>
+            <SettingsIcon className="h-7 w-7" style={{ color: accentA }} />
+            SYSTEM SETTINGS
           </h1>
-          <p className="text-slate-400 mt-2">Customize your Catalyst Core experience</p>
+          <p className="mt-1 text-sm font-mono" style={{ color: theme?.colors?.muted || '#5F6E80' }}>
+            Customize your Catalyst Core field interface
+          </p>
         </div>
 
-        <Card className="bg-slate-800 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              🎨 Visual Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        {/* Faction Theme */}
+        <div className="rounded-xl border mb-4 overflow-hidden"
+          style={{ background: panel0, borderColor: accentA + '30' }}>
+          <div className="px-4 py-3 border-b flex items-center gap-2"
+            style={{ borderColor: accentA + '20' }}>
+            <Palette className="h-4 w-4" style={{ color: accentA }} />
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+              style={{ color: theme?.colors?.text0 }}>Faction Theme</span>
+          </div>
+          <div className="p-4">
+            <ThemeSwitcher />
+          </div>
+        </div>
 
+        {/* Boot Sequence */}
+        <div className="rounded-xl border mb-4 overflow-hidden"
+          style={{ background: panel0, borderColor: accentA + '30' }}>
+          <div className="px-4 py-3 border-b flex items-center gap-2"
+            style={{ borderColor: accentA + '20' }}>
+            <Monitor className="h-4 w-4" style={{ color: accentA }} />
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+              style={{ color: theme?.colors?.text0 }}>Boot Sequence</span>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <div className="text-sm font-medium" style={{ color: theme?.colors?.text0 }}>Startup Boot Sequence</div>
+                <div className="text-xs mt-0.5" style={{ color: theme?.colors?.muted }}>Show faction boot screen on startup</div>
+              </div>
+              <Switch
+                checked={settings.bootEnabled !== false}
+                onCheckedChange={(v) => updateSetting('bootEnabled', v)}
+              />
+            </div>
+            {settings.bootEnabled !== false && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  sessionStorage.removeItem('bootShown');
+                  window.location.reload();
+                }}
+                className="text-xs"
+                style={{ borderColor: accentA + '50', color: accentA, background: 'transparent' }}
+              >
+                Preview Boot Sequence
+              </Button>
+            )}
+          </div>
+        </div>
 
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Theme</Label>
-                  <Select value={settings.theme} onValueChange={(v) => updateSetting('theme', v)}>
-                    <SelectTrigger className="bg-slate-900 border-slate-700 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dark">Dark (Default)</SelectItem>
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="midnight">Midnight Blue</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
+        <div className="rounded-xl border mb-4 overflow-hidden"
+          style={{ background: panel0, borderColor: accentA + '30' }}>
+          <div className="px-4 py-3 border-b"
+            style={{ borderColor: accentA + '20' }}>
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+              style={{ color: theme?.colors?.text0 }}>🎨 Visual Settings</span>
+          </div>
+          <div className="p-4 space-y-4">
                 <div className="space-y-2">
                   <Label className="text-slate-300">Font Size</Label>
                   <Select value={settings.fontSize} onValueChange={(v) => updateSetting('fontSize', v)}>
