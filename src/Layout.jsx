@@ -34,6 +34,23 @@ export default function Layout({ children }) {
   const [lastSaved, setLastSaved] = useState(null);
   const { play } = useSoundEffects();
   const { settings } = useSettings();
+  const { theme, factionId } = useTheme();
+  
+  // Boot sequence state
+  const bootKey = `catalystBoot_${factionId}`;
+  const [showBoot, setShowBoot] = useState(() => {
+    const bootEnabled = (() => {
+      try { return JSON.parse(localStorage.getItem('catalystCoreSettings') || '{}').bootEnabled !== false; } catch { return true; }
+    })();
+    if (!bootEnabled) return false;
+    // Show on first visit or faction change
+    return !sessionStorage.getItem('bootShown');
+  });
+
+  const handleBootComplete = () => {
+    setShowBoot(false);
+    sessionStorage.setItem('bootShown', '1');
+  };
 
   useEffect(() => {
     const handleDMStatusChange = () => {
