@@ -198,19 +198,37 @@ export default function Layout({ children }) {
     xlarge: 'text-xl'
   }[settings.fontSize] || '';
 
+  // Apply CSS vars from theme on mount and faction change
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme?.css) {
+      Object.entries(theme.css).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
+  }, [theme]);
+
   return (
     <TutorialProvider>
       <AegisProvider>
+        {/* Boot sequence overlay */}
+        {showBoot && (
+          <BootSequence
+            theme={theme}
+            reducedMotion={settings.reducedMotion}
+            onComplete={handleBootComplete}
+          />
+        )}
         <div className={cn(
-          "min-h-screen bg-slate-950 overflow-x-hidden relative",
+          "min-h-screen overflow-x-hidden relative",
           fontSizeClass,
           settings.highContrast && "contrast-125"
-        )}>
+        )}
+          style={{ background: theme?.background?.gradient || '#0F1216' }}
+        >
           {/* Scanline effect */}
-          {settings.scanlineEffect && <div className="scanline" />}
+          {settings.scanlineEffect && !settings.reducedMotion && <div className="scanline" />}
 
       {/* Military grid background */}
-      {settings.particleEffects && (
+      {settings.particleEffects && theme?.background?.gridOpacity > 0 && (
         <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
       )}
       
