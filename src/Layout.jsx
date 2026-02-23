@@ -235,8 +235,13 @@ export default function Layout({ children }) {
 
       
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-lg border-b border-violet-500/30 shadow-lg shadow-violet-500/10"
-        style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b"
+        style={{
+          background: (theme?.colors?.bg0 || '#0F1216') + 'F0',
+          borderColor: (theme?.colors?.accentA || '#00E5FF') + '30',
+          boxShadow: `0 1px 20px ${(theme?.colors?.accentA || '#00E5FF')}18`,
+          paddingTop: 'env(safe-area-inset-top)'
+        }}>
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Back button on sub-pages (mobile) */}
