@@ -183,29 +183,22 @@ export default function Layout({ children }) {
     <TutorialProvider>
       <AegisProvider>
         <div className={cn(
-          "min-h-screen overflow-x-hidden relative",
+          "min-h-screen bg-slate-950 overflow-x-hidden relative",
           fontSizeClass,
           settings.highContrast && "contrast-125"
-        )} style={{ background: 'var(--omni-bg)' }}>
+        )}>
           {/* Scanline effect */}
           {settings.scanlineEffect && <div className="scanline" />}
 
-      {/* HUD animated grid background */}
-      <div className="fixed inset-0 hud-grid pointer-events-none" />
-
-      {/* Ambient glow blobs */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/3 w-[600px] h-[300px] rounded-full opacity-[0.04]"
-          style={{ background: 'radial-gradient(ellipse, #00D4FF, transparent)', filter: 'blur(60px)' }} />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.03]"
-          style={{ background: 'radial-gradient(ellipse, #7C3AED, transparent)', filter: 'blur(80px)' }} />
-      </div>
+      {/* Military grid background */}
+      {settings.particleEffects && (
+        <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
+      )}
       
 
       
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b"
-        style={{ background: 'rgba(12,15,18,0.92)', borderColor: 'rgba(0,212,255,0.15)', boxShadow: '0 1px 0 rgba(0,212,255,0.08), 0 4px 20px rgba(0,0,0,0.5)' }}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-lg border-b border-violet-500/30 shadow-lg shadow-violet-500/10"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16">
@@ -225,8 +218,7 @@ export default function Layout({ children }) {
               to={createPageUrl('Home')} 
               className="flex items-center gap-2 sm:gap-3"
             >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0"
-                style={{ boxShadow: '0 0 12px rgba(0,212,255,0.25)', border: '1px solid rgba(0,212,255,0.2)' }}>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg" 
                   alt="DC Logo" 
@@ -235,14 +227,11 @@ export default function Layout({ children }) {
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <span className="font-bold text-sm sm:text-base lg:text-lg tracking-[0.12em] truncate"
-                    style={{ color: 'var(--omni-cyan)', textShadow: '0 0 12px rgba(0,212,255,0.4)' }}>
-                    CATALYST CORE
-                  </span>
-                  <Radio className="h-2.5 w-2.5 sm:h-3 sm:w-3 animate-pulse flex-shrink-0" style={{ color: 'var(--omni-cyan)' }} />
+                  <span className="font-bold text-white text-sm sm:text-base lg:text-lg tracking-wider truncate">CATALYST CORE</span>
+                  <Radio className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-violet-400 animate-pulse flex-shrink-0" />
                 </div>
-                <span className="hidden md:block hud-label" style={{ color: 'var(--omni-cyan-dim)' }}>
-                  O.M.N.I. TACTICAL SYSTEM · BEACON SYNC ONLINE
+                <span className="hidden md:block text-[8px] sm:text-[9px] text-violet-400 uppercase tracking-[0.2em] font-mono">
+                  TACTICAL SYSTEM v2.0
                 </span>
               </div>
             </Link>
@@ -439,13 +428,8 @@ export default function Layout({ children }) {
       
       {/* Mobile Bottom Navigation */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl border-t"
-        style={{ 
-          background: 'rgba(10,13,16,0.96)', 
-          borderColor: 'rgba(0,212,255,0.12)',
-          boxShadow: '0 -1px 0 rgba(0,212,255,0.08)',
-          paddingBottom: 'env(safe-area-inset-bottom)' 
-        }}
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="flex items-center justify-around h-16">
           {bottomNavItems.map(item => {
@@ -455,18 +439,13 @@ export default function Layout({ children }) {
                 key={item.path}
                 to={createPageUrl(item.path)}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 transition-all relative",
-                  active ? "nav-icon-active" : "text-slate-600 hover:text-slate-400"
+                  "flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 transition-colors",
+                  active ? "text-violet-400" : "text-slate-500"
                 )}
               >
-                <item.icon className="h-5 w-5" />
-                <span className={cn("text-[9px] font-bold tracking-wider uppercase font-mono", active ? "" : "text-slate-600")}>
-                  {item.label}
-                </span>
-                {active && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full"
-                    style={{ background: 'var(--omni-cyan)', boxShadow: '0 0 8px var(--omni-cyan)' }} />
-                )}
+                <item.icon className={cn("h-5 w-5", active && "drop-shadow-[0_0_6px_rgba(139,92,246,0.8)]")} />
+                <span className="text-[10px] font-medium">{item.label}</span>
+                {active && <span className="absolute bottom-0 w-8 h-0.5 bg-violet-500 rounded-full" />}
               </Link>
             );
           })}

@@ -22,12 +22,16 @@ import { postRollToDiscord } from '@/components/utils/postRollToDiscord';
 // ─── HP Bar ──────────────────────────────────────────────────────────────────
 function HPBar({ current, max }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
-  const barClass = current <= 0 ? 'hp-bar-dead' : pct <= 39 ? 'hp-bar-low' : pct <= 74 ? 'hp-bar-mid' : 'hp-bar-healthy';
+  const color = current <= 0
+    ? 'bg-red-600 animate-pulse'
+    : pct <= 39 ? 'bg-red-500'
+    : pct <= 74 ? 'bg-yellow-500'
+    : 'bg-emerald-500';
 
   return (
-    <div className="w-full h-3 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
+    <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden">
       <div
-        className={cn("h-full rounded-full hp-bar-fill", barClass)}
+        className={cn("h-full rounded-full transition-all duration-300", color)}
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -127,10 +131,9 @@ function CombatStatus({ character, onUpdate }) {
       {/* Main combat stats row: AC | HP | Initiative */}
       <div className="grid grid-cols-3 gap-3">
         {/* AC */}
-        <div className="rounded-xl p-3 flex flex-col items-center gap-1 relative group"
-          style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.15)' }}>
-          <Shield className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
-          <span className="hud-label">Armor Class</span>
+        <div className="bg-slate-800/70 border border-slate-700 rounded-xl p-3 flex flex-col items-center gap-1 relative group">
+          <Shield className="h-4 w-4 text-blue-400" />
+          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Armor Class</span>
           {editingAC ? (
             <Input
               autoFocus
@@ -200,10 +203,9 @@ function CombatStatus({ character, onUpdate }) {
         </div>
 
         {/* Initiative */}
-        <div className="rounded-xl p-3 flex flex-col items-center gap-1"
-          style={{ background: 'rgba(0,212,255,0.04)', border: '1px solid rgba(0,212,255,0.15)' }}>
-          <Dices className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
-          <span className="hud-label">Initiative</span>
+        <div className="bg-slate-800/70 border border-slate-700 rounded-xl p-3 flex flex-col items-center gap-1">
+          <Dices className="h-4 w-4 text-emerald-400" />
+          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Initiative</span>
           {editingInit ? (
             <Input
               autoFocus
@@ -261,7 +263,7 @@ function CombatStatus({ character, onUpdate }) {
 
       {/* Roll Initiative Button */}
       <Button onClick={rollInitiative}
-        className="w-full btn-cyan gap-2">
+        className="w-full bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/50 text-emerald-200 gap-2">
         <Dices className="h-4 w-4" />
         Roll Initiative {formatModifier(initiativeMod)}
       </Button>
@@ -536,27 +538,25 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
     <TooltipProvider>
       <div className="space-y-4">
         {/* Combat Status - top priority */}
-        <div className="hud-panel p-4">
-          <CombatStatus character={character} onUpdate={onUpdate} />
-        </div>
+        <Card className="bg-slate-800/50 border-slate-700 border-violet-500/30">
+          <CardContent className="pt-4">
+            <CombatStatus character={character} onUpdate={onUpdate} />
+          </CardContent>
+        </Card>
 
         {/* SP Tracker */}
-        <div className="hud-panel p-4" style={{ borderColor: 'rgba(0,212,255,0.2)' }}>
-          <div className="space-y-2">
+        <Card className="bg-blue-950/20 border-blue-900/50">
+          <CardContent className="pt-4 pb-4 space-y-2">
             <div className="flex items-center gap-2 mb-1">
-              <Zap className="h-4 w-4" style={{ color: 'var(--omni-cyan)' }} />
-              <span className="hud-label" style={{ color: 'var(--omni-cyan-dim)' }}>Stamina Points</span>
-              <span className="ml-auto font-bold font-mono text-lg" style={{ color: 'var(--omni-cyan)' }}>
+              <Zap className="h-4 w-4 text-blue-400" />
+              <span className="text-xs font-bold text-blue-300 uppercase tracking-wider">Stamina Points</span>
+              <span className="ml-auto text-white font-bold font-mono text-lg">
                 {character.current_sp ?? character.max_sp ?? 0} / {character.max_sp ?? 0}
               </span>
             </div>
-            <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
-              <div className="h-full rounded-full transition-all duration-500"
-                style={{ 
-                  width: `${((character.current_sp ?? character.max_sp ?? 0) / Math.max(1, character.max_sp ?? 1)) * 100}%`,
-                  background: 'var(--omni-cyan)',
-                  boxShadow: '0 0 8px var(--omni-cyan-glow)'
-                }} />
+            <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+              <div className="h-full bg-blue-500 rounded-full transition-all"
+                style={{ width: `${((character.current_sp ?? character.max_sp ?? 0) / Math.max(1, character.max_sp ?? 1)) * 100}%` }} />
             </div>
             <div className="grid grid-cols-6 gap-1 pt-1">
               {[-3, -2, -1, +1, +2, +3].map(v => (
@@ -575,9 +575,8 @@ export default function EnhancedCombatPanel({ character, onUpdate }) {
                 </button>
               ))}
             </div>
-          </div>
-        </div>
-
+          </CardContent>
+        </Card>
 
         <ActionEconomy character={character} />
         <AttackBonuses character={character} />

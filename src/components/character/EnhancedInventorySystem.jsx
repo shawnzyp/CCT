@@ -265,8 +265,10 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
   return (
     <div className="space-y-4">
       {/* Weight Summary Bar */}
-      <div className={cn("rounded-xl p-4 flex flex-wrap items-center gap-4 hud-panel", overEncumbered && "hud-panel-danger")}
-        style={overEncumbered ? {} : { borderColor: 'rgba(0,212,255,0.2)' }}>
+      <div className={cn(
+        "rounded-xl border p-4 flex flex-wrap items-center gap-4",
+        overEncumbered ? "border-red-500/50 bg-red-950/20" : "border-slate-700 bg-slate-800/50"
+      )}>
         <div className="flex items-center gap-2">
           <Weight className={cn("h-5 w-5", overEncumbered ? "text-red-400" : "text-violet-400")} />
           <div>
@@ -289,14 +291,10 @@ export default function EnhancedInventorySystem({ character, onUpdate }) {
           <span><span className="text-violet-300 font-semibold">{equippedCount}</span> equipped</span>
         </div>
         {carryCapacity > 0 && (
-          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
             <div 
-              className="h-full rounded-full transition-all duration-500"
-              style={{ 
-                width: `${Math.min(100, (totalWeight / carryCapacity) * 100)}%`,
-                background: overEncumbered ? 'var(--omni-red)' : 'var(--omni-cyan)',
-                boxShadow: overEncumbered ? '0 0 8px var(--omni-red-glow)' : '0 0 6px var(--omni-cyan-glow)'
-              }}
+              className={cn("h-full rounded-full transition-all", overEncumbered ? "bg-red-500" : "bg-violet-500")}
+              style={{ width: `${Math.min(100, (totalWeight / carryCapacity) * 100)}%` }}
             />
           </div>
         )}
