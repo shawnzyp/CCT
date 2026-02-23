@@ -127,7 +127,7 @@ export default function Settings() {
           </div>
           <div className="p-4 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Font Size</Label>
+                  <Label style={{ color: theme?.colors?.text1 }}>Font Size</Label>
                   <Select value={settings.fontSize} onValueChange={(v) => updateSetting('fontSize', v)}>
                     <SelectTrigger className="bg-slate-900 border-slate-700 text-white">
                       <SelectValue />
