@@ -18,9 +18,13 @@ import { useTheme } from '@/components/theme/useTheme';
 export default function Settings() {
   const { settings, updateSettings } = useSettings();
   const { play } = useSoundEffects();
+  const { theme } = useTheme();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const accentA = theme?.colors?.accentA || '#00E5FF';
+  const panel0 = theme?.colors?.panel0 || '#1A1F26';
 
   const updateSetting = (key, value) => {
     updateSettings({ [key]: value });
