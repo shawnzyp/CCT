@@ -6,7 +6,8 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor } from "lucide-react";
+import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor, FlaskConical } from "lucide-react";
+import VisualQA from '@/components/theme/VisualQA';
 import { toast } from "sonner";
 import { useSettings } from '@/components/utils/useSettings';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
@@ -21,6 +22,7 @@ export default function Settings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showQA, setShowQA] = useState(false);
 
   const accentA = theme?.colors?.accentA || '#00E5FF';
   const panel0 = theme?.colors?.panel0 || '#1A1F26';
@@ -296,6 +298,22 @@ export default function Settings() {
           </div>
         </div>
 
+        {/* Visual QA Toggle */}
+        <div className="rounded-xl border mb-4 overflow-hidden"
+          style={{ background: panel0, borderColor: (theme?.colors?.accentB || '#5CCFFF') + '30' }}>
+          <div className="px-4 py-3 border-b flex items-center gap-2"
+            style={{ borderColor: (theme?.colors?.accentB || '#5CCFFF') + '20' }}>
+            <FlaskConical className="h-4 w-4" style={{ color: theme?.colors?.accentB || '#5CCFFF' }} />
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+              style={{ color: theme?.colors?.text0 }}>Developer</span>
+          </div>
+          <div className="p-4">
+            <SettingRow label="Visual QA Mode" desc="Highlight layout bounds and token values">
+              <Switch checked={showQA} onCheckedChange={setShowQA} />
+            </SettingRow>
+          </div>
+        </div>
+
         <div className="mt-4 p-3 rounded-lg border text-center"
           style={{ borderColor: accentA + '25', background: accentA + '08' }}>
           <p className="text-xs font-mono" style={{ color: theme?.colors?.muted }}>
@@ -303,6 +321,8 @@ export default function Settings() {
           </p>
         </div>
       </div>
+
+      {showQA && <VisualQA onClose={() => setShowQA(false)} />}
 
       {/* Delete Confirmation */}
       <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
