@@ -7,11 +7,13 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert } from "lucide-react";
+import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor } from "lucide-react";
 import { toast } from "sonner";
 import { useSettings } from '@/components/utils/useSettings';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import { base44 } from '@/api/base44Client';
+import ThemeSwitcher from '@/components/theme/ThemeSwitcher';
+import { useTheme } from '@/components/theme/useTheme';
 
 export default function Settings() {
   const { settings, updateSettings } = useSettings();
