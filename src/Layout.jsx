@@ -204,7 +204,7 @@ export default function Layout({ children }) {
           style={{ background: theme?.background?.gradient || '#0F1216' }}
         >
           {/* Scanline */}
-          {settings.scanlineEffect && !settings.reducedMotion && <div className="scanline" />}
+          {settings.scanlineEffect && !settings.reducedMotion && <div className="cc-scanline-layer" />}
 
           {/* Grid */}
           {settings.particleEffects && (theme?.background?.gridOpacity || 0) > 0 && (

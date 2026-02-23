@@ -46,7 +46,7 @@ export default function ThemeSwitcher() {
       </div>
 
       {/* Mode Toggle */}
-      <div className="rounded-lg border border-slate-700 overflow-hidden">
+      <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'var(--cc-accent-a, #00E5FF)' + '30' }}>
         <div className="flex">
           {['field', 'command'].map(m => (
             <button
@@ -54,10 +54,9 @@ export default function ThemeSwitcher() {
               onClick={() => setUiMode(m)}
               className={cn(
                 "flex-1 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] transition-all",
-                mode === m
-                  ? "text-black"
-                  : "text-slate-400 hover:text-slate-200"
+                mode === m ? "text-black" : ""
               )}
+              style={mode !== m ? { color: 'var(--cc-muted)' } : {}}
               style={mode === m ? { background: 'var(--cc-accent-a)' } : { background: 'transparent' }}
             >
               {m} Mode
