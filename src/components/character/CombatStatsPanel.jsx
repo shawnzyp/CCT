@@ -79,8 +79,8 @@ export default function CombatStatsPanel({ character }) {
           <HpBar value={character.current_sp || 0} max={character.max_sp || 1} color={spColor} />
         </div>
 
-        <StatCard icon={Shield} label="TC" value={character.toughness_class || 10} sub="Toughness Class" accentColor={accentA} bg={panel0} />
-        <StatCard icon={Move} label="Speed" value={`${character.speed || 30} ft`} sub="Movement" accentColor={c.accentB || '#5CCFFF'} bg={panel0} />
+        <StatCard icon={Shield} label="TC" value={character.toughness_class || 10} sub="Toughness Class" accentColor={accentA} bg={panel0} text0={text0} muted={muted} />
+        <StatCard icon={Move} label="Speed" value={`${character.speed || 30} ft`} sub="Movement" accentColor={c.accentB || '#5CCFFF'} bg={panel0} text0={text0} muted={muted} />
       </div>
 
       {/* Ability Scores */}
