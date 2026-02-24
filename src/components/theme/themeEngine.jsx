@@ -38,7 +38,7 @@ export const FACTION_THEMES = {
       gradient: 'linear-gradient(135deg, #0F1216 0%, #141A22 60%, #0d1520 100%)',
     },
     motion: {
-      easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+      easing: [0.2, 0.8, 0.2, 1],
       fast: 120,
       med: 220,
       slow: 420,
