@@ -261,6 +261,44 @@ button.cc-sm-target {
   overflow-y: auto;
 }
 
+/* ── FORM ELEMENT GLOBAL ENFORCEMENT ────────────────────────────────────── */
+/* Ensure no native browser default styling leaks through */
+input, textarea, select {
+  background: var(--cc-panel1, #202833);
+  color: var(--cc-text0, #E6F1FF);
+  border: 1px solid color-mix(in srgb, var(--cc-accent-a, #00E5FF) 22%, transparent);
+  border-radius: 0.375rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color var(--cc-fast, 120ms) var(--cc-easing, ease);
+}
+input:focus, textarea:focus, select:focus {
+  border-color: color-mix(in srgb, var(--cc-accent-a, #00E5FF) 55%, transparent);
+}
+input::placeholder, textarea::placeholder {
+  color: var(--cc-muted, #5F6E80);
+  opacity: 0.7;
+}
+
+/* Radix overlay backdrop */
+[data-radix-dialog-overlay] {
+  background: rgba(0,0,0,0.75) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Remove default select arrow styling */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: none;
+}
+
+/* Checkbox / radio native */
+input[type="checkbox"], input[type="radio"] {
+  accent-color: var(--cc-accent-a, #00E5FF);
+}
+
 /* ── LEGACY COMPAT ───────────────────────────────────────────────────────── */
 .scanline { display: none; } /* replaced by cc-scanline-layer */
 
