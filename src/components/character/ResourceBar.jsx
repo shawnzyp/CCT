@@ -110,7 +110,7 @@ export default function ResourceBar({
             className="cc-bar-fill"
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.35 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
             style={{
               background: barColor,
               boxShadow: isDangerous ? `0 0 6px ${barColor}80` : 'none',
