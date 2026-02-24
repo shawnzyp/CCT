@@ -105,7 +105,8 @@ export default function BootSequence({ theme, onComplete, reducedMotion }) {
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  const { colors, hud, motion: m } = theme;
+  const { colors, hud } = theme;
+  const ease = Array.isArray(theme?.motion?.easing) ? theme.motion.easing : [0.2, 0.8, 0.2, 1];
   const bootStyle = theme.bootStyle;
 
   if (phase === 4) {
