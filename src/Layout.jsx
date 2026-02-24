@@ -341,10 +341,10 @@ export default function Layout({ children }) {
                       disabled={isSaving}
                       className="flex items-center gap-1.5 px-2.5 h-8 rounded-md text-xs font-medium transition-all"
                       style={{
-                        background: isSaving ? (theme?.colors?.success || '#00D1B2') : accentA,
-                        color: '#000',
-                        transition: `background ${theme?.motion?.med || 220}ms`,
-                      }}
+                            background: isSaving ? (theme?.colors?.success || '#00D1B2') : accentA,
+                            color: '#000',
+                            transition: `background ${theme?.motion?.med || 220}ms ease-out`,
+                          }}
                     >
                       <AnimatePresence mode="wait">
                         {isSaving ? (
