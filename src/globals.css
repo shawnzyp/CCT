@@ -239,6 +239,20 @@ button.cc-sm-target {
   pointer-events: none;
 }
 
+/* ── TABS ACTIVE STATE (global patch) ───────────────────────────────────── */
+[data-radix-tabs-trigger][data-state="active"] {
+  background: var(--cc-accent-a, #00E5FF) !important;
+  color: #000 !important;
+}
+[data-radix-tabs-trigger][data-state="inactive"] {
+  background: transparent !important;
+  color: var(--cc-muted, #5F6E80) !important;
+}
+[data-radix-tabs-trigger][data-state="inactive"]:hover {
+  color: var(--cc-text1, #8EA0B5) !important;
+  background: color-mix(in srgb, var(--cc-accent-a, #00E5FF) 8%, transparent) !important;
+}
+
 /* ── SCROLLBAR ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
