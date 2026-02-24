@@ -23,8 +23,8 @@ function StatCard({ icon: Icon, label, value, sub, accentColor, bg }) {
         <Icon className="h-3.5 w-3.5" style={{ color: accentColor }} />
         <span className="text-[10px] font-mono uppercase tracking-[0.12em]" style={{ color: accentColor }}>{label}</span>
       </div>
-      <div className="text-xl font-mono font-bold" style={{ color: '#E6F1FF' }}>{value}</div>
-      {sub && <div className="text-[10px] mt-1" style={{ color: '#5F6E80' }}>{sub}</div>}
+      <div className="text-xl font-mono font-bold" style={{ color: accentColor === undefined ? 'var(--cc-text0,#E6F1FF)' : 'var(--cc-text0,#E6F1FF)' }}>{value}</div>
+      {sub && <div className="text-[10px] mt-1" style={{ color: 'var(--cc-muted,#5F6E80)' }}>{sub}</div>}
     </div>
   );
 }
