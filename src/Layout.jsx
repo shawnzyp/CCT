@@ -453,9 +453,9 @@ export default function Layout({ children }) {
                     to={createPageUrl(item.path)}
                     className="flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 relative"
                     style={{
-                      color: active ? accentA : muted,
-                      transition: `color ${theme?.motion?.fast || 120}ms`,
-                    }}
+                              color: active ? accentA : muted,
+                              transition: `color ${theme?.motion?.fast || 120}ms ease-out`,
+                            }}
                   >
                     <item.icon
                       className="h-5 w-5"
