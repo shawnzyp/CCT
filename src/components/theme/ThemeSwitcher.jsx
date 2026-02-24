@@ -17,14 +17,12 @@ export default function ThemeSwitcher() {
             <button
               key={t.id}
               onClick={() => setFaction(t.id)}
-              className={cn(
-                "relative p-3 rounded-lg border-2 text-left transition-all",
-                active ? "border-[var(--cc-accent-a)]" : "border-slate-700 hover:border-slate-500"
-              )}
+              className="relative p-3 text-left transition-all rounded-lg border"
               style={{
                 background: t.colors.panel0,
-                borderColor: active ? t.colors.accentA : undefined,
-                boxShadow: active ? t.hud.glowIntensity : undefined,
+                borderColor: active ? t.colors.accentA : t.colors.accentA + '25',
+                boxShadow: active && t.hud.glowIntensity !== 'none' ? t.hud.glowIntensity : 'none',
+                borderRadius: t.hud.panelRadius,
               }}
             >
               {active && (
