@@ -7,10 +7,10 @@ import { useTheme } from '@/components/theme/useTheme';
 function HpBar({ value, max, color }) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (
-    <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+    <div className="cc-bar-track mt-1.5">
       <div
-        className="h-full rounded-full transition-all"
-        style={{ width: `${pct}%`, background: color, transition: 'width 300ms, background 250ms' }}
+        className="cc-bar-fill"
+        style={{ width: `${pct}%`, background: color }}
       />
     </div>
   );
