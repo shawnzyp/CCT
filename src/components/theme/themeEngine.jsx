@@ -99,7 +99,7 @@ export const FACTION_THEMES = {
       gradient: 'radial-gradient(ellipse at 30% 20%, #1a2d47 0%, #111C2D 60%, #0d1520 100%)',
     },
     motion: {
-      easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+      easing: [0.0, 0.0, 0.2, 1],
       fast: 150,
       med: 260,
       slow: 450,
