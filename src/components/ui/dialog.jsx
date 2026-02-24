@@ -76,7 +76,8 @@ DialogFooter.displayName = "DialogFooter"
 const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-base sm:text-lg font-semibold leading-none tracking-tight", className)}
+    className={cn("text-base font-mono font-bold tracking-[0.12em] leading-none", className)}
+    style={{ color: 'var(--cc-text0, #E6F1FF)' }}
     {...props} />
 ))
 DialogTitle.displayName = DialogPrimitive.Title.displayName
@@ -84,7 +85,8 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName
 const DialogDescription = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-xs font-mono", className)}
+    style={{ color: 'var(--cc-muted, #5F6E80)' }}
     {...props} />
 ))
 DialogDescription.displayName = DialogPrimitive.Description.displayName
