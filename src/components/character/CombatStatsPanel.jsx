@@ -16,15 +16,15 @@ function HpBar({ value, max, color }) {
   );
 }
 
-function StatCard({ icon: Icon, label, value, sub, accentColor, bg }) {
+function StatCard({ icon: Icon, label, value, sub, accentColor, bg, text0, muted }) {
   return (
     <div className="rounded-lg border p-3" style={{ background: bg, borderColor: accentColor + '35' }}>
       <div className="flex items-center gap-1.5 mb-1">
         <Icon className="h-3.5 w-3.5" style={{ color: accentColor }} />
         <span className="text-[10px] font-mono uppercase tracking-[0.12em]" style={{ color: accentColor }}>{label}</span>
       </div>
-      <div className="text-xl font-mono font-bold" style={{ color: accentColor === undefined ? 'var(--cc-text0,#E6F1FF)' : 'var(--cc-text0,#E6F1FF)' }}>{value}</div>
-      {sub && <div className="text-[10px] mt-1" style={{ color: 'var(--cc-muted,#5F6E80)' }}>{sub}</div>}
+      <div className="text-xl font-mono font-bold" style={{ color: text0 }}>{value}</div>
+      {sub && <div className="text-[10px] mt-1" style={{ color: muted }}>{sub}</div>}
     </div>
   );
 }
