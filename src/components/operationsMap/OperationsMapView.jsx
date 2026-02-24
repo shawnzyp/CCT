@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import {
-  MANHATTAN_BOUNDS, MAP_CENTER, MAP_INITIAL_ZOOM,
-  MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_STYLE,
+  OPERATIONAL_BOUNDS, OPERATIONAL_POLYGON,
+  MAP_CENTER, MAP_INITIAL_ZOOM, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_STYLE,
   FACTION_COLORS,
 } from './mapConfig';
 import { base44 } from '@/api/base44Client';
@@ -12,6 +12,9 @@ const TYPE_EMOJI = {
   poi: '📍', missions: '🎯', safehouses: '🏠',
   drops: '📦', sos: '🆘',
 };
+
+// Background color to match app bg – hard mask edge blends cleanly
+const MASK_BG = '#0F1216';
 
 function createMarkerEl(feature) {
   const el = document.createElement('div');
@@ -25,8 +28,29 @@ function createMarkerEl(feature) {
   return el;
 }
 
+// World-minus-polygon: everything OUTSIDE the operational polygon becomes the mask
+function buildMaskData(polygon) {
+  return {
+    type: 'FeatureCollection',
+    features: [{
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        // Outer ring = full world; inner ring = operational zone (hole = visible area)
+        coordinates: [
+          // World bounding box
+          [[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]],
+          // Operational polygon (hole) — counter-clockwise winding
+          [...polygon, polygon[0]],
+        ]
+      }
+    }]
+  };
+}
+
 function initMap(container, token, onMapClick) {
   mapboxgl.accessToken = token;
+
   const m = new mapboxgl.Map({
     container,
     style: MAP_STYLE,
@@ -34,55 +58,87 @@ function initMap(container, token, onMapClick) {
     zoom: MAP_INITIAL_ZOOM,
     minZoom: MAP_MIN_ZOOM,
     maxZoom: MAP_MAX_ZOOM,
-    maxBounds: [
-      [MANHATTAN_BOUNDS[0][0] - 0.05, MANHATTAN_BOUNDS[0][1] - 0.05],
-      [MANHATTAN_BOUNDS[1][0] + 0.05, MANHATTAN_BOUNDS[1][1] + 0.05],
-    ],
+    // Hard pan lock — cannot pan beyond operational region
+    maxBounds: OPERATIONAL_BOUNDS,
+    // Smooth zoom
+    scrollZoom: { around: 'cursor' },
+    fadeDuration: 200,
+    // Ensure tiles load only what's needed
+    renderWorldCopies: false,
   });
+
   m.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-left');
   m.on('click', (e) => onMapClick([e.lngLat.lng, e.lngLat.lat]));
   return m;
 }
 
 function addMapLayers(m) {
-  // Theater boundary mask
-  m.addSource('theater-mask', {
+  // ── OUTER MASK (hard clip — covers everything outside operational polygon) ──
+  m.addSource('op-mask', {
+    type: 'geojson',
+    data: buildMaskData(OPERATIONAL_POLYGON),
+  });
+  m.addLayer({
+    id: 'op-mask-fill',
+    type: 'fill',
+    source: 'op-mask',
+    paint: {
+      'fill-color': MASK_BG,
+      'fill-opacity': 1,     // HARD mask, not dimmed
+    },
+  });
+
+  // ── OPERATIONAL BOUNDARY LINE (clean edge indicator) ─────────────────────
+  m.addSource('op-boundary', {
     type: 'geojson',
     data: {
-      type: 'FeatureCollection',
-      features: [{
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: [
-            [[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]],
-            [
-              [MANHATTAN_BOUNDS[0][0], MANHATTAN_BOUNDS[0][1]],
-              [MANHATTAN_BOUNDS[1][0], MANHATTAN_BOUNDS[0][1]],
-              [MANHATTAN_BOUNDS[1][0], MANHATTAN_BOUNDS[1][1]],
-              [MANHATTAN_BOUNDS[0][0], MANHATTAN_BOUNDS[1][1]],
-              [MANHATTAN_BOUNDS[0][0], MANHATTAN_BOUNDS[0][1]],
-            ]
-          ]
-        }
-      }]
-    }
+      type: 'Feature',
+      geometry: { type: 'Polygon', coordinates: [[...OPERATIONAL_POLYGON, OPERATIONAL_POLYGON[0]]] },
+    },
   });
-  m.addLayer({ id: 'theater-mask-fill', type: 'fill', source: 'theater-mask', paint: { 'fill-color': '#000000', 'fill-opacity': 0.65 } });
+  m.addLayer({
+    id: 'op-boundary-line',
+    type: 'line',
+    source: 'op-boundary',
+    paint: {
+      'line-color': '#00E5FF',
+      'line-width': 1.5,
+      'line-opacity': 0.35,
+      'line-dasharray': [6, 4],
+    },
+  });
 
-  // Territories
+  // ── FACTION TERRITORIES ───────────────────────────────────────────────────
   m.addSource('territories', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-  m.addLayer({ id: 'territories-fill', type: 'fill', source: 'territories', paint: { 'fill-color': ['get', 'color'], 'fill-opacity': ['*', ['/', ['get', 'control'], 100], 0.4] } }, 'theater-mask-fill');
-  m.addLayer({ id: 'territories-line', type: 'line', source: 'territories', paint: { 'line-color': ['get', 'color'], 'line-width': 2, 'line-opacity': 0.8 } });
+  m.addLayer({
+    id: 'territories-fill', type: 'fill', source: 'territories',
+    paint: {
+      'fill-color': ['get', 'color'],
+      'fill-opacity': ['*', ['/', ['get', 'control'], 100], 0.4],
+    }
+  }, 'op-mask-fill'); // render BELOW mask so they stay inside boundary visually
+  m.addLayer({
+    id: 'territories-line', type: 'line', source: 'territories',
+    paint: { 'line-color': ['get', 'color'], 'line-width': 2, 'line-opacity': 0.8 },
+  }, 'op-mask-fill');
 
-  // Fog
+  // ── EVENT FOG ─────────────────────────────────────────────────────────────
   m.addSource('fog', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-  m.addLayer({ id: 'fog-fill', type: 'fill', source: 'fog', paint: { 'fill-color': '#000', 'fill-opacity': 0.55 } });
+  m.addLayer({
+    id: 'fog-fill', type: 'fill', source: 'fog',
+    paint: { 'fill-color': '#000', 'fill-opacity': 0.55 },
+  }, 'op-mask-fill');
 
-  // Mission zones
+  // ── MISSION ZONES ─────────────────────────────────────────────────────────
   m.addSource('missions-zones', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-  m.addLayer({ id: 'missions-zones-fill', type: 'fill', source: 'missions-zones', paint: { 'fill-color': '#F59E0B', 'fill-opacity': 0.15 } });
-  m.addLayer({ id: 'missions-zones-line', type: 'line', source: 'missions-zones', paint: { 'line-color': '#F59E0B', 'line-width': 2, 'line-dasharray': [4, 2] } });
+  m.addLayer({
+    id: 'missions-zones-fill', type: 'fill', source: 'missions-zones',
+    paint: { 'fill-color': '#F59E0B', 'fill-opacity': 0.15 },
+  }, 'op-mask-fill');
+  m.addLayer({
+    id: 'missions-zones-line', type: 'line', source: 'missions-zones',
+    paint: { 'line-color': '#F59E0B', 'line-width': 2, 'line-dasharray': [4, 2] },
+  }, 'op-mask-fill');
 }
 
 export default function OperationsMapView({ state, isDM, activeTool, getVisibleFeatures, onMapClick, onFeatureClick }) {
@@ -155,7 +211,11 @@ export default function OperationsMapView({ state, isDM, activeTool, getVisibleF
     });
 
     const ter = state.visibleLayers.territories ? getVisibleFeatures('territories') : [];
-    map.current.getSource('territories')?.setData(toGeoJSON(ter, f => ({ id: f.id, color: FACTION_COLORS[f.faction] || '#64748B', control: f.metadata?.control ?? 50 })));
+    map.current.getSource('territories')?.setData(toGeoJSON(ter, f => ({
+      id: f.id,
+      color: FACTION_COLORS[f.faction] || '#64748B',
+      control: f.metadata?.control ?? 50,
+    })));
 
     const fog = state.visibleLayers.fog ? getVisibleFeatures('fog') : [];
     map.current.getSource('fog')?.setData(toGeoJSON(fog));
@@ -166,11 +226,11 @@ export default function OperationsMapView({ state, isDM, activeTool, getVisibleF
 
   if (tokenError) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-slate-950">
-        <div className="text-center text-slate-500">
+      <div className="w-full h-full flex items-center justify-center" style={{ background: MASK_BG }}>
+        <div className="text-center" style={{ color: 'var(--cc-muted, #5F6E80)' }}>
           <div className="text-4xl mb-3">🗺️</div>
-          <p className="text-sm">Map unavailable — Mapbox token not configured.</p>
-          <p className="text-xs mt-1">Please set MAPBOX_TOKEN in app secrets.</p>
+          <p className="text-sm font-mono">Map unavailable — Mapbox token not configured.</p>
+          <p className="text-xs mt-1 font-mono">Set MAPBOX_TOKEN in app secrets.</p>
         </div>
       </div>
     );
@@ -179,13 +239,27 @@ export default function OperationsMapView({ state, isDM, activeTool, getVisibleF
   return (
     <>
       <style>{`
-        .ops-marker { display:flex; align-items:center; justify-content:center; width:32px; height:32px; background:rgba(15,23,42,0.85); border:2px solid rgba(139,92,246,0.6); border-radius:50%; transition:transform 0.15s; box-shadow:0 0 10px rgba(0,229,255,0.2); }
-        .ops-marker:hover { transform:scale(1.2); border-color:#00E5FF; }
-        @keyframes ops-pulse-anim { 0%,100%{box-shadow:0 0 6px 2px rgba(239,68,68,0.4);} 50%{box-shadow:0 0 18px 6px rgba(239,68,68,0.8);} }
-        .ops-pulse { animation:ops-pulse-anim 1.5s ease-in-out infinite; border-color:#EF4444; }
-        .mapboxgl-ctrl-top-left { top:60px !important; }
+        .ops-marker {
+          display: flex; align-items: center; justify-content: center;
+          width: 32px; height: 32px;
+          background: rgba(15,18,22,0.88);
+          border: 2px solid color-mix(in srgb, var(--cc-accent-a, #00E5FF) 55%, transparent);
+          border-radius: 50%;
+          transition: transform 0.15s, border-color 0.15s;
+          box-shadow: 0 0 10px color-mix(in srgb, var(--cc-accent-a, #00E5FF) 25%, transparent);
+          pointer-events: auto;
+        }
+        .ops-marker:hover { transform: scale(1.2); border-color: var(--cc-accent-a, #00E5FF); }
+        @keyframes ops-pulse-anim {
+          0%,100% { box-shadow: 0 0 6px 2px rgba(239,68,68,0.4); }
+          50%      { box-shadow: 0 0 18px 6px rgba(239,68,68,0.8); }
+        }
+        .ops-pulse { animation: ops-pulse-anim 1.5s ease-in-out infinite; border-color: #EF4444; }
+        .mapboxgl-ctrl-top-left { top: 60px !important; }
+        /* Hide Mapbox attribution branding */
+        .mapboxgl-ctrl-attrib-inner a[href*="mapbox"] { display: none; }
       `}</style>
-      <div ref={mapContainer} className="w-full h-full" />
+      <div ref={mapContainer} className="w-full h-full" style={{ background: MASK_BG }} />
     </>
   );
 }
