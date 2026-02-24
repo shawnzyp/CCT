@@ -60,7 +60,7 @@ export const FACTION_THEMES = {
       '--cc-fast': '120ms',
       '--cc-med': '220ms',
       '--cc-slow': '420ms',
-      '--cc-easing': 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+      '--cc-easing': 'cubic-bezier(0.2, 0.8, 0.2, 1)', // CSS-safe (for transitions)
     }
   },
 
