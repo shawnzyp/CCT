@@ -275,6 +275,30 @@ button.cc-sm-target {
   overflow-y: auto;
 }
 
+/* ── CC GLOBAL CSS VAR ENFORCEMENT ──────────────────────────────────────── */
+/* Override shadcn default CSS vars to use CC tokens */
+:root {
+  --background: var(--cc-bg0, #0F1216);
+  --foreground: var(--cc-text0, #E6F1FF);
+  --card: var(--cc-panel0, #1A1F26);
+  --card-foreground: var(--cc-text0, #E6F1FF);
+  --popover: var(--cc-panel0, #1A1F26);
+  --popover-foreground: var(--cc-text0, #E6F1FF);
+  --primary: var(--cc-accent-a, #00E5FF);
+  --primary-foreground: #000000;
+  --secondary: var(--cc-panel1, #202833);
+  --secondary-foreground: var(--cc-text1, #8EA0B5);
+  --muted: var(--cc-panel1, #202833);
+  --muted-foreground: var(--cc-muted, #5F6E80);
+  --accent: var(--cc-panel1, #202833);
+  --accent-foreground: var(--cc-text0, #E6F1FF);
+  --destructive: var(--cc-danger, #FF3B3B);
+  --destructive-foreground: var(--cc-text0, #E6F1FF);
+  --border: color-mix(in srgb, var(--cc-accent-a, #00E5FF) 18%, transparent);
+  --input: var(--cc-panel1, #202833);
+  --ring: var(--cc-accent-a, #00E5FF);
+}
+
 /* ── FORM ELEMENT GLOBAL ENFORCEMENT ────────────────────────────────────── */
 /* Ensure no native browser default styling leaks through */
 input, textarea, select {
