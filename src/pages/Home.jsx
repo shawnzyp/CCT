@@ -150,7 +150,7 @@ export default function Home() {
               >
                 <Sparkles className="h-4 w-4" />
                 NEW OPERATIVE
-                <ArrowRight className="h-3.5 w-3.5 ml-auto" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </Link>
           </div>
