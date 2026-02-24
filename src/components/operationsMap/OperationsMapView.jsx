@@ -5,7 +5,7 @@ import {
   OPERATIONAL_BOUNDS, OPERATIONAL_POLYGON,
   MAP_CENTER, MAP_INITIAL_ZOOM, MAP_MIN_ZOOM, MAP_MAX_ZOOM, MAP_STYLE,
   FACTION_COLORS,
-} from './mapConfig.js';
+} from './mapConfig';
 import { base44 } from '@/api/base44Client';
 
 const TYPE_EMOJI = {
