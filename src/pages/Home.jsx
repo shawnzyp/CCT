@@ -49,7 +49,7 @@ export default function Home() {
   const text0 = c.text0 || '#E6F1FF';
   const text1 = c.text1 || '#8EA0B5';
   const muted = c.muted || '#5F6E80';
-  const easing = [0.2, 0.8, 0.2, 1];
+  const easing = Array.isArray(m.easing) ? m.easing : [0.2, 0.8, 0.2, 1];
 
   const features = [
     { icon: Swords,     title: 'Combat',        desc: 'Track encounters',         link: currentCharacter ? `CharacterSheet?id=${currentCharacter.id}` : null, action: !currentCharacter ? () => setShowCharacterSelector(true) : null },
