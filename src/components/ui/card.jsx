@@ -1,49 +1,59 @@
 
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
-const Card = React.forwardRef(({ className, ...props }, ref) => (
+// CC-themed card using CSS vars
+const Card = React.forwardRef(({ className, style, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("rounded-lg sm:rounded-xl border bg-card text-card-foreground shadow", className)}
+    className={cn("rounded-lg border overflow-hidden relative", className)}
+    style={{
+      background: 'var(--cc-panel0, #1A1F26)',
+      borderColor: 'color-mix(in srgb, var(--cc-accent-a, #00E5FF) 20%, transparent)',
+      color: 'var(--cc-text0, #E6F1FF)',
+      ...style,
+    }}
     {...props} />
 ))
 Card.displayName = "Card"
 
-const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
+const CardHeader = React.forwardRef(({ className, style, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-3 sm:p-4 lg:p-6", className)}
+    className={cn("flex flex-col space-y-1.5 p-4", className)}
+    style={style}
     {...props} />
 ))
 CardHeader.displayName = "CardHeader"
 
-const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
+const CardTitle = React.forwardRef(({ className, style, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("font-semibold leading-none tracking-tight", className)}
+    className={cn("font-mono font-bold text-sm tracking-wide leading-none", className)}
+    style={{ color: 'var(--cc-text0, #E6F1FF)', ...style }}
     {...props} />
 ))
 CardTitle.displayName = "CardTitle"
 
-const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
+const CardDescription = React.forwardRef(({ className, style, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-xs font-mono", className)}
+    style={{ color: 'var(--cc-muted, #5F6E80)', ...style }}
     {...props} />
 ))
 CardDescription.displayName = "CardDescription"
 
 const CardContent = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-3 sm:p-4 lg:p-6 pt-0", className)} {...props} />
+  <div ref={ref} className={cn("p-4 pt-0", className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
-const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
+const CardFooter = React.forwardRef(({ className, style, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-3 sm:p-4 lg:p-6 pt-0", className)}
+    className={cn("flex items-center p-4 pt-0", className)}
+    style={style}
     {...props} />
 ))
 CardFooter.displayName = "CardFooter"
