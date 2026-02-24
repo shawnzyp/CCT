@@ -131,7 +131,7 @@ export default function BootSequence({ theme, onComplete, reducedMotion }) {
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 0.4, ease: m.easing }}
+          transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
           className="absolute top-0 left-0 right-0 h-px origin-left"
           style={{ background: colors.accentA }}
         />
