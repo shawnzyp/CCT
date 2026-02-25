@@ -8,6 +8,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor, FlaskConical, Radio } from "lucide-react";
 import AegisSettings from '@/components/aegis/AegisSettings';
+import SessionLinkPanel from '@/components/session/SessionLinkPanel';
+import EventInbox from '@/components/session/EventInbox';
+import PlayerSignalButton from '@/components/session/PlayerSignalButton';
 import VisualQA from '@/components/theme/VisualQA';
 import { toast } from "sonner";
 import { useSettings } from '@/components/utils/useSettings';
