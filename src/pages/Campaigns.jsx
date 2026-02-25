@@ -91,58 +91,91 @@ export default function Campaigns() {
             />
           </div>
         
-        {filteredCampaigns.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {filteredCampaigns.map((campaign, index) => {
-              const StatusIcon = STATUS_ICONS[campaign.status];
-              return (
-                <Link key={campaign.id} to={createPageUrl(`CampaignDetail?id=${campaign.id}`)}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all cursor-pointer group">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-white group-hover:text-violet-300 transition-colors">
+          {/* Campaigns Grid */}
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}>
+                <BookOpen className="h-8 w-8" style={{ color: accentA }} />
+              </motion.div>
+            </div>
+          ) : filteredCampaigns.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              {filteredCampaigns.map((campaign, index) => {
+                const StatusIcon = STATUS_ICONS[campaign.status];
+                const statusConfig = {
+                  active: { color: '#00D1B2', label: 'ACTIVE' },
+                  planning: { color: muted, label: 'PLANNING' },
+                  completed: { color: '#00B4D8', label: 'COMPLETED' },
+                  on_hold: { color: '#FFC857', label: 'ON HOLD' }
+                }[campaign.status] || { color: muted, label: campaign.status };
+                
+                return (
+                  <Link key={campaign.id} to={createPageUrl(`CampaignDetail?id=${campaign.id}`)}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05, duration: 0.3 }}
+                      whileHover={!settings.reducedMotion ? { y: -4, transition: { duration: 0.2 } } : {}}
+                      className="group"
+                    >
+                      <div
+                        className="rounded-lg border p-4 sm:p-5 cursor-pointer transition-all duration-200 h-full flex flex-col"
+                        style={{
+                          background: panel0,
+                          borderColor: `${accentA}20`,
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!settings.reducedMotion) {
+                            e.currentTarget.style.borderColor = `${accentA}60`;
+                            if (settings.glowEffects) e.currentTarget.style.boxShadow = `0 0 12px ${accentA}40`;
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = `${accentA}20`;
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      >
+                        {/* Header with name and status */}
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <h3 className="text-sm sm:text-base font-mono font-semibold flex-1 truncate group-hover:opacity-80 transition-opacity" style={{ color: text0 }}>
                             {campaign.name}
-                          </CardTitle>
-                          <Badge className={cn("text-xs", STATUS_COLORS[campaign.status])}>
-                            <StatusIcon className="h-3 w-3 mr-1" />
-                            {campaign.status.replace('_', ' ')}
-                          </Badge>
+                          </h3>
+                          <div className="flex items-center gap-1 px-2 py-1 rounded text-xs font-mono font-semibold flex-shrink-0" style={{ background: `${statusConfig.color}20`, color: statusConfig.color, border: `1px solid ${statusConfig.color}40` }}>
+                            <StatusIcon className="h-3 w-3" />
+                            <span>{statusConfig.label}</span>
+                          </div>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-slate-400 line-clamp-2 mb-3">
+                        
+                        {/* Description */}
+                        <p className="text-xs sm:text-sm line-clamp-2 mb-3 flex-grow" style={{ color: text1 }}>
                           {campaign.description || 'No description'}
                         </p>
-                        <div className="flex items-center gap-3 text-xs text-slate-500">
-                          <span>{campaign.journal_entries?.length || 0} entries</span>
+                        
+                        {/* Stats footer */}
+                        <div className="flex items-center gap-3 text-[10px] sm:text-xs font-mono" style={{ color: muted }}>
+                          <span>📔 {campaign.journal_entries?.length || 0}</span>
                           <span>•</span>
-                          <span>{campaign.world_events?.length || 0} events</span>
+                          <span>🌍 {campaign.world_events?.length || 0}</span>
                         </div>
-                      </CardContent>
-                      </Card>
-                      </motion.div>
-                      </Link>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <BookOpen className="h-16 w-16 text-slate-600 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-white mb-2">No Campaigns Yet</h2>
-            <p className="text-slate-400 mb-6">Create your first campaign to begin</p>
-            <Button onClick={() => setShowCreate(true)} className="bg-violet-600 hover:bg-violet-700">
-              <Plus className="h-4 w-4 mr-2" />
-              Create Campaign
-            </Button>
-          </div>
-        )}
+                      </div>
+                    </motion.div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <BookOpen className="h-12 w-12 mx-auto mb-4" style={{ color: muted, opacity: 0.5 }} />
+                <h2 className="text-lg sm:text-xl font-mono font-semibold mb-2" style={{ color: text0 }}>No Campaigns Yet</h2>
+                <p className="text-xs sm:text-sm mb-6 font-mono" style={{ color: text1 }}>Create your first campaign to begin</p>
+                <Button onClick={() => setShowCreate(true)} style={{ background: accentA, color: '#000' }} className="text-xs sm:text-sm font-semibold">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Campaign
+                </Button>
+              </motion.div>
+            </div>
+          )}
         </div>
       </PullToRefresh>
       {showCreate && <CreateCampaignDialog onClose={() => setShowCreate(false)} />}
