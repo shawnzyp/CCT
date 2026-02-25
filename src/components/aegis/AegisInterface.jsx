@@ -120,11 +120,24 @@ export default function AegisInterface() {
 
     const userMessage = input.trim();
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    const newMessages = [...messages, { role: 'user', content: userMessage }];
+    setMessages(newMessages);
     setLoading(true);
     play('navigate', 0.2);
 
     try {
+      // ── Action module detection ────────────────────────────────────────
+      const actionType = (settings.aegisActionModules !== false) ? detectAction(userMessage) : null;
+      if (actionType) {
+        const actionResult = await executeAction(actionType);
+        if (actionResult) {
+          setMessages(prev => [...prev, { role: 'assistant', content: actionResult, isAction: true }]);
+          setLoading(false);
+          play('success', 0.15);
+          return;
+        }
+      }
+
       // Check for spoiler content in query (for non-Director users)
       const queryLower = userMessage.toLowerCase();
       const containsSpoiler = !isDirector && SPOILER_KEYWORDS.some(keyword => queryLower.includes(keyword));
