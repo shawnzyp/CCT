@@ -11,6 +11,7 @@ import AegisSettings from '@/components/aegis/AegisSettings';
 import SessionLinkPanel from '@/components/session/SessionLinkPanel';
 import EventInbox from '@/components/session/EventInbox';
 import PlayerSignalButton from '@/components/session/PlayerSignalButton';
+import { usePresenceHeartbeat } from '@/components/utils/usePresenceHeartbeat';
 import VisualQA from '@/components/theme/VisualQA';
 import { toast } from "sonner";
 import { useSettings } from '@/components/utils/useSettings';
