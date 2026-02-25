@@ -58,33 +58,38 @@ export default function Campaigns() {
       
       <PullToRefresh onRefresh={handleRefresh} className="relative z-10">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white flex items-center gap-2 sm:gap-3">
-              <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-violet-500/20">
-                <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-violet-400" />
+          {/* Header */}
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2" style={{ color: text0 }}>
+                  <div className="p-1.5 rounded-lg flex items-center justify-center" style={{ background: `${accentA}20` }}>
+                    <BookOpen className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: accentA }} />
+                  </div>
+                  CAMPAIGNS
+                </h1>
+                <p className="text-xs sm:text-sm font-mono mt-1" style={{ color: muted }}>Manage your adventures and stories</p>
               </div>
-              Campaigns
-            </h1>
-            <p className="text-sm sm:text-base text-slate-400 mt-1">Manage your adventures and stories</p>
+              
+              <Button onClick={() => setShowCreate(true)} style={{ background: accentA, color: '#000' }} className="gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold w-full sm:w-auto">
+                <Plus className="h-4 w-4" />
+                <span>New Campaign</span>
+              </Button>
+            </div>
           </div>
           
-          <Button onClick={() => setShowCreate(true)} className="bg-violet-600 hover:bg-violet-700 gap-1.5 sm:gap-2 text-sm sm:text-base w-full sm:w-auto">
-            <Plus className="h-4 w-4" />
-            <span>New Campaign</span>
-          </Button>
-        </div>
-        
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-          <Input
-            placeholder="Search campaigns..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 bg-slate-800/50 border-slate-700 text-white"
-            autoFocus={false}
-          />
-        </div>
+          {/* Search */}
+          <div className="relative mb-6" style={{ opacity: 0.9 }}>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: muted }} />
+            <Input
+              placeholder="Search campaigns..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 text-xs sm:text-sm"
+              style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}
+              autoFocus={false}
+            />
+          </div>
         
         {filteredCampaigns.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
