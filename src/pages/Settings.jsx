@@ -28,6 +28,18 @@ export default function Settings() {
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [showQA, setShowQA] = useState(false);
+  const [linkedSession, setLinkedSession] = useState(null);
+  
+  // Initialize presence heartbeat
+  useEffect(() => {
+    const stored = localStorage.getItem('linkedSession');
+    if (stored) {
+      try {
+        setLinkedSession(JSON.parse(stored));
+      } catch {}
+    }
+  }, []);
+  usePresenceHeartbeat(linkedSession?.campaignId, linkedSession?.sessionId);
 
   const accentA = theme?.colors?.accentA || '#00E5FF';
   const panel0 = theme?.colors?.panel0 || '#1A1F26';
