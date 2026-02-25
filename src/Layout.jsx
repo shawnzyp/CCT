@@ -145,7 +145,7 @@ function LayoutComponent({ children }) {
 
   const bottomNavItems = [
     { label: 'Home', path: 'Home', icon: Home },
-    { label: 'Characters', path: 'CreateCharacter', icon: User },
+    { label: 'Characters', icon: User, action: 'characterSelector' },
     { label: 'Campaigns', path: 'Campaigns', icon: BookOpen },
     { label: 'Settings', path: 'Settings', icon: Settings },
   ];
