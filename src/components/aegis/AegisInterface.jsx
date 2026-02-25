@@ -21,7 +21,64 @@ const SPOILER_KEYWORDS = ['null protocol', 'morvox', 'silas vorr', 'director pei
 
 const CATALYST_CORE_RULEBOOK_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/62962428a_Catalyst_Core_Player_Guide.pdf";
 
+// ── ACTION COMMANDS ───────────────────────────────────────────────────────────
+// Simple pattern-based action detection for in-app actions
+const ACTION_PATTERNS = [
+  { regex: /\b(schedule|remind me|set a reminder)\b/i, type: 'schedule' },
+  { regex: /\b(generate report|show report|my stats)\b/i, type: 'report' },
+  { regex: /\b(what('s| is) my (hp|health|hit points))\b/i, type: 'character_hp' },
+  { regex: /\b(show my character|my character stats)\b/i, type: 'character_summary' },
+  { regex: /\b(campaign (status|summary)|active quests)\b/i, type: 'campaign_summary' },
+];
+
+function detectAction(text) {
+  for (const p of ACTION_PATTERNS) {
+    if (p.regex.test(text)) return p.type;
+  }
+  return null;
+}
+
+async function executeAction(type) {
+  try {
+    const character = localStorage.getItem('currentCharacter')
+      ? JSON.parse(localStorage.getItem('currentCharacter'))
+      : null;
+
+    if (type === 'character_hp' && character) {
+      const hp = character.current_hp ?? '?';
+      const max = character.max_hp ?? '?';
+      const pct = max && max !== '?' ? Math.round((hp / max) * 100) : '?';
+      return `STATUS: ${character.name}\nHP: ${hp} / ${max} (${pct}%)\nSP: ${character.current_sp ?? '?'} / ${character.max_sp ?? '?'}`;
+    }
+    if (type === 'character_summary' && character) {
+      return `OPERATIVE: ${character.name}\nTIER: ${character.tier ?? 0} | LEVEL: ${character.level ?? 1}\nHP: ${character.current_hp ?? '?'}/${character.max_hp ?? '?'} | CREDITS: ${character.credits ?? 0}\nCLASSIFICATION: ${character.classification ?? 'unknown'}`;
+    }
+    if (type === 'campaign_summary') {
+      const campaigns = await base44.entities.Campaign.list('-updated_date', 1);
+      if (campaigns.length === 0) return 'No active campaign found. Initialize one in Campaigns.';
+      const c = campaigns[0];
+      const quests = (c.quests || []).filter(q => q.status === 'active');
+      return `CAMPAIGN: ${c.name}\nSTATUS: ${c.status}\nACTIVE QUESTS: ${quests.length}\n${quests.slice(0,3).map(q => `  • ${q.title}`).join('\n')}`;
+    }
+    if (type === 'schedule') {
+      return `ACTION: Reminder functionality acknowledged.\nNOTE: In-session reminders can be set via Campaign > Session Log. For timed actions, use the Director Hub.`;
+    }
+    if (type === 'report') {
+      const character = localStorage.getItem('currentCharacter')
+        ? JSON.parse(localStorage.getItem('currentCharacter'))
+        : null;
+      if (!character) return 'No character selected. Select a character to generate a report.';
+      const stats = character.achievement_stats || {};
+      return `FIELD REPORT: ${character.name}\n---\nEnemies Defeated: ${stats.enemies_defeated ?? 0}\nCritical Hits: ${stats.critical_hits ?? 0}\nQuests Completed: ${stats.quests_completed ?? 0}\nDamage Dealt: ${stats.damage_dealt ?? 0}\nHealing Done: ${stats.healing_done ?? 0}\nSessions Played: ${stats.sessions_played ?? 0}`;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 export default function AegisInterface() {
+  const { settings } = useSettings();
   const [isDirector, setIsDirector] = useState(() => {
     return localStorage.getItem('isDM') === 'true';
   });
