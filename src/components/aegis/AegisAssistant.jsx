@@ -357,7 +357,7 @@ export default function AegisAssistant() {
           aria-label="Open A.E.G.I.S." className="rounded-[0px_16px_16px_0px] relative flex flex-col items-center justify-center gap-0.5"
 
           style={{
-            width: TAB_W,
+            width: TAB_W - 6,
             paddingTop: 10,
             paddingBottom: 10,
             minHeight: 72,
