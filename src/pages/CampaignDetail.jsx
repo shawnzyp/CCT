@@ -178,27 +178,27 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectTrigger className="text-xs sm:text-sm" style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}>
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
-              <SelectItem value="player">👤 Player Dashboard</SelectItem>
-              <SelectItem value="dashboard">📊 GM Dashboard</SelectItem>
-              <SelectItem value="log">💬 Session Log</SelectItem>
-              <SelectItem value="quests">📜 Quests</SelectItem>
-              <SelectItem value="arcs">🎯 Story Arcs</SelectItem>
-              <SelectItem value="journal">📖 Journal</SelectItem>
-              <SelectItem value="world">🗺️ World</SelectItem>
-              <SelectItem value="characters">👥 Characters</SelectItem>
-              <SelectItem value="events">🌍 World Events</SelectItem>
-              <SelectItem value="resources">📦 Shared Resources</SelectItem>
-              <SelectItem value="chat">💬 Chat</SelectItem>
-              <SelectItem value="aegis">🤖 A.E.G.I.S.</SelectItem>
-              <SelectItem value="adventure">📖 Adventure</SelectItem>
-              <SelectItem value="deck">🃏 Deck of Fates</SelectItem>
-              <SelectItem value="echo">📡 Echo Events</SelectItem>
-              <SelectItem value="gm-tools">🎲 GM Tools</SelectItem>
-              <SelectItem value="combat">⚔️ Combat</SelectItem>
-              <SelectItem value="compare">📊 Compare Characters</SelectItem>
-            </SelectContent>
-          </Select>
+                  <SelectItem value="player">Player</SelectItem>
+                <SelectItem value="dashboard">Dashboard</SelectItem>
+                <SelectItem value="log">Session Log</SelectItem>
+                <SelectItem value="quests">Quests</SelectItem>
+                <SelectItem value="arcs">Story Arcs</SelectItem>
+                <SelectItem value="journal">Journal</SelectItem>
+                <SelectItem value="world">World</SelectItem>
+                <SelectItem value="characters">Characters</SelectItem>
+                <SelectItem value="events">Events</SelectItem>
+                <SelectItem value="resources">Resources</SelectItem>
+                <SelectItem value="chat">Chat</SelectItem>
+                <SelectItem value="aegis">A.E.G.I.S.</SelectItem>
+                <SelectItem value="adventure">Adventure</SelectItem>
+                <SelectItem value="deck">Deck</SelectItem>
+                <SelectItem value="echo">Echo</SelectItem>
+                <SelectItem value="gm-tools">GM Tools</SelectItem>
+                <SelectItem value="combat">Combat</SelectItem>
+                <SelectItem value="compare">Compare</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           
           <TabsContent value="player">
             <PlayerDashboard campaign={campaign} currentCharacter={currentCharacter} />
