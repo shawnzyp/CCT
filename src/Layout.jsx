@@ -452,3 +452,11 @@ function LayoutComponent({ children }) {
     </TutorialProvider>
   );
 }
+
+export default function Layout({ children }) {
+  return (
+    <BootGate>
+      <LayoutComponent>{children}</LayoutComponent>
+    </BootGate>
+  );
+}
