@@ -495,47 +495,15 @@ export default function AegisAssistant() {
             </div>
           </div>
 
-          {/* Chat panel – only when CHAT_OPEN */}
-          <AnimatePresence>
-            {isChatOpen && (
-              <motion.div
-                key="chat"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex-1 flex flex-col overflow-hidden"
-                onClick={handleAegisInteraction}
-                onScroll={handleAegisInteraction}
-                onKeyDown={handleAegisInteraction}
-              >
-                {/* Chat header */}
-                <div
-                  className="flex items-center justify-between px-3 py-2 flex-shrink-0"
-                  style={{ borderBottom: '1px solid rgba(139,92,246,0.2)' }}
-                >
-                  <div>
-                    <div className="text-xs font-bold font-mono text-violet-300">A.E.G.I.S.</div>
-                    <div className="text-[9px] font-mono text-violet-500 uppercase tracking-widest">
-                      Adaptive Intelligence
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleCloseChat}
-                    aria-label="Close A.E.G.I.S. Chat"
-                    className="cc-sm-target h-7 w-7 min-h-0 min-w-0 flex items-center justify-center rounded-lg hover:bg-violet-500/20 transition-colors"
-                  >
-                    <X className="h-4 w-4 text-violet-300" />
-                  </button>
-                </div>
-
-                {/* Chat interface */}
-                <div className="flex-1 overflow-hidden">
-                  <AegisInterface compact />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Chat interface */}
+          <div
+            className="flex-1 overflow-hidden"
+            onClick={handleAegisInteraction}
+            onScroll={handleAegisInteraction}
+            onKeyDown={handleAegisInteraction}
+          >
+            <AegisInterface compact />
+          </div>
         </div>
       </motion.div>
 
