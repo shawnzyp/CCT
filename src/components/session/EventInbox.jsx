@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, CheckCircle2, Mail, Zap, MapPin, Clock } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Mail, Zap, MapPin, Clock, Radio } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 
