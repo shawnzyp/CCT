@@ -1,465 +1,436 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor, FlaskConical, Radio, Shield } from "lucide-react";
-import AegisSettings from '@/components/aegis/AegisSettings';
-import SessionLinkPanel from '@/components/session/SessionLinkPanel';
-import EventInbox from '@/components/session/EventInbox';
-import PlayerSignalButton from '@/components/session/PlayerSignalButton';
-import { usePresenceHeartbeat } from '@/components/utils/usePresenceHeartbeat';
-import VisualQA from '@/components/theme/VisualQA';
-import { toast } from "sonner";
+import React, { useState } from 'react';
 import { useSettings } from '@/components/utils/useSettings';
-import useSoundEffects from '@/components/sounds/useSoundEffects';
 import { base44 } from '@/api/base44Client';
-import ThemeSwitcher from '@/components/theme/ThemeSwitcher';
-import { useTheme } from '@/components/theme/useTheme';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Slider } from '@/components/ui/slider';
+import { Volume2, Zap, Shield, Palette, Music, Settings, Code, Trash2, RotateCcw } from 'lucide-react';
+import { toast } from 'sonner';
+import useSoundEffects from '@/components/sounds/useSoundEffects';
 
-export default function Settings() {
-  const { settings, updateSettings } = useSettings();
-  const { play } = useSoundEffects();
-  const { theme } = useTheme();
-  const isDM = localStorage.getItem('isDM') === 'true';
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteConfirmText, setDeleteConfirmText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showQA, setShowQA] = useState(false);
-  const [linkedSession, setLinkedSession] = useState(null);
-  
-  // Initialize presence heartbeat
-  useEffect(() => {
-    const stored = localStorage.getItem('linkedSession');
-    if (stored) {
-      try {
-        setLinkedSession(JSON.parse(stored));
-      } catch {}
-    }
-  }, []);
-  usePresenceHeartbeat(linkedSession?.campaignId, linkedSession?.sessionId);
-  
-  const handleGlitchChange = (value) => {
-    const newSettings = { ...settings, glitchIntensity: value };
-    updateSettings(newSettings);
-  };
-
-  const accentA = theme?.colors?.accentA || '#00E5FF';
-  const panel0 = theme?.colors?.panel0 || '#1A1F26';
-
-  const updateSetting = (key, value) => {
-    updateSettings({ [key]: value });
-    toast.success('Setting updated', { duration: 1000 });
-  };
-  
-  const testSound = () => {
-    play('click');
-  };
-
-  const handleDeleteAccount = async () => {
-    if (deleteConfirmText !== 'DELETE') {
-      toast.error('Type DELETE to confirm');
-      return;
-    }
-    setIsDeleting(true);
-    try {
-      // Clear all local data
-      localStorage.clear();
-      // Log out
-      await base44.auth.logout('/');
-      toast.success('Account deleted');
-    } catch (error) {
-      toast.error('Failed to delete account. Contact support.');
-    }
-    setIsDeleting(false);
-  };
-
+function SettingRow({ label, description, children, variant = 'default' }) {
   return (
-    <div className="min-h-screen p-4 sm:p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 font-mono tracking-wider"
-            style={{ color: theme?.colors?.text0 || '#E6F1FF' }}>
-            <SettingsIcon className="h-7 w-7" style={{ color: accentA }} />
-            SYSTEM SETTINGS
-          </h1>
-          <p className="mt-1 text-sm font-mono" style={{ color: theme?.colors?.muted || '#5F6E80' }}>
-            Customize your Catalyst Core field interface
-          </p>
-        </div>
-
-        {/* Faction Theme */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: accentA + '30' }}>
-          <div className="px-4 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: accentA + '20' }}>
-            <Palette className="h-4 w-4" style={{ color: accentA }} />
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>Faction Theme</span>
-          </div>
-          <div className="p-4">
-            <ThemeSwitcher />
-          </div>
-        </div>
-
-        {/* Boot Sequence */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: accentA + '30' }}>
-          <div className="px-4 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: accentA + '20' }}>
-            <Monitor className="h-4 w-4" style={{ color: accentA }} />
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>Boot Sequence</span>
-          </div>
-          <div className="p-4 space-y-3">
-            <div className="flex items-center justify-between py-2">
-              <div>
-                <div className="text-sm font-medium" style={{ color: theme?.colors?.text0 }}>Startup Boot Sequence</div>
-                <div className="text-xs mt-0.5" style={{ color: theme?.colors?.muted }}>Show faction boot screen on startup</div>
-              </div>
-              <Switch
-                checked={settings.bootEnabled !== false}
-                onCheckedChange={(v) => updateSetting('bootEnabled', v)}
-              />
-            </div>
-            {settings.bootEnabled !== false && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  sessionStorage.removeItem('bootShown');
-                  window.location.reload();
-                }}
-                className="text-xs"
-                style={{ borderColor: accentA + '50', color: accentA, background: 'transparent' }}
-              >
-                Preview Boot Sequence
-              </Button>
-            )}
-          </div>
-        </div>
-
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: accentA + '30' }}>
-          <div className="px-4 py-3 border-b"
-            style={{ borderColor: accentA + '20' }}>
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>🎨 Visual Settings</span>
-          </div>
-          <div className="p-4 space-y-4">
-                <SettingRow label="Font Size" desc="UI text scale">
-                  <Select value={settings.fontSize} onValueChange={(v) => updateSetting('fontSize', v)}>
-                    <SelectTrigger className="w-36 text-xs" style={{ background: theme?.colors?.bg0, borderColor: accentA + '40', color: theme?.colors?.text0 }}>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="small">Small</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="large">Large</SelectItem>
-                      <SelectItem value="xlarge">Extra Large</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </SettingRow>
-                <SettingRow label="Colorblind Mode" desc="Accessibility filter">
-                  <Select value={settings.colorblindMode} onValueChange={(v) => updateSetting('colorblindMode', v)}>
-                    <SelectTrigger className="w-36 text-xs" style={{ background: theme?.colors?.bg0, borderColor: accentA + '40', color: theme?.colors?.text0 }}>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">None</SelectItem>
-                      <SelectItem value="protanopia">Protanopia</SelectItem>
-                      <SelectItem value="deuteranopia">Deuteranopia</SelectItem>
-                      <SelectItem value="tritanopia">Tritanopia</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </SettingRow>
-                <SettingRow label="Animations" desc="Page transitions and UI motion">
-                  <Switch checked={settings.animationsEnabled} onCheckedChange={(v) => updateSetting('animationsEnabled', v)} />
-                </SettingRow>
-                <SettingRow label="Particle Effects" desc="Background grid and particle FX">
-                  <Switch checked={settings.particleEffects} onCheckedChange={(v) => updateSetting('particleEffects', v)} />
-                </SettingRow>
-                <SettingRow label="High Contrast" desc="Increase text/background contrast">
-                  <Switch checked={settings.highContrast} onCheckedChange={(v) => updateSetting('highContrast', v)} />
-                </SettingRow>
-                <SettingRow label="Reduced Motion" desc="Minimize all animations">
-                  <Switch checked={settings.reducedMotion} onCheckedChange={(v) => updateSetting('reducedMotion', v)} />
-                </SettingRow>
-                <SettingRow label="Scanline Effect" desc="CRT scanline overlay">
-                  <Switch checked={settings.scanlineEffect} onCheckedChange={(v) => updateSetting('scanlineEffect', v)} />
-                </SettingRow>
-                <SettingRow label="Glow Effects" desc="Accent glow on active elements">
-                  <Switch checked={settings.glowEffects} onCheckedChange={(v) => updateSetting('glowEffects', v)} />
-                </SettingRow>
-          </div>
-        </div>
-
-        {/* Audio */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: accentA + '30' }}>
-          <div className="px-4 py-3 border-b" style={{ borderColor: accentA + '20' }}>
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>🔊 Audio Settings</span>
-          </div>
-          <div className="p-4 space-y-3">
-            <SettingRow label="Sound Effects" desc="Combat and action sounds">
-              <Switch checked={settings.soundEffects} onCheckedChange={(v) => updateSetting('soundEffects', v)} />
-            </SettingRow>
-            {settings.soundEffects && (
-              <div className="pl-4 border-l-2 space-y-2" style={{ borderColor: accentA + '60' }}>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono" style={{ color: theme?.colors?.text1 }}>SFX Volume: {settings.sfxVolume}%</span>
-                  <button onClick={testSound} className="text-xs px-2 py-1 rounded border" style={{ color: accentA, borderColor: accentA + '50' }}>
-                    <Play className="h-3 w-3" />
-                  </button>
-                </div>
-                <Slider value={[settings.sfxVolume]} onValueChange={([v]) => updateSetting('sfxVolume', v)} max={100} step={5} />
-              </div>
-            )}
-            <SettingRow label="UI Sounds" desc="Button clicks and navigation">
-              <Switch checked={settings.uiSounds} onCheckedChange={(v) => updateSetting('uiSounds', v)} />
-            </SettingRow>
-            {settings.uiSounds && (
-              <div className="pl-4 border-l-2 space-y-2" style={{ borderColor: accentA + '60' }}>
-                <span className="text-xs font-mono" style={{ color: theme?.colors?.text1 }}>UI Volume: {settings.uiVolume}%</span>
-                <Slider value={[settings.uiVolume]} onValueChange={([v]) => updateSetting('uiVolume', v)} max={100} step={5} />
-              </div>
-            )}
-            <SettingRow label="Background Music" desc="Ambient soundtrack">
-              <Switch checked={settings.backgroundMusic} onCheckedChange={(v) => updateSetting('backgroundMusic', v)} />
-            </SettingRow>
-            {settings.backgroundMusic && (
-              <div className="pl-4 border-l-2 space-y-2" style={{ borderColor: accentA + '60' }}>
-                <span className="text-xs font-mono" style={{ color: theme?.colors?.text1 }}>Music Volume: {settings.musicVolume}%</span>
-                <Slider value={[settings.musicVolume]} onValueChange={([v]) => updateSetting('musicVolume', v)} max={100} step={5} />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Gameplay */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: accentA + '30' }}>
-          <div className="px-4 py-3 border-b" style={{ borderColor: accentA + '20' }}>
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>🎮 Gameplay Settings</span>
-          </div>
-          <div className="p-4 space-y-3">
-            <SettingRow label="Auto-Calculate Modifiers" desc="Add skill and stat bonuses automatically">
-              <Switch checked={settings.autoCalculateModifiers} onCheckedChange={(v) => updateSetting('autoCalculateModifiers', v)} />
-            </SettingRow>
-            <SettingRow label="Auto-Save" desc="Save character progress automatically">
-              <Switch checked={settings.autoSave} onCheckedChange={(v) => updateSetting('autoSave', v)} />
-            </SettingRow>
-            {settings.autoSave && (
-              <div className="pl-4 border-l-2" style={{ borderColor: accentA + '60' }}>
-                <Select value={settings.autoSaveInterval.toString()} onValueChange={(v) => updateSetting('autoSaveInterval', parseInt(v))}>
-                  <SelectTrigger className="w-40 text-xs" style={{ background: theme?.colors?.bg0, borderColor: accentA + '40', color: theme?.colors?.text0 }}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">Every 1 min</SelectItem>
-                    <SelectItem value="3">Every 3 min</SelectItem>
-                    <SelectItem value="5">Every 5 min</SelectItem>
-                    <SelectItem value="10">Every 10 min</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            <SettingRow label="Show Tutorials" desc="Helpful tooltips and guides">
-              <Switch checked={settings.showTutorials} onCheckedChange={(v) => updateSetting('showTutorials', v)} />
-            </SettingRow>
-            <SettingRow label="Confirm Dangerous Actions" desc="Require confirmation for deletions">
-              <Switch checked={settings.confirmDangerousActions} onCheckedChange={(v) => updateSetting('confirmDangerousActions', v)} />
-            </SettingRow>
-            <SettingRow label="Dice Roll Animations" desc="Animated dice effects">
-              <Switch checked={settings.showDiceAnimations} onCheckedChange={(v) => updateSetting('showDiceAnimations', v)} />
-            </SettingRow>
-            <SettingRow label="Critical Hit Effects" desc="Special FX for critical hits">
-              <Switch checked={settings.criticalHitEffects} onCheckedChange={(v) => updateSetting('criticalHitEffects', v)} />
-            </SettingRow>
-            <SettingRow label="Floating Damage Numbers" desc="Animated damage display">
-              <Switch checked={settings.damageNumbersFloat} onCheckedChange={(v) => updateSetting('damageNumbersFloat', v)} />
-            </SettingRow>
-            <SettingRow label="Initiative Reminders" desc="Notify when it's your turn">
-              <Switch checked={settings.initiativeReminders} onCheckedChange={(v) => updateSetting('initiativeReminders', v)} />
-            </SettingRow>
-            <SettingRow label="Auto-Roll Initiative" desc="Roll initiative automatically">
-              <Switch checked={settings.autoRollInitiative} onCheckedChange={(v) => updateSetting('autoRollInitiative', v)} />
-            </SettingRow>
-            <SettingRow label="Compact Mode" desc="Reduced spacing and padding">
-              <Switch checked={settings.compactMode} onCheckedChange={(v) => updateSetting('compactMode', v)} />
-            </SettingRow>
-            <SettingRow label="Show Grid Lines" desc="Tactical grid on combat map">
-              <Switch checked={settings.showGridLines} onCheckedChange={(v) => updateSetting('showGridLines', v)} />
-            </SettingRow>
-          </div>
-        </div>
-
-        {/* Account Security */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: (theme?.colors?.danger || '#FF3B3B') + '40' }}>
-          <div className="px-4 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: (theme?.colors?.danger || '#FF3B3B') + '30' }}>
-            <ShieldAlert className="h-4 w-4" style={{ color: theme?.colors?.danger || '#FF3B3B' }} />
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>Account Security</span>
-          </div>
-          <div className="p-4">
-            <SettingRow label="Delete Account" desc="Permanently delete account and all data">
-              <button
-                onClick={() => setShowDeleteModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border"
-                style={{ color: theme?.colors?.danger || '#FF3B3B', borderColor: (theme?.colors?.danger || '#FF3B3B') + '60', background: 'transparent' }}
-              >
-                <Trash2 className="h-3.5 w-3.5" /> Delete
-              </button>
-            </SettingRow>
-          </div>
-        </div>
-
-        {/* Session Link Status */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: 'rgba(139,92,246,0.3)' }}>
-          <div className="px-4 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: 'rgba(139,92,246,0.2)' }}>
-            <Radio className="h-4 w-4" style={{ color: '#a78bfa' }} />
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>Session Connection</span>
-          </div>
-          <div className="p-4 space-y-4">
-            <SessionLinkPanel />
-            <div className="pt-3 border-t border-slate-700">
-              <div className="text-xs font-mono uppercase text-slate-400 mb-3">Event Inbox</div>
-              <EventInbox />
-            </div>
-            <div className="pt-3 border-t border-slate-700">
-              <PlayerSignalButton />
-            </div>
-          </div>
-        </div>
-
-        {/* A.E.G.I.S. Settings */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: 'rgba(139,92,246,0.3)' }}>
-          <div className="px-4 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: 'rgba(139,92,246,0.2)' }}>
-            <Radio className="h-4 w-4" style={{ color: '#a78bfa' }} />
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>A.E.G.I.S. Configuration</span>
-          </div>
-          <div className="p-4">
-            <AegisSettings />
-          </div>
-        </div>
-
-        {/* Director Boot Settings */}
-        {isDM && (
-          <div className="rounded-xl border mb-4 overflow-hidden"
-            style={{ background: panel0, borderColor: accentA + '30' }}>
-            <div className="px-4 py-3 border-b flex items-center gap-2"
-              style={{ borderColor: accentA + '20' }}>
-              <Shield className="h-4 w-4" style={{ color: accentA }} />
-              <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-                style={{ color: theme?.colors?.text0 }}>Biometric Boot Settings</span>
-            </div>
-            <div className="p-4 space-y-3">
-              <SettingRow label="Biometric Glitch Intensity" desc="Visual glitch intensity during scan (0-1)">
-                <Slider
-                  value={[settings.glitchIntensity || 0.3]}
-                  onValueChange={(v) => handleGlitchChange(v[0])}
-                  min={0}
-                  max={1}
-                  step={0.1}
-                  className="w-40"
-                />
-              </SettingRow>
-            </div>
-          </div>
-        )}
-
-        {/* Visual QA Toggle */}
-        <div className="rounded-xl border mb-4 overflow-hidden"
-          style={{ background: panel0, borderColor: (theme?.colors?.accentB || '#5CCFFF') + '30' }}>
-          <div className="px-4 py-3 border-b flex items-center gap-2"
-            style={{ borderColor: (theme?.colors?.accentB || '#5CCFFF') + '20' }}>
-            <FlaskConical className="h-4 w-4" style={{ color: theme?.colors?.accentB || '#5CCFFF' }} />
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
-              style={{ color: theme?.colors?.text0 }}>Developer</span>
-          </div>
-          <div className="p-4">
-            <SettingRow label="Visual QA Mode" desc="Highlight layout bounds and token values">
-              <Switch checked={showQA} onCheckedChange={setShowQA} />
-            </SettingRow>
-          </div>
-        </div>
-
-        <div className="mt-4 p-3 rounded-lg border text-center"
-          style={{ borderColor: accentA + '25', background: accentA + '08' }}>
-          <p className="text-xs font-mono" style={{ color: theme?.colors?.muted }}>
-            SETTINGS AUTO-SAVED // FIELD CONFIG PERSISTENT
-          </p>
-        </div>
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-cyan-900/20 last:border-0">
+      <div className="flex-1">
+        <div className="font-mono text-sm font-semibold text-cyan-100">{label}</div>
+        {description && <div className="text-xs mt-1 opacity-70 font-mono">{description}</div>}
       </div>
-
-      {showQA && <VisualQA onClose={() => setShowQA(false)} />}
-
-      {/* Delete Confirmation */}
-      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-        <DialogContent className="max-w-md" style={{ background: panel0, borderColor: (theme?.colors?.danger || '#FF3B3B') + '60' }}>
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2" style={{ color: theme?.colors?.danger || '#FF3B3B' }}>
-              <AlertTriangle className="h-5 w-5" />
-              Delete Account
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="p-3 rounded-lg border" style={{ borderColor: (theme?.colors?.danger || '#FF3B3B') + '40', background: (theme?.colors?.danger || '#FF3B3B') + '10' }}>
-              <p className="text-sm" style={{ color: theme?.colors?.text1 }}>
-                This will permanently delete your account and <strong style={{ color: theme?.colors?.danger }}>all associated data</strong> including characters, campaigns, and settings. This action <strong style={{ color: theme?.colors?.danger }}>cannot be undone</strong>.
-              </p>
-            </div>
-            <div>
-              <Label className="text-xs" style={{ color: theme?.colors?.muted }}>
-                Type <strong style={{ color: theme?.colors?.danger }}>DELETE</strong> to confirm
-              </Label>
-              <Input
-                value={deleteConfirmText}
-                onChange={(e) => setDeleteConfirmText(e.target.value)}
-                placeholder="Type DELETE here"
-                className="mt-1"
-                style={{ background: theme?.colors?.bg0, borderColor: (theme?.colors?.danger || '#FF3B3B') + '40', color: theme?.colors?.text0 }}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => { setShowDeleteModal(false); setDeleteConfirmText(''); }} className="flex-1">
-                Cancel
-              </Button>
-              <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleteConfirmText !== 'DELETE' || isDeleting} className="flex-1">
-                {isDeleting ? 'Deleting...' : 'Delete Account'}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <div className="flex-shrink-0">{children}</div>
     </div>
   );
 }
 
-// Shared row component
-function SettingRow({ label, desc, children }) {
-  const { theme } = useTheme();
+export default function Settings() {
+  const { settings, updateSetting, updateSettings, reset } = useSettings();
+  const { play } = useSoundEffects();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+
+  const handleSoundTest = (type) => {
+    if (type === 'sfx' && settings.sfxEnabled) {
+      play?.('attack');
+    } else if (type === 'ui' && settings.uiSoundsEnabled) {
+      play?.('click');
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText.toLowerCase() !== 'delete my account') return;
+    
+    try {
+      // Clear local data
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Logout
+      await base44.auth.logout('/');
+      toast.success('Account deletion initiated');
+    } catch (err) {
+      toast.error('Failed to delete account');
+    }
+  };
+
+  const resetCategory = (category) => {
+    reset(category);
+    toast.success(`${category} settings reset to defaults`);
+    play?.('ui_confirm');
+  };
+
   return (
-    <div className="flex items-center justify-between py-2.5 border-b last:border-b-0"
-      style={{ borderColor: (theme?.colors?.accentA || '#00E5FF') + '12' }}>
-      <div>
-        <div className="text-sm font-medium" style={{ color: theme?.colors?.text0 || '#E6F1FF' }}>{label}</div>
-        {desc && <div className="text-xs mt-0.5" style={{ color: theme?.colors?.muted || '#5F6E80' }}>{desc}</div>}
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 to-black p-4 sm:p-6">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-cyan-100 flex items-center gap-2">
+            <Settings className="w-6 h-6" />
+            SETTINGS
+          </h1>
+          <p className="text-xs font-mono text-cyan-900/70 mt-1">Configure your experience</p>
+        </div>
+
+        <Tabs defaultValue="visual" className="space-y-6">
+          <TabsList className="grid grid-cols-4 gap-2 bg-slate-900/50 border border-cyan-900/30 p-1">
+            <TabsTrigger value="visual" className="text-xs">Visual</TabsTrigger>
+            <TabsTrigger value="audio" className="text-xs">Audio</TabsTrigger>
+            <TabsTrigger value="gameplay" className="text-xs">Gameplay</TabsTrigger>
+            <TabsTrigger value="account" className="text-xs">Account</TabsTrigger>
+          </TabsList>
+
+          {/* ── VISUAL SETTINGS ── */}
+          <TabsContent value="visual" className="space-y-4">
+            <div className="rounded-lg border border-cyan-900/30 bg-slate-900/50 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-cyan-100 flex items-center gap-2">
+                  <Palette className="w-4 h-4" /> Visual
+                </h2>
+                <Button variant="outline" size="sm" onClick={() => resetCategory('Visual')}>
+                  <RotateCcw className="w-3 h-3 mr-1" /> Reset
+                </Button>
+              </div>
+
+              <SettingRow label="Font Size" description="Scale all text and UI elements">
+                <Select value={settings.fontSize} onValueChange={(v) => updateSetting('fontSize', v)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="small">Small</SelectItem>
+                    <SelectItem value="medium">Default</SelectItem>
+                    <SelectItem value="large">Large</SelectItem>
+                    <SelectItem value="xlarge">X-Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingRow>
+
+              <SettingRow label="High Contrast" description="Increase border and text contrast">
+                <Switch
+                  checked={settings.highContrast}
+                  onCheckedChange={(v) => updateSetting('highContrast', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Reduced Motion" description="Disable heavy animations">
+                <Switch
+                  checked={settings.reducedMotion}
+                  onCheckedChange={(v) => updateSetting('reducedMotion', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Particle Effects" description="Show background grid and effects">
+                <Switch
+                  checked={settings.particleEffects}
+                  onCheckedChange={(v) => updateSetting('particleEffects', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Scanline Effect" description="CRT scanline overlay">
+                <Switch
+                  checked={settings.scanlineEffect}
+                  onCheckedChange={(v) => updateSetting('scanlineEffect', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Glow Effects" description="Accent glow on active elements">
+                <Switch
+                  checked={settings.glowEffects}
+                  onCheckedChange={(v) => updateSetting('glowEffects', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Animations" description="Page transitions and UI motion">
+                <Switch
+                  checked={settings.animationsEnabled}
+                  onCheckedChange={(v) => updateSetting('animationsEnabled', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Compact Mode" description="Reduce padding and spacing">
+                <Switch
+                  checked={settings.compactMode}
+                  onCheckedChange={(v) => updateSetting('compactMode', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Colorblind Mode" description="Adjust colors for accessibility">
+                <Select value={settings.colorblindMode} onValueChange={(v) => updateSetting('colorblindMode', v)}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    <SelectItem value="protanopia">Protanopia (Red-Blind)</SelectItem>
+                    <SelectItem value="deuteranopia">Deuteranopia (Green-Blind)</SelectItem>
+                    <SelectItem value="tritanopia">Tritanopia (Blue-Blind)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingRow>
+            </div>
+          </TabsContent>
+
+          {/* ── AUDIO SETTINGS ── */}
+          <TabsContent value="audio" className="space-y-4">
+            <div className="rounded-lg border border-cyan-900/30 bg-slate-900/50 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-cyan-100 flex items-center gap-2">
+                  <Music className="w-4 h-4" /> Audio
+                </h2>
+                <Button variant="outline" size="sm" onClick={() => resetCategory('Audio')}>
+                  <RotateCcw className="w-3 h-3 mr-1" /> Reset
+                </Button>
+              </div>
+
+              <SettingRow label="Master Mute">
+                <Switch
+                  checked={settings.masterMute}
+                  onCheckedChange={(v) => updateSetting('masterMute', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Sound Effects">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={settings.sfxEnabled}
+                    onCheckedChange={(v) => updateSetting('sfxEnabled', v)}
+                    disabled={settings.masterMute}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleSoundTest('sfx')}
+                    disabled={settings.masterMute}
+                  >
+                    Test
+                  </Button>
+                </div>
+              </SettingRow>
+
+              <SettingRow label="SFX Volume" description={`${settings.sfxVolume}%`}>
+                <Slider
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[settings.sfxVolume]}
+                  onValueChange={(v) => updateSetting('sfxVolume', v[0])}
+                  disabled={settings.masterMute || !settings.sfxEnabled}
+                  className="w-32"
+                />
+              </SettingRow>
+
+              <SettingRow label="UI Sounds">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={settings.uiSoundsEnabled}
+                    onCheckedChange={(v) => updateSetting('uiSoundsEnabled', v)}
+                    disabled={settings.masterMute}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleSoundTest('ui')}
+                    disabled={settings.masterMute}
+                  >
+                    Test
+                  </Button>
+                </div>
+              </SettingRow>
+
+              <SettingRow label="UI Volume" description={`${settings.uiSoundsVolume}%`}>
+                <Slider
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[settings.uiSoundsVolume]}
+                  onValueChange={(v) => updateSetting('uiSoundsVolume', v[0])}
+                  disabled={settings.masterMute || !settings.uiSoundsEnabled}
+                  className="w-32"
+                />
+              </SettingRow>
+
+              <SettingRow label="Background Music">
+                <Switch
+                  checked={settings.musicEnabled}
+                  onCheckedChange={(v) => updateSetting('musicEnabled', v)}
+                  disabled={settings.masterMute}
+                />
+              </SettingRow>
+
+              <SettingRow label="Music Volume" description={`${settings.musicVolume}%`}>
+                <Slider
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[settings.musicVolume]}
+                  onValueChange={(v) => updateSetting('musicVolume', v[0])}
+                  disabled={settings.masterMute || !settings.musicEnabled}
+                  className="w-32"
+                />
+              </SettingRow>
+            </div>
+          </TabsContent>
+
+          {/* ── GAMEPLAY SETTINGS ── */}
+          <TabsContent value="gameplay" className="space-y-4">
+            <div className="rounded-lg border border-cyan-900/30 bg-slate-900/50 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-cyan-100 flex items-center gap-2">
+                  <Zap className="w-4 h-4" /> Gameplay
+                </h2>
+                <Button variant="outline" size="sm" onClick={() => resetCategory('Gameplay')}>
+                  <RotateCcw className="w-3 h-3 mr-1" /> Reset
+                </Button>
+              </div>
+
+              <SettingRow label="Auto-Calculate Modifiers" description="Automatically derive from ability scores">
+                <Switch
+                  checked={settings.autoCalculateModifiers}
+                  onCheckedChange={(v) => updateSetting('autoCalculateModifiers', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Auto-Save" description="Periodically save progress">
+                <Switch
+                  checked={settings.autoSaveEnabled}
+                  onCheckedChange={(v) => updateSetting('autoSaveEnabled', v)}
+                />
+              </SettingRow>
+
+              {settings.autoSaveEnabled && (
+                <SettingRow label="Auto-Save Interval" description="How often to save">
+                  <Select value={String(settings.autoSaveInterval)} onValueChange={(v) => updateSetting('autoSaveInterval', parseInt(v))}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 minute</SelectItem>
+                      <SelectItem value="3">3 minutes</SelectItem>
+                      <SelectItem value="5">5 minutes</SelectItem>
+                      <SelectItem value="10">10 minutes</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </SettingRow>
+              )}
+
+              <SettingRow label="Show Tutorials" description="Display tutorial tooltips">
+                <Switch
+                  checked={settings.showTutorials}
+                  onCheckedChange={(v) => updateSetting('showTutorials', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Confirm Dangerous Actions" description="Require confirmation for deletes">
+                <Switch
+                  checked={settings.confirmDangerousActions}
+                  onCheckedChange={(v) => updateSetting('confirmDangerousActions', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Dice Animations" description="Animate dice rolls">
+                <Switch
+                  checked={settings.diceAnimations}
+                  onCheckedChange={(v) => updateSetting('diceAnimations', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Critical Hit Effects" description="Visual effects on crits">
+                <Switch
+                  checked={settings.criticalHitEffects}
+                  onCheckedChange={(v) => updateSetting('criticalHitEffects', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Floating Damage Numbers" description="Animated damage display">
+                <Switch
+                  checked={settings.floatingDamageNumbers}
+                  onCheckedChange={(v) => updateSetting('floatingDamageNumbers', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Initiative Reminders" description="Notify when it's your turn">
+                <Switch
+                  checked={settings.initiativeReminders}
+                  onCheckedChange={(v) => updateSetting('initiativeReminders', v)}
+                />
+              </SettingRow>
+
+              <SettingRow label="Auto-Roll Initiative">
+                <span className="text-xs opacity-50 font-mono">Coming Soon</span>
+              </SettingRow>
+
+              <SettingRow label="Show Grid Lines">
+                <span className="text-xs opacity-50 font-mono">Coming Soon (Combat Map)</span>
+              </SettingRow>
+            </div>
+          </TabsContent>
+
+          {/* ── ACCOUNT ── */}
+          <TabsContent value="account" className="space-y-4">
+            <div className="rounded-lg border border-red-900/30 bg-slate-900/50 p-4 space-y-3">
+              <h2 className="text-sm font-semibold text-red-300 flex items-center gap-2">
+                <Shield className="w-4 h-4" /> Danger Zone
+              </h2>
+
+              <SettingRow label="Delete Account" description="Permanently delete all data">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setShowDeleteDialog(true)}
+                >
+                  <Trash2 className="w-3 h-3 mr-1" /> Delete
+                </Button>
+              </SettingRow>
+            </div>
+
+            {/* Diagnostics */}
+            <div className="rounded-lg border border-cyan-900/30 bg-slate-900/50 p-4 space-y-3">
+              <h2 className="text-sm font-semibold text-cyan-100 flex items-center gap-2">
+                <Code className="w-4 h-4" /> Diagnostics
+              </h2>
+              <div className="text-xs font-mono space-y-1 opacity-70">
+                <div>Storage: localStorage</div>
+                <div>Last Saved: {settings._lastSaved ? new Date(settings._lastSaved).toLocaleString() : 'Never'}</div>
+                <div>Version: {settings._version}</div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
-      <div className="flex-shrink-0 ml-4">{children}</div>
+
+      {/* Delete Account Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Account</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. All characters, settings, and data will be permanently deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="py-4">
+            <label className="text-sm font-mono text-cyan-100">
+              Type "delete my account" to confirm:
+            </label>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              className="w-full mt-2 px-3 py-2 rounded border border-cyan-900/30 bg-slate-900 text-cyan-100 font-mono text-sm focus:outline-none focus:border-cyan-500"
+              placeholder="delete my account"
+            />
+          </div>
+          <div className="flex gap-3 justify-end">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              disabled={deleteConfirmText.toLowerCase() !== 'delete my account'}
+              className="bg-red-900 hover:bg-red-800"
+            >
+              Delete
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
