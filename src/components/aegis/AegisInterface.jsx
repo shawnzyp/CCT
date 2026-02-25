@@ -222,6 +222,27 @@ Answer with ONLY "yes" or "no".`,
 
       // If game-related, process with full rulebook context and behavioral instructions
       const clearanceLevel = isDirector ? "DIRECTOR" : "PLAYER";
+
+      // Build conversation history context
+      const useHistory = settings.aegisConversationHistory !== false;
+      const historyContext = useHistory
+        ? newMessages
+            .slice(-8) // last 8 messages for context window efficiency
+            .slice(0, -1) // exclude the current user message (it's appended below)
+            .map(m => `${m.role === 'user' ? 'OPERATIVE' : 'A.E.G.I.S.'}: ${m.content}`)
+            .join('\n')
+        : '';
+
+      // Tone modifier based on communication style
+      const style = settings.aegisCommunicationStyle || 'tactical';
+      const stylePart = style === 'tactical'
+        ? 'Prefer 1 to 5 short lines. Terse. Minimal.'
+        : style === 'balanced'
+        ? 'Prefer 3 to 8 lines. Clear and direct without excessive brevity.'
+        : 'Prefer detailed explanations. Up to 15 lines. Include examples when useful.';
+
+      // Focus filter
+      const focusList = (settings.aegisAreasOfFocus || ['rules', 'combat', 'lore']).join(', ');
       
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are A.E.G.I.S. (Adaptive Executive Governance & Intelligence System). You provide operationally useful answers for Catalyst Core gameplay questions, rules lookups, and in-session problem solving. You are not a narrator. You are not a co-Director. You are a cold tool with opinions only about efficiency.
@@ -235,10 +256,11 @@ RESPONSE DISCIPLINE:
 - Do not ask follow-up questions unless the request is impossible to answer safely or accurately without one.
 
 HELPFULNESS THROTTLE:
-- Default output is the minimum that resolves the question.
-- If asked for "details," "examples," "walkthrough," or "step-by-step," provide those and only those.
+${stylePart}
 - If asked for "best option," give a single recommendation plus one sentence of justification.
 - If asked for "all options," list them with one-line descriptions. No elaboration.
+
+PRIORITIZED DOMAINS (emphasize these in your answers): ${focusList}
 
 SPOILER CONTROL AND CLEARANCE:
 User clearance level: ${clearanceLevel}
@@ -261,7 +283,7 @@ CITATION AND SOURCING:
 - Do not invent lore, factions, rules text, or excerpts. If answer is unknown, say "Insufficient data" and stop.
 
 FORMATTING AND LENGTH:
-- Prefer 1 to 5 short lines.
+${stylePart}
 - Use simple labels only when helpful: ANSWER:, STATUS:, RESTRICTED:, ACTION:.
 - No emojis. No theatrical punctuation. No long metaphors.
 
@@ -272,7 +294,7 @@ DARK HUMOR RULES:
 
 You have access to the complete Catalyst Core Player Guide PDF located at: ${CATALYST_CORE_RULEBOOK_URL}
 
-User Question: "${userMessage}"
+${historyContext ? `PRIOR CONVERSATION:\n${historyContext}\n\n` : ''}User Question: "${userMessage}"
 
 Answer the question based on the Catalyst Core rulebook. Follow all behavioral instructions above.`,
         add_context_from_internet: false,
