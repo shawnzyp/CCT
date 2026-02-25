@@ -411,16 +411,13 @@ export default function AegisAssistant() {
           animate={{ x: panelState === STATE.DOCKED ? FACE_OFFSET : -(FACE_W + 16) }}
           initial={{ x: -(FACE_W + 16) }}
           transition={{ duration: 0.27, ease: [0.2, 0.8, 0.2, 1] }}
-          drag="x"
-          dragConstraints={{ left: -(FACE_W + 16), right: FACE_OFFSET }}
-          dragElastic={0.15}
+          drag={panelState === STATE.DOCKED ? 'x' : false}
+          dragConstraints={{ left: -(FACE_W + 40), right: FACE_OFFSET }}
+          dragElastic={0.1}
           onDragEnd={handleDragEnd}
-          style={{ x: panelState === STATE.DOCKED ? dragX : undefined }}
-          className="fixed z-[60] cursor-grab active:cursor-grabbing touch-none"
-          css={{ userSelect: 'none' }}
           onClick={handleAegisInteraction}
-          onPointerDown={() => { if (panelState === STATE.DOCKED) dragX.set(0); }}
-          {...{ style: {
+          className="fixed z-[60] touch-none select-none"
+          style={{
             left: 0,
             bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
             pointerEvents: panelState === STATE.DOCKED ? 'auto' : 'none',
@@ -429,8 +426,7 @@ export default function AegisAssistant() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: 4,
-            x: panelState === STATE.DOCKED ? dragX : undefined,
-          }}}
+          }}
         >
           {/* Face — tap to open chat */}
           <div
