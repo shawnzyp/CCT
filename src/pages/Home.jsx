@@ -130,7 +130,7 @@ export default function Home() {
                 >
                   <User className="h-4 w-4" />
                   {currentCharacter.name}
-                  <ArrowRight className="h-3.5 w-3.5 ml-auto" />
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </Link>
             ) : (
