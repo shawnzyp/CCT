@@ -121,11 +121,17 @@ export default function CampaignDetail({ currentCharacter }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 pb-20">
-      <div className="max-w-7xl mx-auto px-4 py-8 pb-24">
-        <div className="flex items-start gap-4 mb-6">
+    <div className="min-h-screen pb-20" style={{ background: theme?.background?.gradient || bg0 }}>
+      {settings.particleEffects && (theme?.background?.gridOpacity || 0) > 0 && (
+        <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
+      )}
+      
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 pb-24 relative z-10">
+        
+        {/* Header */}
+        <div className="flex items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Link to={createPageUrl('Campaigns')}>
-            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+            <Button variant="ghost" size="icon" style={{ color: text1 }}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -133,28 +139,46 @@ export default function CampaignDetail({ currentCharacter }) {
             <img 
               src={campaign.logo_url} 
               alt={campaign.name}
-              className="w-16 h-16 rounded-xl object-cover border-2 border-violet-500/50"
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
+              style={{ border: `1px solid ${accentA}30` }}
             />
           )}
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-white">{campaign.name}</h1>
-            <p className="text-slate-400">{campaign.description}</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-3xl font-mono font-bold truncate" style={{ color: text0 }}>
+              {campaign.name}
+            </h1>
+            <p className="text-xs sm:text-sm line-clamp-2" style={{ color: text1 }}>
+              {campaign.description}
+            </p>
           </div>
-          <CampaignExport campaign={campaign} characters={characters} />
+          <div className="flex-shrink-0">
+            <CampaignExport campaign={campaign} characters={characters} />
+          </div>
         </div>
 
-        {/* Session Timer & Dice History - Always Visible */}
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
+        {/* Session Timer & Dice History */}
+        <div className="grid md:grid-cols-2 gap-3 sm:gap-4 mb-6">
           <SessionTimer />
           <DiceRollHistory />
         </div>
         
+        {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
+          <div className="hidden md:block">
+            <TabsList className="grid grid-cols-4 gap-2" style={{ background: `${panel0}80`, border: `1px solid ${accentA}20` }}>
+              <TabsTrigger value="player" className="text-xs">Player</TabsTrigger>
+              <TabsTrigger value="dashboard" className="text-xs">Dashboard</TabsTrigger>
+              <TabsTrigger value="journal" className="text-xs">Journal</TabsTrigger>
+              <TabsTrigger value="characters" className="text-xs">Characters</TabsTrigger>
+            </TabsList>
+          </div>
+          
+          <div className="md:hidden">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="text-xs sm:text-sm" style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
               <SelectItem value="player">👤 Player Dashboard</SelectItem>
               <SelectItem value="dashboard">📊 GM Dashboard</SelectItem>
               <SelectItem value="log">💬 Session Log</SelectItem>
