@@ -2,11 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Loader2, Radio, AlertCircle } from "lucide-react";
+import { Send, Loader2, Radio, Zap, FileText, Clock } from "lucide-react";
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import { useSettings } from '@/components/utils/useSettings';
 
 const WITTY_RESPONSES = [
   "Operational bandwidth allocated to game mechanics. Reroute inquiry.",
