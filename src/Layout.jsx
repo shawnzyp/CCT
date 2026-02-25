@@ -29,8 +29,6 @@ function LayoutComponent({ children }) {
   const [currentCharacter, setCurrentCharacter] = useState(null);
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
   const [isDM, setIsDM] = useState(() => localStorage.getItem('isDM') === 'true');
-  const [isSaving, setIsSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState(null);
   const { play } = useSoundEffects();
   const { settings } = useSettings();
   const { theme, factionId } = useTheme();
