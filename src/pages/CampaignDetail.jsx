@@ -209,43 +209,41 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="world">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="py-8">
-                <h3 className="text-lg font-semibold text-white mb-4">World Information</h3>
-                <div className="space-y-6">
-                  {campaign.world_locations?.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-400 uppercase mb-2">Locations</h4>
-                      <div className="space-y-2">
-                        {campaign.world_locations.map((loc, i) => (
-                          <div key={i} className="bg-slate-700/50 rounded p-3">
-                            <div className="font-medium text-white">{loc.name}</div>
-                            <p className="text-sm text-slate-400">{loc.description}</p>
-                          </div>
-                        ))}
-                      </div>
+            <div className="rounded-lg border p-4 sm:p-6 space-y-6" style={{ background: panel0, borderColor: `${accentA}20` }}>
+              <h3 className="text-base sm:text-lg font-mono font-semibold" style={{ color: text0 }}>World Information</h3>
+              <div className="space-y-6">
+                {campaign.world_locations?.length > 0 && (
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-mono font-semibold uppercase mb-3" style={{ color: accentA }}>Locations</h4>
+                    <div className="space-y-2">
+                      {campaign.world_locations.map((loc, i) => (
+                        <div key={i} className="rounded p-3" style={{ background: `${panel1}80`, borderLeft: `2px solid ${accentA}40` }}>
+                          <div className="font-mono font-semibold text-sm" style={{ color: text0 }}>{loc.name}</div>
+                          <p className="text-xs mt-1" style={{ color: text1 }}>{loc.description}</p>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                  {campaign.world_npcs?.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-400 uppercase mb-2">NPCs</h4>
-                      <div className="space-y-2">
-                        {campaign.world_npcs.map((npc, i) => (
-                          <div key={i} className="bg-slate-700/50 rounded p-3">
-                            <div className="font-medium text-white">{npc.name}</div>
-                            <p className="text-xs text-slate-400">{npc.role}</p>
-                            <p className="text-sm text-slate-300 mt-1">{npc.description}</p>
-                          </div>
-                        ))}
-                      </div>
+                  </div>
+                )}
+                {campaign.world_npcs?.length > 0 && (
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-mono font-semibold uppercase mb-3" style={{ color: accentA }}>NPCs</h4>
+                    <div className="space-y-2">
+                      {campaign.world_npcs.map((npc, i) => (
+                        <div key={i} className="rounded p-3" style={{ background: `${panel1}80`, borderLeft: `2px solid ${accentA}40` }}>
+                          <div className="font-mono font-semibold text-sm" style={{ color: text0 }}>{npc.name}</div>
+                          <p className="text-[10px] sm:text-xs mt-1" style={{ color: muted }}>{npc.role}</p>
+                          <p className="text-xs mt-2" style={{ color: text1 }}>{npc.description}</p>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                  {!campaign.world_locations?.length && !campaign.world_npcs?.length && (
-                    <p className="text-slate-400 text-center">No world information yet</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                  </div>
+                )}
+                {!campaign.world_locations?.length && !campaign.world_npcs?.length && (
+                  <p className="text-center text-xs sm:text-sm font-mono" style={{ color: muted }}>No world information yet</p>
+                )}
+              </div>
+            </div>
           </TabsContent>
           
           <TabsContent value="log">
