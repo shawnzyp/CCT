@@ -325,23 +325,29 @@ export default function AegisAssistant() {
   const FACE_W = 80;   // px – face dock
   const CHAT_W = 320;  // px – chat panel
 
+  // TAB_W must match the tab button width
+  const TAB_W = 32;
+
   return (
     <>
-      {/* ── EDGE TAB ─────────────────────────────────────────────────────── */}
-      <div
-        className="fixed z-[60] flex flex-col items-center"
+      {/* ── EDGE TAB (slides OFF when panel is visible) ───────────────────── */}
+      <motion.div
+        className="fixed z-[60]"
+        animate={{ x: isVisible ? -(TAB_W + 4) : 0 }}
+        initial={{ x: 0 }}
+        transition={{ duration: 0.27, ease: [0.2, 0.8, 0.2, 1] }}
         style={{
           left: 0,
-          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)', // above bottom nav
-          pointerEvents: 'auto',
+          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
+          willChange: 'transform',
         }}
       >
         <button
           onClick={handleTabPress}
-          aria-label={isVisible ? 'Close A.E.G.I.S.' : 'Open A.E.G.I.S.'}
+          aria-label="Open A.E.G.I.S."
           className="relative flex flex-col items-center justify-center gap-0.5 rounded-r-xl"
           style={{
-            width: 32,
+            width: TAB_W,
             paddingTop: 10,
             paddingBottom: 10,
             minHeight: 72,
@@ -354,7 +360,7 @@ export default function AegisAssistant() {
             transition: 'box-shadow 300ms ease',
           }}
         >
-          {/* Unread / attention dot */}
+          {/* Unread dot */}
           <AnimatePresence>
             {hasUnread && (
               <motion.div
@@ -370,7 +376,7 @@ export default function AegisAssistant() {
 
           {/* Vertical label */}
           <span
-            className="font-mono text-[9px] font-bold tracking-[0.15em] uppercase"
+            className="font-mono text-[9px] font-bold uppercase"
             style={{
               writingMode: 'vertical-rl',
               transform: 'rotate(180deg)',
@@ -381,30 +387,23 @@ export default function AegisAssistant() {
           >
             A.E.G.I.S.
           </span>
-
-          {/* Chevron direction indicator */}
-          <motion.div
-            animate={{ rotate: isVisible ? 180 : 0 }}
-            transition={{ duration: 0.22 }}
-          >
-            <ChevronRight className="h-3 w-3 text-violet-400" />
-          </motion.div>
+          <ChevronRight className="h-3 w-3 text-violet-400" />
         </button>
-      </div>
+      </motion.div>
 
-      {/* ── SLIDE PANEL ──────────────────────────────────────────────────── */}
+      {/* ── SLIDE PANEL (slides IN from where the tab was) ───────────────── */}
       <motion.div
         aria-label="A.E.G.I.S. panel"
-        animate={{ x: isVisible ? 0 : -(isChatOpen ? CHAT_W : FACE_W) - 8 }}
-        initial={{ x: -(FACE_W + 8) }}
+        animate={{ x: isVisible ? 0 : -(isChatOpen ? CHAT_W : FACE_W) - 4 }}
+        initial={{ x: -(FACE_W + 4) }}
         transition={{ duration: 0.27, ease: [0.2, 0.8, 0.2, 1] }}
-        className="fixed z-[59]"
+        className="fixed z-[60]"
         style={{
           left: 0,
           bottom: 'calc(env(safe-area-inset-bottom, 0px) + 64px)',
           top: 'calc(env(safe-area-inset-top, 0px) + 56px)',
           width: isChatOpen ? CHAT_W : FACE_W,
-          maxHeight: 'calc(100dvh - 56px - 64px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))',
+          maxHeight: 'calc(100dvh - 56px - 64px)',
           pointerEvents: isVisible ? 'auto' : 'none',
           willChange: 'transform',
           display: 'flex',
@@ -422,7 +421,7 @@ export default function AegisAssistant() {
             boxShadow: '4px 0 24px rgba(139,92,246,0.2)',
           }}
         >
-          {/* Face dock row – always visible when panel is open */}
+          {/* ── FACE DOCK — tap to open chat, or tap to close panel ── */}
           <div
             className="flex-shrink-0 flex flex-col items-center justify-center py-3 gap-2 cursor-pointer"
             style={{
@@ -430,28 +429,32 @@ export default function AegisAssistant() {
               borderBottom: isChatOpen ? '1px solid rgba(139,92,246,0.25)' : 'none',
               minHeight: FACE_W,
             }}
-            onClick={handleFacePress}
-            aria-label="Open A.E.G.I.S. Chat"
-            role="button"
-            tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && handleFacePress()}
+            onClick={isChatOpen ? undefined : handleFacePress}
+            aria-label={isChatOpen ? undefined : 'Open A.E.G.I.S. Chat'}
+            role={isChatOpen ? undefined : 'button'}
+            tabIndex={isChatOpen ? -1 : 0}
+            onKeyDown={e => !isChatOpen && e.key === 'Enter' && handleFacePress()}
           >
             <AegisFace expression={expression} isTalking={isTalking} size={48} />
-            {/* Status + open chat hint */}
             <div className="text-center px-1">
               <div className="text-[8px] font-mono text-violet-400 uppercase tracking-widest leading-none">
                 ONLINE
               </div>
               {!isChatOpen && (
-                <div
-                  className="mt-1 flex items-center justify-center gap-0.5"
-                  style={{ color: 'rgba(139,92,246,0.6)' }}
-                >
+                <div className="mt-1 flex items-center justify-center gap-0.5" style={{ color: 'rgba(139,92,246,0.6)' }}>
                   <MessageSquare style={{ width: 8, height: 8 }} />
                   <span className="text-[7px] font-mono uppercase tracking-wide">Chat</span>
                 </div>
               )}
             </div>
+            {/* Close panel button (X) always visible on face dock */}
+            <button
+              onClick={e => { e.stopPropagation(); isChatOpen ? handleCloseChat() : setPanelState(STATE.CLOSED); play('click', 0.15); }}
+              aria-label="Close A.E.G.I.S."
+              className="cc-sm-target w-5 h-5 min-h-0 min-w-0 flex items-center justify-center rounded-full hover:bg-violet-500/20 transition-colors"
+            >
+              <X className="h-3 w-3 text-violet-400" />
+            </button>
           </div>
 
           {/* Chat panel – only when CHAT_OPEN */}
