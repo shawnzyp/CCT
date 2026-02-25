@@ -75,30 +75,7 @@ function LayoutComponent({ children }) {
     return () => window.removeEventListener('characterChanged', handler);
   }, []);
 
-  useEffect(() => {
-    const handler = () => setLastSaved(new Date());
-    window.addEventListener('appSaved', handler);
-    return () => window.removeEventListener('appSaved', handler);
-  }, []);
 
-  const handleSave = () => {
-    setIsSaving(true);
-    window.dispatchEvent(new CustomEvent('triggerSave'));
-    setTimeout(() => {
-      setIsSaving(false);
-      setLastSaved(new Date());
-      toast.success('Progress saved!');
-      play?.('resource_gain');
-    }, 500);
-  };
-
-  const formatLastSaved = () => {
-    if (!lastSaved) return 'Not saved';
-    const diff = Math.floor((new Date() - lastSaved) / 1000);
-    if (diff < 60) return 'Just now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    return `${Math.floor(diff / 3600)}h ago`;
-  };
 
   const handleCharacterSelect = (character) => {
     setCurrentCharacter(character);
