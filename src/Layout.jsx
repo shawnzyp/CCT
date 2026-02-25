@@ -18,7 +18,7 @@ import DMLoginFooter from '@/components/dm/DMLoginFooter';
 import { useSettings } from '@/components/utils/useSettings';
 import { toast } from 'sonner';
 import { useTheme } from '@/components/theme/useTheme';
-import BootSequence from '@/components/theme/BootSequence';
+import BootGate from '@/components/theme/BootGate';
 
 export default function Layout({ children }) {
   const location = useLocation();
