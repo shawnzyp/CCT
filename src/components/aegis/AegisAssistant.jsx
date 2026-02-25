@@ -279,33 +279,92 @@ export default function AegisAssistant() {
   // Bottom offset: above mobile nav bar (4rem = 64px) + safe area + 8px gap
   const bottomOffset = 'calc(4rem + env(safe-area-inset-bottom, 0px) + 8px)';
 
+  // Width of the slide-in panel
+  const PANEL_W = 'min(360px, 88vw)';
+  // Tab width (always on-screen)
+  const TAB_W = 36;
+
   return (
     <>
-      {/* ── SLIDE-IN PANEL (left edge, slides in from off-screen) ── */}
+      {/* ── ALWAYS-VISIBLE TAB (pinned to left edge of screen) ── */}
+      <button
+        onClick={handleTabClick}
+        className="fixed z-[61] flex flex-col items-center justify-between rounded-r-2xl shadow-2xl transition-colors"
+        style={{
+          left: 0,
+          bottom: bottomOffset,
+          width: TAB_W,
+          height: 120,
+          background: 'linear-gradient(160deg, #6d28d9 0%, #7c3aed 60%, #5b21b6 100%)',
+          border: '1.5px solid rgba(167,139,250,0.6)',
+          borderLeft: 'none',
+          boxShadow: '2px 0 24px rgba(139,92,246,0.5), inset -1px 0 8px rgba(167,139,250,0.1)',
+          paddingTop: 8,
+          paddingBottom: 8,
+        }}
+        aria-label="Open A.E.G.I.S. assistant"
+      >
+        {/* Mini animated face */}
+        <AegisFace expression={expression} isTalking={isTalking} size={24} />
+
+        {/* Rotated label */}
+        <span
+          className="font-bold font-mono text-violet-100 tracking-[0.18em] uppercase leading-none"
+          style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontSize: 8 }}
+        >
+          A.E.G.I.S.
+        </span>
+
+        {/* Chevron */}
+        <ChevronRight
+          className="text-violet-300 transition-transform duration-300"
+          style={{ width: 14, height: 14, transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        />
+
+        {/* New message dot */}
+        <AnimatePresence>
+          {showMessage && !isOpen && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-violet-300 rounded-full border-2 border-slate-950"
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Live pulse dot */}
+        <motion.div
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-green-400 rounded-full"
+        />
+      </button>
+
+      {/* ── SLIDE-IN PANEL (slides in from off-screen, sits right of tab) ── */}
       <motion.div
         initial={false}
-        animate={{ x: isOpen ? 0 : 'calc(-100% - 2px)' }}
-        transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-        className="fixed z-[60] flex"
+        animate={{ x: isOpen ? TAB_W : `calc(-${PANEL_W})` }}
+        transition={{ type: 'spring', stiffness: 300, damping: 32 }}
+        className="fixed z-[60]"
         style={{
           bottom: bottomOffset,
           left: 0,
-          // Panel itself
-          width: 'min(360px, 92vw)',
+          width: PANEL_W,
           maxHeight: 'calc(100dvh - 8rem)',
         }}
-        // Reset auto-close on any interaction inside the panel
         onPointerMove={resetAutoClose}
         onPointerDown={resetAutoClose}
       >
-        {/* Panel body */}
         <div
-          className="flex-1 bg-slate-900 border border-violet-500/70 border-r-0 rounded-l-xl shadow-2xl shadow-violet-500/20 flex flex-col overflow-hidden"
+          className="bg-slate-900 border border-violet-500/60 rounded-r-xl shadow-2xl shadow-violet-500/25 flex flex-col overflow-hidden"
           style={{ maxHeight: 'calc(100dvh - 8rem)' }}
         >
           {/* Header */}
           <div className="bg-gradient-to-r from-violet-700 to-purple-700 px-4 py-3 flex items-center gap-3 border-b border-violet-500/50 flex-shrink-0">
-            <AegisFace expression={expression} isTalking={isTalking} size={36} />
+            <div id="aegis-face-header">
+              <AegisFace expression={expression} isTalking={isTalking} size={36} />
+            </div>
             <div className="flex-1 min-w-0">
               <div className="text-white font-bold font-mono text-sm">A.E.G.I.S.</div>
               <div className="text-violet-200 text-[10px] font-mono leading-tight truncate">
@@ -342,65 +401,27 @@ export default function AegisAssistant() {
             <AegisInterface />
           </div>
         </div>
-
-        {/* Tab — attached to RIGHT edge of panel, always visible */}
-        <button
-          onClick={handleTabClick}
-          className="relative flex-shrink-0 flex flex-col items-center justify-between py-3 px-1.5 bg-violet-700 hover:bg-violet-600 border border-violet-500/70 border-l-0 rounded-r-xl shadow-xl transition-colors"
-          style={{ width: 28 }}
-        >
-          {/* Mini face */}
-          <AegisFace expression={expression} isTalking={isTalking} size={22} />
-
-          {/* Label rotated */}
-          <span
-            className="text-[9px] font-bold font-mono text-violet-200 tracking-widest uppercase"
-            style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', lineHeight: 1 }}
-          >
-            A.E.G.I.S.
-          </span>
-
-          {/* Chevron direction hint */}
-          <ChevronRight
-            className="h-3 w-3 text-violet-300"
-            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
-          />
-
-          {/* Message dot indicator when closed */}
-          <AnimatePresence>
-            {showMessage && !isOpen && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -top-1 -right-1 w-3 h-3 bg-violet-400 rounded-full border-2 border-slate-950"
-              />
-            )}
-          </AnimatePresence>
-
-          {/* Live indicator dot */}
-          <motion.div
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-green-400 rounded-full"
-          />
-        </button>
       </motion.div>
 
-      {/* ── SPEECH BUBBLE (visible when AEGIS is closed, floats near the tab) ── */}
+      {/* ── SPEECH BUBBLE ── */}
       <AnimatePresence>
-        {showMessage && !isOpen && (
+        {showMessage && (
           <motion.div
-            initial={{ opacity: 0, x: -10 }}
+            key="speech-bubble"
+            initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            className="fixed z-[59] max-w-[260px]"
+            exit={{ opacity: 0, x: -12 }}
+            className="fixed z-[62]"
             style={{
-              bottom: `calc(${bottomOffset} + 36px)`,
-              left: 36,
+              // When open: floats above the panel header face; when closed: floats above the tab
+              bottom: isOpen
+                ? `calc(${bottomOffset} + 110px)`
+                : `calc(${bottomOffset} + 130px)`,
+              left: isOpen ? TAB_W + 8 : TAB_W + 8,
+              maxWidth: 240,
             }}
           >
-            <div className="relative bg-slate-800/95 border border-violet-500/70 rounded-xl p-3 shadow-xl shadow-violet-500/20">
+            <div className="relative bg-slate-800/97 border border-violet-500/70 rounded-xl p-3 shadow-xl shadow-violet-500/25">
               <button
                 onClick={() => setShowMessage(false)}
                 className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-700 border border-violet-500 flex items-center justify-center hover:bg-slate-600"
@@ -412,8 +433,11 @@ export default function AegisAssistant() {
                 <span className="text-[9px] font-mono text-violet-400 uppercase tracking-wider">A.E.G.I.S. Advisory</span>
               </div>
               <p className="text-xs text-slate-300 leading-relaxed">{currentMessage}</p>
-              {/* Arrow pointing down-left toward tab */}
-              <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-slate-800 border-r border-b border-violet-500/70 transform rotate-45" />
+              {/* Arrow pointing left toward the tab/face */}
+              <div
+                className="absolute w-3 h-3 bg-slate-800 border-l border-b border-violet-500/70 transform rotate-45"
+                style={{ left: -7, bottom: 14 }}
+              />
             </div>
           </motion.div>
         )}
