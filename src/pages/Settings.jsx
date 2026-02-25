@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
-import { Volume2, Zap, Shield, Palette, Music, Settings, Code, Trash2, RotateCcw } from 'lucide-react';
+import { Volume2, Zap, Shield, Palette, Music, Cog, Code, Trash2, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 
@@ -65,7 +65,7 @@ export default function Settings() {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-cyan-100 flex items-center gap-2">
-            <Settings className="w-6 h-6" />
+            <Cog className="w-6 h-6" />
             SETTINGS
           </h1>
           <p className="text-xs font-mono text-cyan-900/70 mt-1">Configure your experience</p>
