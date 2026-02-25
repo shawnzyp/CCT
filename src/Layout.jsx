@@ -33,36 +33,7 @@ export default function Layout({ children }) {
   const { settings } = useSettings();
   const { theme, factionId } = useTheme();
 
-  // Boot sequence
-  const [showBoot, setShowBoot] = useState(() => {
-    try {
-      const s = JSON.parse(localStorage.getItem('catalystCoreSettings') || '{}');
-      if (s.bootEnabled === false) return false;
-    } catch {}
-    return !sessionStorage.getItem('bootShown');
-  });
 
-  const handleBootComplete = () => {
-    setShowBoot(false);
-    sessionStorage.setItem('bootShown', '1');
-  };
-
-  // Re-show boot on faction change (only if boot is enabled)
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.detail?.faction) {
-        try {
-          const s = JSON.parse(localStorage.getItem('catalystCoreSettings') || '{}');
-          if (s.bootEnabled !== false) {
-            sessionStorage.removeItem('bootShown');
-            setShowBoot(true);
-          }
-        } catch {}
-      }
-    };
-    window.addEventListener('themeChanged', handler);
-    return () => window.removeEventListener('themeChanged', handler);
-  }, []);
 
   // Apply CSS vars whenever theme changes
   useEffect(() => {
