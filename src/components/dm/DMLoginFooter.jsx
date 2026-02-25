@@ -52,7 +52,26 @@ export default function DMLoginFooter({ isDM, onDMLogin, onDMLogout }) {
   return (
     <>
       {/* Footer Button */}
-      
+      <div className="w-full bg-slate-950/95 backdrop-blur-lg border-t border-violet-500/30 mt-12">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-center">
+          {isDM ? (
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all">
+              <LogOut className="h-4 w-4" />
+              Exit Director Mode
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setShowPINDialog(true)}
+              className="gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/20 transition-all hover:shadow-violet-500/40">
+              <Shield className="h-4 w-4" />
+              Director Access
+            </Button>
+          )}
+        </div>
+      </div>
 
 
 
