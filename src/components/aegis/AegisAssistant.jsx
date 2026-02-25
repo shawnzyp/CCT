@@ -408,13 +408,20 @@ export default function AegisAssistant() {
       {!isChatOpen && (
         <motion.div
           aria-label="A.E.G.I.S. face"
-          animate={{ x: panelState === STATE.DOCKED ? 0 : -(FACE_W + 8) }}
-          initial={{ x: -(FACE_W + 8) }}
+          animate={{ x: panelState === STATE.DOCKED ? FACE_OFFSET : -(FACE_W + 16) }}
+          initial={{ x: -(FACE_W + 16) }}
           transition={{ duration: 0.27, ease: [0.2, 0.8, 0.2, 1] }}
-          className="fixed z-[60]"
-          style={{
+          drag="x"
+          dragConstraints={{ left: -(FACE_W + 16), right: FACE_OFFSET }}
+          dragElastic={0.15}
+          onDragEnd={handleDragEnd}
+          style={{ x: panelState === STATE.DOCKED ? dragX : undefined }}
+          className="fixed z-[60] cursor-grab active:cursor-grabbing touch-none"
+          css={{ userSelect: 'none' }}
+          onClick={handleAegisInteraction}
+          onPointerDown={() => { if (panelState === STATE.DOCKED) dragX.set(0); }}
+          {...{ style: {
             left: 0,
-            // Vertically centred on the tab: tab bottom = 72px + safe, tab minH = 72px → centre = 72 + 36 = 108px from bottom
             bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
             pointerEvents: panelState === STATE.DOCKED ? 'auto' : 'none',
             willChange: 'transform',
@@ -422,8 +429,8 @@ export default function AegisAssistant() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: 4,
-          }}
-          onClick={handleAegisInteraction}
+            x: panelState === STATE.DOCKED ? dragX : undefined,
+          }}}
         >
           {/* Face — tap to open chat */}
           <div
@@ -444,14 +451,6 @@ export default function AegisAssistant() {
               <span className="text-[7px] font-mono uppercase tracking-wide">Chat</span>
             </div>
           </div>
-          {/* Close */}
-          <button
-            onClick={e => { e.stopPropagation(); setPanelState(STATE.CLOSED); play('click', 0.15); }}
-            aria-label="Close A.E.G.I.S."
-            className="cc-sm-target w-5 h-5 min-h-0 min-w-0 flex items-center justify-center rounded-full hover:bg-violet-500/20 transition-colors"
-          >
-            <X className="h-3 w-3 text-violet-400" />
-          </button>
         </motion.div>
       )}
 
