@@ -346,3 +346,55 @@ input[type="checkbox"], input[type="radio"] {
     linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
   background-size: 50px 50px;
 }
+
+/* ── SETTINGS-DRIVEN CLASSES ───────────────────────────────────────────── */
+
+/* Reduced Motion */
+.reduce-motion,
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.reduce-motion .cc-scanline-layer,
+.reduce-motion [class*="animate-"] {
+  display: none !important;
+}
+
+/* Animations Disabled */
+.animations-disabled,
+.animations-disabled * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* No Glow */
+.no-glow,
+.no-glow * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* High Contrast */
+.high-contrast {
+  --cc-accent-a: #00FF00;
+  contrast: 1.25;
+}
+
+.high-contrast [role="button"],
+.high-contrast button {
+  outline: 1px solid var(--cc-accent-a);
+}
+
+/* Compact Mode */
+.compact-mode {
+  --density: 0.8;
+}
+
+/* Font Scale */
+html {
+  --font-scale: 1;
+  --density: 1;
+  font-size: calc(16px * var(--font-scale));
+}
