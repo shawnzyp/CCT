@@ -520,7 +520,7 @@ export default function AegisAssistant() {
             className="fixed z-[61] pointer-events-none"
             style={{
               // Always to the right of whatever is on the left edge
-              left: isVisible ? (isChatOpen ? CHAT_W : 60) + 10 : TAB_W + 10,
+              left: isVisible ? (isChatOpen ? CHAT_W : FACE_OFFSET + FACE_W) + 8 : TAB_W + 10,
               // Vertically aligned with the tab centre
               bottom: 'calc(env(safe-area-inset-bottom, 0px) + 90px)',
               pointerEvents: 'none',
