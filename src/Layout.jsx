@@ -36,6 +36,11 @@ function LayoutComponent({ children }) {
 
 
 
+  // Initialize settings on mount
+  useEffect(() => {
+    initializeSettingsApplication();
+  }, []);
+
   // Apply CSS vars whenever theme changes
   useEffect(() => {
     const root = document.documentElement;
