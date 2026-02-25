@@ -302,6 +302,27 @@ export default function Settings() {
           </div>
         </div>
 
+        {/* Session Link Status */}
+        <div className="rounded-xl border mb-4 overflow-hidden"
+          style={{ background: panel0, borderColor: 'rgba(139,92,246,0.3)' }}>
+          <div className="px-4 py-3 border-b flex items-center gap-2"
+            style={{ borderColor: 'rgba(139,92,246,0.2)' }}>
+            <Radio className="h-4 w-4" style={{ color: '#a78bfa' }} />
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+              style={{ color: theme?.colors?.text0 }}>Session Connection</span>
+          </div>
+          <div className="p-4 space-y-4">
+            <SessionLinkPanel />
+            <div className="pt-3 border-t border-slate-700">
+              <div className="text-xs font-mono uppercase text-slate-400 mb-3">Event Inbox</div>
+              <EventInbox />
+            </div>
+            <div className="pt-3 border-t border-slate-700">
+              <PlayerSignalButton />
+            </div>
+          </div>
+        </div>
+
         {/* A.E.G.I.S. Settings */}
         <div className="rounded-xl border mb-4 overflow-hidden"
           style={{ background: panel0, borderColor: 'rgba(139,92,246,0.3)' }}>
