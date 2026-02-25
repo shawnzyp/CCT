@@ -13,6 +13,7 @@ import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisAssistant from '@/components/aegis/AegisAssistant';
 import { AegisProvider } from '@/components/aegis/AegisContext';
 import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
+import BootGate from '@/components/theme/BootGate';
 import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
 import DMLoginFooter from '@/components/dm/DMLoginFooter';
 import { useSettings } from '@/components/utils/useSettings';
