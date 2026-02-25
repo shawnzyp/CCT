@@ -40,6 +40,11 @@ export default function Settings() {
     }
   }, []);
   usePresenceHeartbeat(linkedSession?.campaignId, linkedSession?.sessionId);
+  
+  const handleGlitchChange = (value) => {
+    const newSettings = { ...settings, glitchIntensity: value };
+    updateSettings(newSettings);
+  };
 
   const accentA = theme?.colors?.accentA || '#00E5FF';
   const panel0 = theme?.colors?.panel0 || '#1A1F26';
