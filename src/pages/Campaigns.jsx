@@ -24,6 +24,8 @@ export default function Campaigns() {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const queryClient = useQueryClient();
+  const { settings } = useSettings();
+  const { theme } = useTheme();
   
   const { data: campaigns = [], isLoading } = useQuery({
     queryKey: ['campaigns'],
@@ -37,13 +39,22 @@ export default function Campaigns() {
   const filteredCampaigns = campaigns.filter(c => 
     c.name?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const accentA = theme?.colors?.accentA || '#00E5FF';
+  const bg0 = theme?.colors?.bg0 || '#0F1216';
+  const panel0 = theme?.colors?.panel0 || '#1A1F26';
+  const text0 = theme?.colors?.text0 || '#E6F1FF';
+  const text1 = theme?.colors?.text1 || '#8EA0B5';
+  const muted = theme?.colors?.muted || '#5F6E80';
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-      </div>
+    <div
+      className="min-h-screen"
+      style={{ background: theme?.background?.gradient || bg0 }}
+    >
+      {settings.particleEffects && (theme?.background?.gridOpacity || 0) > 0 && (
+        <div className="fixed inset-0 military-grid opacity-30 pointer-events-none" />
+      )}
       
       <PullToRefresh onRefresh={handleRefresh} className="relative z-10">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
