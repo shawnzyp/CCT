@@ -351,10 +351,10 @@ export default function CampaignDetail({ currentCharacter }) {
                 onUpdate={(data) => updateCampaign.mutate(data)} 
               />
             ) : (
-              <div className="bg-slate-900/50 border-2 border-red-500/50 rounded-xl p-12 text-center">
-                <Shield className="h-16 w-16 mx-auto text-red-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">DM Access Required</h3>
-                <p className="text-slate-400">
+              <div className="rounded-lg border-2 p-8 sm:p-12 text-center" style={{ background: `${panel0}80`, borderColor: '#FF3B3B60' }}>
+                <Shield className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4" style={{ color: '#FF3B3B' }} />
+                <h3 className="text-lg sm:text-xl font-mono font-bold mb-2" style={{ color: text0 }}>DM Access Required</h3>
+                <p className="text-xs sm:text-sm font-mono" style={{ color: text1 }}>
                   You must authenticate as the Dungeon Master to access these tools.
                 </p>
               </div>
