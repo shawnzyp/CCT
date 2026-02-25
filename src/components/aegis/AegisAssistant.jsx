@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, X, Sparkles, Radio } from 'lucide-react';
+import { X, Radio, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisInterface from './AegisInterface';
@@ -117,295 +117,303 @@ const EXPRESSIONS = {
   analyzing: { eyeScale: 1.1, mouthWidth: 20, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
   determined: { eyeScale: 0.6, mouthWidth: 22, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
   amused: { eyeScale: 0.9, mouthWidth: 24, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
-  skeptical: { eyeScale: 0.75, mouthWidth: 20, mouthY: -1, mouthCurve: -1, eyeSpacing: 5 },
-  concerned: { eyeScale: 1.2, mouthWidth: 18, mouthY: -1, mouthCurve: -3, eyeSpacing: 6 },
+  calm: { eyeScale: 0.8, mouthWidth: 24, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
   focused: { eyeScale: 0.5, mouthWidth: 22, mouthY: 0, mouthCurve: 0, eyeSpacing: 5 },
   alert: { eyeScale: 1.3, mouthWidth: 20, mouthY: 0, mouthCurve: 1, eyeSpacing: 7 },
-  calm: { eyeScale: 0.8, mouthWidth: 24, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
-  curious: { eyeScale: 1.2, mouthWidth: 20, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
-  pleased: { eyeScale: 0.9, mouthWidth: 26, mouthY: 2, mouthCurve: 3, eyeSpacing: 6 },
-  serious: { eyeScale: 0.7, mouthWidth: 20, mouthY: -1, mouthCurve: 0, eyeSpacing: 5 },
-  observing: { eyeScale: 1.0, mouthWidth: 22, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
-  engaged: { eyeScale: 1.1, mouthWidth: 25, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
-  vigilant: { eyeScale: 1.2, mouthWidth: 18, mouthY: 0, mouthCurve: -1, eyeSpacing: 7 },
-  relaxed: { eyeScale: 0.85, mouthWidth: 24, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 }
 };
 
+// AegisFace used in both the tab and the panel
+function AegisFace({ expression, isTalking, size = 48 }) {
+  const expr = EXPRESSIONS[expression] || EXPRESSIONS.neutral;
+  const scale = size / 64;
+
+  return (
+    <div
+      className="relative rounded-full bg-gradient-to-br from-violet-600 to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/50 flex items-center justify-center overflow-hidden flex-shrink-0"
+      style={{ width: size, height: size }}
+    >
+      {/* Scan line */}
+      <motion.div
+        animate={{ y: ['-100%', '100%'] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+        className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-400/30 to-transparent"
+      />
+      {/* Face */}
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        <motion.div
+          className="flex mb-1"
+          style={{ gap: `${expr.eyeSpacing * scale}px`, marginBottom: `${6 * scale}px` }}
+          animate={{ scaleY: expr.eyeScale }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div
+            className="bg-white rounded-full"
+            style={{ width: `${10 * scale}px`, height: `${10 * scale}px` }}
+            animate={{ scaleY: expr.eyeScale }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="bg-white rounded-full"
+            style={{ width: `${10 * scale}px`, height: `${10 * scale}px` }}
+            animate={{ scaleY: expr.eyeScale }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          />
+        </motion.div>
+        <svg width={28 * scale} height={12 * scale} style={{ overflow: 'visible' }}>
+          <motion.path
+            d={`M ${2 * scale} ${(6 - expr.mouthY) * scale} Q ${14 * scale} ${(6 + expr.mouthCurve - expr.mouthY) * scale} ${expr.mouthWidth * scale} ${(6 - expr.mouthY) * scale}`}
+            stroke="rgba(255,255,255,0.8)"
+            strokeWidth={2.5 * scale}
+            fill="none"
+            strokeLinecap="round"
+            animate={{
+              d: isTalking
+                ? [
+                    `M ${2*scale} ${6*scale} Q ${14*scale} ${6*scale} ${expr.mouthWidth*scale} ${6*scale}`,
+                    `M ${2*scale} ${6*scale} Q ${14*scale} ${9*scale} ${expr.mouthWidth*scale} ${6*scale}`,
+                    `M ${2*scale} ${6*scale} Q ${14*scale} ${3*scale} ${expr.mouthWidth*scale} ${6*scale}`,
+                    `M ${2*scale} ${6*scale} Q ${14*scale} ${9*scale} ${expr.mouthWidth*scale} ${6*scale}`,
+                    `M ${2*scale} ${6*scale} Q ${14*scale} ${6*scale} ${expr.mouthWidth*scale} ${6*scale}`,
+                  ]
+                : `M ${2*scale} ${(6-expr.mouthY)*scale} Q ${14*scale} ${(6+expr.mouthCurve-expr.mouthY)*scale} ${expr.mouthWidth*scale} ${(6-expr.mouthY)*scale}`
+            }}
+            transition={{ duration: isTalking ? 0.6 : 0.3, repeat: isTalking ? Infinity : 0, ease: 'easeInOut' }}
+          />
+        </svg>
+      </div>
+      {/* Pulse ring */}
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0, 0.5] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute inset-0 rounded-full border-2 border-violet-400"
+      />
+    </div>
+  );
+}
+
 export default function AegisAssistant() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showEncouragement, setShowEncouragement] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   const [currentMessage, setCurrentMessage] = useState('');
-  const [isThinking, setIsThinking] = useState(false);
-  const [expression, setExpression] = useState('neutral');
   const [isTalking, setIsTalking] = useState(false);
+  const [expression, setExpression] = useState('neutral');
   const { play } = useSoundEffects();
-  
-  // Constantly cycle through expressions
+
+  // Auto-close timer ref — resets on any interaction inside AEGIS
+  const autoCloseTimer = useRef(null);
+
+  const resetAutoClose = useCallback(() => {
+    if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current);
+    autoCloseTimer.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 60000); // 60 seconds
+  }, []);
+
+  // Start/reset timer whenever panel opens
+  useEffect(() => {
+    if (isOpen) {
+      resetAutoClose();
+    } else {
+      if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current);
+    }
+    return () => { if (autoCloseTimer.current) clearTimeout(autoCloseTimer.current); };
+  }, [isOpen, resetAutoClose]);
+
+  // Cycle expressions
   useEffect(() => {
     const expressions = Object.keys(EXPRESSIONS);
-    let currentIndex = 0;
-    
-    const cycleExpression = () => {
-      setExpression(expressions[currentIndex]);
-      currentIndex = (currentIndex + 1) % expressions.length;
-    };
-    
-    const expressionInterval = setInterval(cycleExpression, 3000);
-    return () => clearInterval(expressionInterval);
+    let idx = 0;
+    const interval = setInterval(() => {
+      setExpression(expressions[idx]);
+      idx = (idx + 1) % expressions.length;
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
-  
+
   // Random encouragement system
   useEffect(() => {
     const showRandomEncouragement = () => {
-      // Get current character from localStorage
       const storedChar = localStorage.getItem('currentCharacter');
       let characterName = 'Hero';
-      
       if (storedChar) {
         try {
           const char = JSON.parse(storedChar);
           characterName = char.name || 'Hero';
-          
-          // Remove definite article if present (e.g., "The Batman" -> "Batman")
           if (characterName.toLowerCase().startsWith('the ')) {
             characterName = characterName.substring(4);
           }
-        } catch (e) {
-          // Use default if parsing fails
-        }
+        } catch (e) {}
       }
-      
       const randomTemplate = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
       const randomMessage = randomTemplate.replace(/#character/g, characterName);
       setCurrentMessage(randomMessage);
-      setShowEncouragement(true);
+      setShowMessage(true);
       setIsTalking(true);
       setExpression('happy');
       play('navigate', 0.1);
-      
+
       setTimeout(() => {
-        setShowEncouragement(false);
+        setShowMessage(false);
         setIsTalking(false);
         setExpression('neutral');
-      }, 7000); // Increased from 5000 to 7000 (2 seconds longer)
+      }, 7000);
     };
-    
-    // Show first encouragement after 10 seconds
+
     const initialTimer = setTimeout(showRandomEncouragement, 10000);
-    
-    // Then every 60-120 seconds randomly
     const interval = setInterval(() => {
-      const randomDelay = 60000 + Math.random() * 60000; // 60-120 seconds
-      setTimeout(showRandomEncouragement, randomDelay);
+      const delay = 60000 + Math.random() * 60000;
+      setTimeout(showRandomEncouragement, delay);
     }, 120000);
-    
+
     return () => {
       clearTimeout(initialTimer);
       clearInterval(interval);
     };
   }, [play]);
-  
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
+
+  const handleTabClick = () => {
+    setIsOpen(prev => !prev);
     play('click', 0.2);
   };
-  
+
+  // Bottom offset: above mobile nav bar (4rem = 64px) + safe area + 8px gap
+  const bottomOffset = 'calc(4rem + env(safe-area-inset-bottom, 0px) + 8px)';
+
   return (
     <>
-      {/* Floating Assistant Icon */}
+      {/* ── SLIDE-IN PANEL (left edge, slides in from off-screen) ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="fixed z-50"
+        initial={false}
+        animate={{ x: isOpen ? 0 : 'calc(-100% - 2px)' }}
+        transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+        className="fixed z-[60] flex"
         style={{
-          bottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
-          left: 'max(24px, env(safe-area-inset-left, 24px))'
+          bottom: bottomOffset,
+          left: 0,
+          // Panel itself
+          width: 'min(360px, 92vw)',
+          maxHeight: 'calc(100dvh - 8rem)',
         }}
+        // Reset auto-close on any interaction inside the panel
+        onPointerMove={resetAutoClose}
+        onPointerDown={resetAutoClose}
       >
-        <motion.button
-          onClick={toggleExpanded}
-          className="relative"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+        {/* Panel body */}
+        <div
+          className="flex-1 bg-slate-900 border border-violet-500/70 border-r-0 rounded-l-xl shadow-2xl shadow-violet-500/20 flex flex-col overflow-hidden"
+          style={{ maxHeight: 'calc(100dvh - 8rem)' }}
         >
-          {/* Animated Face Icon - Centered */}
-          <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 border-2 border-violet-400 shadow-lg shadow-violet-500/50 flex items-center justify-center overflow-hidden">
-            {/* Scanning effect */}
-            <motion.div
-              animate={{ y: ['-100%', '100%'] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-400/30 to-transparent"
-            />
-            
-            {/* Face - animated eyes and mouth - CENTERED */}
-            <div className="relative z-10 flex flex-col items-center justify-center">
-              {/* Eyes with improved expressiveness */}
+          {/* Header */}
+          <div className="bg-gradient-to-r from-violet-700 to-purple-700 px-4 py-3 flex items-center gap-3 border-b border-violet-500/50 flex-shrink-0">
+            <AegisFace expression={expression} isTalking={isTalking} size={36} />
+            <div className="flex-1 min-w-0">
+              <div className="text-white font-bold font-mono text-sm">A.E.G.I.S.</div>
+              <div className="text-violet-200 text-[10px] font-mono leading-tight truncate">
+                Adaptive Executive Governance &amp; Intelligence System
+              </div>
+            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center flex-shrink-0 transition-colors"
+            >
+              <X className="h-4 w-4 text-white" />
+            </button>
+          </div>
+
+          {/* Live message banner inside panel */}
+          <AnimatePresence>
+            {showMessage && (
               <motion.div
-                animate={{
-                  scaleY: EXPRESSIONS[expression].eyeScale,
-                  gap: EXPRESSIONS[expression].eyeSpacing
-                }}
-                transition={{ duration: 0.3 }}
-                className="flex gap-1.5 mb-1.5"
-                style={{ gap: `${EXPRESSIONS[expression].eyeSpacing}px` }}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="border-b border-violet-500/30 bg-violet-900/30 px-4 py-2 flex-shrink-0"
               >
-                <motion.div 
-                  className="w-2.5 h-2.5 bg-white rounded-full"
-                  animate={{
-                    scaleY: EXPRESSIONS[expression].eyeScale
-                  }}
-                  transition={{ 
-                    scaleY: { duration: 0.5, ease: "easeInOut" }
-                  }}
-                />
-                <motion.div 
-                  className="w-2.5 h-2.5 bg-white rounded-full"
-                  animate={{
-                    scaleY: EXPRESSIONS[expression].eyeScale
-                  }}
-                  transition={{ 
-                    scaleY: { duration: 0.5, ease: "easeInOut" }
-                  }}
-                />
-              </motion.div>
-              
-              {/* Mouth with talking animation */}
-              <svg width="28" height="12" style={{ overflow: 'visible' }}>
-                <motion.path
-                  d={`M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`}
-                  stroke="rgba(255,255,255,0.8)"
-                  strokeWidth="2.5"
-                  fill="none"
-                  strokeLinecap="round"
-                  animate={{
-                    d: isTalking 
-                      ? [
-                          `M 2 6 Q 14 6 ${EXPRESSIONS[expression].mouthWidth} 6`,
-                          `M 2 6 Q 14 9 ${EXPRESSIONS[expression].mouthWidth} 6`,
-                          `M 2 6 Q 14 3 ${EXPRESSIONS[expression].mouthWidth} 6`,
-                          `M 2 6 Q 14 9 ${EXPRESSIONS[expression].mouthWidth} 6`,
-                          `M 2 6 Q 14 6 ${EXPRESSIONS[expression].mouthWidth} 6`
-                        ]
-                      : `M 2 ${6 - EXPRESSIONS[expression].mouthY} Q 14 ${6 + EXPRESSIONS[expression].mouthCurve - EXPRESSIONS[expression].mouthY} ${EXPRESSIONS[expression].mouthWidth} ${6 - EXPRESSIONS[expression].mouthY}`
-                  }}
-                  transition={{ 
-                    duration: isTalking ? 0.6 : 0.3,
-                    repeat: isTalking ? Infinity : 0,
-                    ease: "easeInOut"
-                  }}
-                />
-              </svg>
-            </div>
-            
-            {/* Pulse ring */}
-            <motion.div
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.5, 0, 0.5]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="absolute inset-0 rounded-full border-2 border-violet-400"
-            />
-          </div>
-          
-          {/* Activity indicator */}
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [1, 0.6, 1]
-            }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-slate-950"
-          />
-          
-          {/* Label */}
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
-            <div className="text-xs font-mono text-violet-400 uppercase tracking-wider">
-              A.E.G.I.S.
-            </div>
-          </div>
-        </motion.button>
-      </motion.div>
-      
-      {/* Encouragement Speech Bubble */}
-      <AnimatePresence>
-        {showEncouragement && (
-          <motion.div
-            initial={{ opacity: 0, x: -20, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="fixed z-50 max-w-xs"
-            style={{
-              bottom: 'max(96px, calc(env(safe-area-inset-bottom, 24px) + 72px))',
-              left: 'max(24px, env(safe-area-inset-left, 24px))'
-            }}
-          >
-            <div className="relative bg-slate-800 border-2 border-violet-500 rounded-xl p-4 shadow-xl shadow-violet-500/30">
-              {/* Close button */}
-              <button
-                onClick={() => setShowEncouragement(false)}
-                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-700 border-2 border-violet-500 flex items-center justify-center hover:bg-slate-600"
-              >
-                <X className="h-3 w-3 text-white" />
-              </button>
-              
-              {/* Header */}
-              <div className="flex items-center gap-2 mb-2">
-                <Radio className="h-3 w-3 text-violet-400" />
-                <span className="text-xs font-mono text-violet-400 uppercase tracking-wider">
-                  A.E.G.I.S. Advisory
-                </span>
-              </div>
-              
-              {/* Message */}
-              <p className="text-sm text-slate-300 leading-relaxed">
-                {currentMessage}
-              </p>
-              
-              {/* Speech bubble arrow */}
-              <div className="absolute -bottom-2 left-8 w-4 h-4 bg-slate-800 border-r-2 border-b-2 border-violet-500 transform rotate-45" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Expanded Panel (Future: full A.E.G.I.S. interface) */}
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed z-50 w-96 max-h-[600px]"
-            style={{
-              bottom: 'max(112px, calc(env(safe-area-inset-bottom, 24px) + 88px))',
-              left: 'max(24px, env(safe-area-inset-left, 24px))'
-            }}
-          >
-            <div className="bg-slate-900 border-2 border-violet-500 rounded-xl shadow-2xl shadow-violet-500/30 overflow-hidden">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-violet-600 to-purple-600 p-4 flex items-center justify-between border-b-2 border-violet-400">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center border-2 border-white/50">
-                    <Radio className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-white font-bold font-mono">A.E.G.I.S.</div>
-                    <div className="text-xs text-violet-100 font-mono">Adaptive Executive Governance & Intelligence System</div>
-                  </div>
+                <div className="flex items-start gap-2">
+                  <Radio className="h-3 w-3 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-violet-200 font-mono leading-relaxed">{currentMessage}</p>
                 </div>
-                <button
-                  onClick={() => setIsExpanded(false)}
-                  className="bg-white/20 hover:bg-white/30 text-white rounded-lg p-1 border-2 border-white/30"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Interface */}
+          <div className="flex-1 overflow-hidden">
+            <AegisInterface />
+          </div>
+        </div>
+
+        {/* Tab — attached to RIGHT edge of panel, always visible */}
+        <button
+          onClick={handleTabClick}
+          className="relative flex-shrink-0 flex flex-col items-center justify-between py-3 px-1.5 bg-violet-700 hover:bg-violet-600 border border-violet-500/70 border-l-0 rounded-r-xl shadow-xl transition-colors"
+          style={{ width: 28 }}
+        >
+          {/* Mini face */}
+          <AegisFace expression={expression} isTalking={isTalking} size={22} />
+
+          {/* Label rotated */}
+          <span
+            className="text-[9px] font-bold font-mono text-violet-200 tracking-widest uppercase"
+            style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', lineHeight: 1 }}
+          >
+            A.E.G.I.S.
+          </span>
+
+          {/* Chevron direction hint */}
+          <ChevronRight
+            className="h-3 w-3 text-violet-300"
+            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
+          />
+
+          {/* Message dot indicator when closed */}
+          <AnimatePresence>
+            {showMessage && !isOpen && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                className="absolute -top-1 -right-1 w-3 h-3 bg-violet-400 rounded-full border-2 border-slate-950"
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Live indicator dot */}
+          <motion.div
+            animate={{ opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-green-400 rounded-full"
+          />
+        </button>
+      </motion.div>
+
+      {/* ── SPEECH BUBBLE (visible when AEGIS is closed, floats near the tab) ── */}
+      <AnimatePresence>
+        {showMessage && !isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            className="fixed z-[59] max-w-[260px]"
+            style={{
+              bottom: `calc(${bottomOffset} + 36px)`,
+              left: 36,
+            }}
+          >
+            <div className="relative bg-slate-800/95 border border-violet-500/70 rounded-xl p-3 shadow-xl shadow-violet-500/20">
+              <button
+                onClick={() => setShowMessage(false)}
+                className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-700 border border-violet-500 flex items-center justify-center hover:bg-slate-600"
+              >
+                <X className="h-2.5 w-2.5 text-white" />
+              </button>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Radio className="h-2.5 w-2.5 text-violet-400" />
+                <span className="text-[9px] font-mono text-violet-400 uppercase tracking-wider">A.E.G.I.S. Advisory</span>
               </div>
-              
-              {/* Content */}
-              <div className="p-0 max-h-[600px] overflow-hidden">
-                <AegisInterface />
-              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">{currentMessage}</p>
+              {/* Arrow pointing down-left toward tab */}
+              <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-slate-800 border-r border-b border-violet-500/70 transform rotate-45" />
             </div>
           </motion.div>
         )}
