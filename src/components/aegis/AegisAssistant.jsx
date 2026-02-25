@@ -330,16 +330,13 @@ export default function AegisAssistant() {
   const TAB_W = 32;
 
   // ── Swipe-to-close for docked face
-  const dragX = useMotionValue(0);
   const handleDragEnd = useCallback((_, info) => {
-    // If dragged left more than 40px, close
-    if (info.offset.x < -40) {
+    // If dragged left more than 40px or fast flick, close
+    if (info.offset.x < -40 || info.velocity.x < -200) {
       setPanelState(STATE.CLOSED);
       play('click', 0.1);
-    } else {
-      dragX.set(0);
     }
-  }, [dragX, play]);
+  }, [play]);
 
   return (
     <>
