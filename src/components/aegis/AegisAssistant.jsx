@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { X, Radio, ChevronRight, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
