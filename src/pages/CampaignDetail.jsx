@@ -178,7 +178,8 @@ export default function CampaignDetail({ currentCharacter }) {
               <SelectTrigger className="text-xs sm:text-sm" style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}>
                 <SelectValue />
               </SelectTrigger>
-                  <SelectItem value="player">Player</SelectItem>
+              <SelectContent>
+                <SelectItem value="player">Player</SelectItem>
                 <SelectItem value="dashboard">Dashboard</SelectItem>
                 <SelectItem value="log">Session Log</SelectItem>
                 <SelectItem value="quests">Quests</SelectItem>
