@@ -355,6 +355,31 @@ export default function Settings() {
           </div>
         </div>
 
+        {/* Director Boot Settings */}
+        {isDM && (
+          <div className="rounded-xl border mb-4 overflow-hidden"
+            style={{ background: panel0, borderColor: accentA + '30' }}>
+            <div className="px-4 py-3 border-b flex items-center gap-2"
+              style={{ borderColor: accentA + '20' }}>
+              <Shield className="h-4 w-4" style={{ color: accentA }} />
+              <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+                style={{ color: theme?.colors?.text0 }}>Biometric Boot Settings</span>
+            </div>
+            <div className="p-4 space-y-3">
+              <SettingRow label="Biometric Glitch Intensity" desc="Visual glitch intensity during scan (0-1)">
+                <Slider
+                  value={[settings.glitchIntensity || 0.3]}
+                  onValueChange={(v) => handleGlitchChange(v[0])}
+                  min={0}
+                  max={1}
+                  step={0.1}
+                  className="w-40"
+                />
+              </SettingRow>
+            </div>
+          </div>
+        )}
+
         {/* Visual QA Toggle */}
         <div className="rounded-xl border mb-4 overflow-hidden"
           style={{ background: panel0, borderColor: (theme?.colors?.accentB || '#5CCFFF') + '30' }}>
