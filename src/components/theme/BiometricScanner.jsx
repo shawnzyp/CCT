@@ -110,18 +110,64 @@ export default function BiometricScanner({
     }
   };
 
+  const handleMouseDown = (e) => {
+    if (disabled || isComplete) return;
+    e.preventDefault();
+    touchStartRef.current = Date.now();
+    setScanError(null);
+    setIsScanning(true);
+    setScanProgress(0);
+
+    const startTime = Date.now();
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / scanDuration, 1);
+      setScanProgress(progress);
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setIsScanning(false);
+        setIsComplete(true);
+        setScanProgress(1);
+        setTimeout(() => onAuthenticate?.(), 500);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+  };
+
+  const handleMouseUp = () => {
+    if (!isScanning || isComplete) return;
+
+    const elapsed = Date.now() - (touchStartRef.current || Date.now());
+    if (elapsed < scanDuration * 0.8) {
+      setIsScanning(false);
+      setScanError(true);
+      setScanProgress(0);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      setTimeout(() => setScanError(false), 2000);
+    }
+  };
+
   useEffect(() => {
     const ref = scanRef.current;
     if (!ref) return;
 
     ref.addEventListener('touchstart', handleTouchStart);
     ref.addEventListener('touchend', handleTouchEnd);
+    ref.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('touchend', handleTouchEnd);
+    document.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       ref?.removeEventListener('touchstart', handleTouchStart);
       ref?.removeEventListener('touchend', handleTouchEnd);
+      ref?.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('mouseup', handleMouseUp);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
