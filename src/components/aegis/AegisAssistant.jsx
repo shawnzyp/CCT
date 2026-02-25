@@ -513,21 +513,13 @@ export default function AegisAssistant() {
           <div
             key={advisory.id}
             className="fixed z-[61] pointer-events-none"
-            style={
-              !isVisible
-                ? {
-                    // Closed: bubble sits to the right of the tab, above nav
-                    left: 38,
-                    bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)',
-                    pointerEvents: 'none',
-                  }
-                : {
-                    // Open: bubble sits to the right of the face dock
-                    left: (isChatOpen ? CHAT_W : FACE_W) + 10,
-                    bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)',
-                    pointerEvents: 'none',
-                  }
-            }
+            style={{
+              // Always to the right of whatever is on the left edge
+              left: isVisible ? (isChatOpen ? CHAT_W : 60) + 10 : TAB_W + 10,
+              // Vertically aligned with the tab centre
+              bottom: 'calc(env(safe-area-inset-bottom, 0px) + 90px)',
+              pointerEvents: 'none',
+            }}
           >
             <AdvisoryBubble
               message={advisory.message}
