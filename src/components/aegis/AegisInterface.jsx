@@ -367,6 +367,12 @@ Answer the question based on the Catalyst Core rulebook. Follow all behavioral i
                   ? 'bg-slate-900 text-slate-200 border border-violet-800/60'
                   : 'bg-slate-800 text-slate-200 border border-slate-700'
               }`}>
+                {msg.isAction && (
+                  <div className="flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-violet-800/40">
+                    <Zap className="h-3 w-3 text-violet-400" />
+                    <span className="text-[10px] font-mono text-violet-400 uppercase tracking-widest">Action Module</span>
+                  </div>
+                )}
                 {msg.role === 'assistant' ? (
                   <ReactMarkdown
                     className="prose prose-sm prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
