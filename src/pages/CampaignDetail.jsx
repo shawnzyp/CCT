@@ -89,9 +89,9 @@ export default function CampaignDetail({ currentCharacter }) {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: theme?.background?.gradient || bg0 }}>
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-          <Zap className="h-8 w-8 text-violet-400" />
+          <Zap className="h-8 w-8" style={{ color: accentA }} />
         </motion.div>
       </div>
     );
@@ -99,11 +99,11 @@ export default function CampaignDetail({ currentCharacter }) {
   
   if (!campaign) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: theme?.background?.gradient || bg0 }}>
         <div className="text-center">
-          <h2 className="text-xl text-white mb-4">Campaign not found</h2>
+          <h2 className="text-xl font-mono font-semibold mb-4" style={{ color: text0 }}>Campaign not found</h2>
           <Link to={createPageUrl('Campaigns')}>
-            <Button>Back to Campaigns</Button>
+            <Button style={{ background: accentA, color: '#000' }}>Back to Campaigns</Button>
           </Link>
         </div>
       </div>
