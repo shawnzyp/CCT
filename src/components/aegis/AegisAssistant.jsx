@@ -168,16 +168,16 @@ function AdvisoryBubble({ message, anchorType, onDismiss }) {
 
         {/* Tail */}
         {anchorType === 'tab' ? (
-          /* Points down-left toward the tab */
+          /* Points left toward the tab */
           <div
             className="absolute"
             style={{
-              bottom: -7, left: 16,
+              left: -7, top: '50%', marginTop: -6,
               width: 12, height: 12,
               background: 'var(--cc-panel0, #1A1F26)',
               border: '1.5px solid rgba(139,92,246,0.55)',
               transform: 'rotate(45deg)',
-              borderTop: 'none', borderLeft: 'none',
+              borderTop: 'none', borderRight: 'none',
             }}
           />
         ) : (
