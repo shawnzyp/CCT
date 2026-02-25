@@ -299,6 +299,20 @@ export default function Settings() {
           </div>
         </div>
 
+        {/* A.E.G.I.S. Settings */}
+        <div className="rounded-xl border mb-4 overflow-hidden"
+          style={{ background: panel0, borderColor: 'rgba(139,92,246,0.3)' }}>
+          <div className="px-4 py-3 border-b flex items-center gap-2"
+            style={{ borderColor: 'rgba(139,92,246,0.2)' }}>
+            <Radio className="h-4 w-4" style={{ color: '#a78bfa' }} />
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.15em]"
+              style={{ color: theme?.colors?.text0 }}>A.E.G.I.S. Configuration</span>
+          </div>
+          <div className="p-4">
+            <AegisSettings />
+          </div>
+        </div>
+
         {/* Visual QA Toggle */}
         <div className="rounded-xl border mb-4 overflow-hidden"
           style={{ background: panel0, borderColor: (theme?.colors?.accentB || '#5CCFFF') + '30' }}>
