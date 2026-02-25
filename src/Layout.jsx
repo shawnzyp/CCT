@@ -410,11 +410,10 @@ function LayoutComponent({ children }) {
             <div className="flex items-center justify-around h-16">
               {bottomNavItems.map(item => {
                 const active = isActive(item.path);
-                return (
-                  <Link
-                    key={item.path}
-                    to={createPageUrl(item.path)}
-                    className="flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 relative"
+                const isCharacterAction = item.action === 'characterSelector';
+                
+                const NavElement = (
+                  <div className="flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 relative"
                     style={{
                               color: active ? accentA : muted,
                               transition: `color ${theme?.motion?.fast || 120}ms ease-out`,
@@ -422,15 +421,37 @@ function LayoutComponent({ children }) {
                   >
                     <item.icon
                       className="h-5 w-5"
-                      style={active ? { filter: `drop-shadow(0 0 5px ${accentA})` } : {}}
+                      style={active || isCharacterAction ? { filter: `drop-shadow(0 0 5px ${accentA})` } : {}}
                     />
                     <span className="text-[10px] font-mono">{item.label}</span>
-                    {active && (
+                    {(active || isCharacterAction) && (
                       <span
                         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full"
                         style={{ background: accentA }}
                       />
                     )}
+                  </div>
+                );
+                
+                if (isCharacterAction) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={() => setShowCharacterSelector(true)}
+                      className="h-full"
+                    >
+                      {NavElement}
+                    </button>
+                  );
+                }
+                
+                return (
+                  <Link
+                    key={item.label}
+                    to={createPageUrl(item.path)}
+                    className="h-full"
+                  >
+                    {NavElement}
                   </Link>
                 );
               })}
