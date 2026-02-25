@@ -32,7 +32,17 @@ const DEFAULT_SETTINGS = {
   initiativeReminders: true,
   autoRollInitiative: false,
   compactMode: false,
-  showGridLines: false
+  showGridLines: false,
+
+  // A.E.G.I.S. Settings
+  aegisEnabled: true,
+  aegisCommunicationStyle: 'tactical',   // 'tactical' | 'balanced' | 'verbose'
+  aegisProactiveTips: true,
+  aegisAdvisoryInterval: 90,             // seconds between advisory messages
+  aegisAreasOfFocus: ['rules', 'combat', 'lore'], // which domains to emphasize
+  aegisActionModules: true,              // allow AEGIS to perform app actions
+  aegisConversationHistory: true,        // use prior messages as context
+  aegisNotifyOnNewContent: true          // advisory bubbles on new campaign events
 };
 
 export function useSettings() {
