@@ -12,53 +12,53 @@ const BUBBLE_DURATION_MS = 8_000;
 
 // ── ENCOURAGEMENTS ───────────────────────────────────────────────────────────
 const ENCOURAGEMENTS = [
-  "#character, status: alive. Keep it that way, hero.",
-  "#character, move your ass. Standing still is how you become a memorial.",
-  "#character, breathe. Panic is for amateurs and talk shows.",
-  "#character, confirm objective. Vibes are not tactical data.",
-  "#character, you have one job: make the problem smaller.",
-  "#character, keep your head up. The city loves cheap shots.",
-  "#character, lock in. The universe is trying to clown you.",
-  "#character, focus. Your feelings can file a complaint later.",
-  "#character, no drama. Save it for the debrief and the bottle.",
-  "#character, eyes up. Threats do not announce themselves like decent people.",
-  "#character, execute. Overthinking is just fear wearing glasses.",
-  "#character, stay sharp. Dull heroes get used as examples.",
-  "#character, you are not outmatched. You are underprepared. Fix it.",
-  "#character, keep comms short. Syllables save lives.",
-  "#character, stop hesitating. The clock does not give a damn.",
-  "#character, use cover. Bravery is not armor.",
-  "#character, you can be scared. Just do not be stupid about it.",
-  "#character, tighten your plan. Loose plans bleed.",
-  "#character, you are the solution. Act like it.",
-  "#character, keep moving. Gravity is undefeated and petty.",
-  "#character, adapt. Plans die fast in New York.",
-  "#character, stay disciplined. Chaos is already on payroll.",
-  "#character, do not freeze. If you freeze, do it behind something solid.",
-  "#character, take control. If you cannot, take away theirs.",
-  "#character, remember: you do not need perfect. You need effective.",
-  "#character, keep it simple. Complex plans get people killed confidently.",
-  "#character, hold the line. That is literally why you are here.",
-  "#character, you are not invincible. Act accordingly, smartass.",
-  "#character, stop second-guessing. Make a call and make it real.",
-  "#character, if it is scary, it is probably important. How fun for you.",
-  "#character, stay mobile. Stationary targets get paperwork and funerals.",
-  "#character, courage is fear with orders and a dirty mouth.",
-  "#character, finish the job. Then collapse. In that order.",
-];
+"#character, status: alive. Keep it that way, hero.",
+"#character, move your ass. Standing still is how you become a memorial.",
+"#character, breathe. Panic is for amateurs and talk shows.",
+"#character, confirm objective. Vibes are not tactical data.",
+"#character, you have one job: make the problem smaller.",
+"#character, keep your head up. The city loves cheap shots.",
+"#character, lock in. The universe is trying to clown you.",
+"#character, focus. Your feelings can file a complaint later.",
+"#character, no drama. Save it for the debrief and the bottle.",
+"#character, eyes up. Threats do not announce themselves like decent people.",
+"#character, execute. Overthinking is just fear wearing glasses.",
+"#character, stay sharp. Dull heroes get used as examples.",
+"#character, you are not outmatched. You are underprepared. Fix it.",
+"#character, keep comms short. Syllables save lives.",
+"#character, stop hesitating. The clock does not give a damn.",
+"#character, use cover. Bravery is not armor.",
+"#character, you can be scared. Just do not be stupid about it.",
+"#character, tighten your plan. Loose plans bleed.",
+"#character, you are the solution. Act like it.",
+"#character, keep moving. Gravity is undefeated and petty.",
+"#character, adapt. Plans die fast in New York.",
+"#character, stay disciplined. Chaos is already on payroll.",
+"#character, do not freeze. If you freeze, do it behind something solid.",
+"#character, take control. If you cannot, take away theirs.",
+"#character, remember: you do not need perfect. You need effective.",
+"#character, keep it simple. Complex plans get people killed confidently.",
+"#character, hold the line. That is literally why you are here.",
+"#character, you are not invincible. Act accordingly, smartass.",
+"#character, stop second-guessing. Make a call and make it real.",
+"#character, if it is scary, it is probably important. How fun for you.",
+"#character, stay mobile. Stationary targets get paperwork and funerals.",
+"#character, courage is fear with orders and a dirty mouth.",
+"#character, finish the job. Then collapse. In that order."];
+
 
 // ── EXPRESSIONS ──────────────────────────────────────────────────────────────
 const EXPRESSIONS = {
-  neutral:   { eyeScale: 1,   mouthWidth: 24, mouthY: 0, mouthCurve: 0,  eyeSpacing: 6 },
-  happy:     { eyeScale: 1.1, mouthWidth: 28, mouthY: 2, mouthCurve: 4,  eyeSpacing: 6 },
-  thinking:  { eyeScale: 0.7, mouthWidth: 16, mouthY: 0, mouthCurve: -2, eyeSpacing: 5 },
-  confident: { eyeScale: 0.8, mouthWidth: 26, mouthY: 1, mouthCurve: 3,  eyeSpacing: 6 },
-  analyzing: { eyeScale: 1.1, mouthWidth: 20, mouthY: 0, mouthCurve: 0,  eyeSpacing: 6 },
-  alert:     { eyeScale: 1.3, mouthWidth: 20, mouthY: 0, mouthCurve: 1,  eyeSpacing: 7 },
-  focused:   { eyeScale: 0.5, mouthWidth: 22, mouthY: 0, mouthCurve: 0,  eyeSpacing: 5 },
-  calm:      { eyeScale: 0.8, mouthWidth: 24, mouthY: 0, mouthCurve: 1,  eyeSpacing: 6 },
-  amused:    { eyeScale: 0.9, mouthWidth: 24, mouthY: 1, mouthCurve: 2,  eyeSpacing: 6 },
-  serious:   { eyeScale: 0.7, mouthWidth: 20, mouthY: -1,mouthCurve: 0,  eyeSpacing: 5 },
+  neutral: { eyeScale: 1, mouthWidth: 24, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
+  happy: { eyeScale: 1.1, mouthWidth: 28, mouthY: 2, mouthCurve: 4, eyeSpacing: 6 },
+  thinking: { eyeScale: 0.7, mouthWidth: 16, mouthY: 0, mouthCurve: -2, eyeSpacing: 5 },
+  confident: { eyeScale: 0.8, mouthWidth: 26, mouthY: 1, mouthCurve: 3, eyeSpacing: 6 },
+  analyzing: { eyeScale: 1.1, mouthWidth: 20, mouthY: 0, mouthCurve: 0, eyeSpacing: 6 },
+  alert: { eyeScale: 1.3, mouthWidth: 20, mouthY: 0, mouthCurve: 1, eyeSpacing: 7 },
+  focused: { eyeScale: 0.5, mouthWidth: 22, mouthY: 0, mouthCurve: 0, eyeSpacing: 5 },
+  calm: { eyeScale: 0.8, mouthWidth: 24, mouthY: 0, mouthCurve: 1, eyeSpacing: 6 },
+  amused: { eyeScale: 0.9, mouthWidth: 24, mouthY: 1, mouthCurve: 2, eyeSpacing: 6 },
+  serious: { eyeScale: 0.7, mouthWidth: 20, mouthY: -1, mouthCurve: 0, eyeSpacing: 5 }
 };
 
 // ── AEGIS FACE SVG ────────────────────────────────────────────────────────────
@@ -71,36 +71,36 @@ function AegisFace({ expression, isTalking, size = 56 }) {
         width: size, height: size,
         background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
         border: '2px solid rgba(167,139,250,0.7)',
-        boxShadow: '0 0 14px rgba(139,92,246,0.45)',
-      }}
-    >
+        boxShadow: '0 0 14px rgba(139,92,246,0.45)'
+      }}>
+
       {/* Scan line */}
       <motion.div
         animate={{ y: ['-100%', '100%'] }}
         transition={{ duration: 2.4, repeat: Infinity, ease: 'linear' }}
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(transparent, rgba(167,139,250,0.25), transparent)' }}
-      />
+        style={{ background: 'linear-gradient(transparent, rgba(167,139,250,0.25), transparent)' }} />
+
       {/* Pulse ring */}
       <motion.div
         animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0, 0.4] }}
         transition={{ duration: 2, repeat: Infinity }}
         className="absolute inset-0 rounded-full"
-        style={{ border: '2px solid rgba(167,139,250,0.6)' }}
-      />
+        style={{ border: '2px solid rgba(167,139,250,0.6)' }} />
+
       {/* Face */}
       <div className="relative z-10 flex flex-col items-center justify-center" style={{ gap: 4 }}>
         {/* Eyes */}
         <div className="flex" style={{ gap: expr.eyeSpacing }}>
-          {[0, 1].map(i => (
-            <motion.div
-              key={i}
-              className="bg-white rounded-full"
-              style={{ width: 9, height: 9 }}
-              animate={{ scaleY: expr.eyeScale }}
-              transition={{ duration: 0.3 }}
-            />
-          ))}
+          {[0, 1].map((i) =>
+          <motion.div
+            key={i}
+            className="bg-white rounded-full"
+            style={{ width: 9, height: 9 }}
+            animate={{ scaleY: expr.eyeScale }}
+            transition={{ duration: 0.3 }} />
+
+          )}
         </div>
         {/* Mouth */}
         <svg width={size * 0.5} height={10} style={{ overflow: 'visible' }}>
@@ -112,19 +112,19 @@ function AegisFace({ expression, isTalking, size = 56 }) {
             strokeLinecap="round"
             animate={isTalking ? {
               d: [
-                `M 2 6 Q ${size * 0.25} 6 ${expr.mouthWidth} 6`,
-                `M 2 6 Q ${size * 0.25} 9 ${expr.mouthWidth} 6`,
-                `M 2 6 Q ${size * 0.25} 3 ${expr.mouthWidth} 6`,
-                `M 2 6 Q ${size * 0.25} 9 ${expr.mouthWidth} 6`,
-                `M 2 6 Q ${size * 0.25} 6 ${expr.mouthWidth} 6`,
-              ]
+              `M 2 6 Q ${size * 0.25} 6 ${expr.mouthWidth} 6`,
+              `M 2 6 Q ${size * 0.25} 9 ${expr.mouthWidth} 6`,
+              `M 2 6 Q ${size * 0.25} 3 ${expr.mouthWidth} 6`,
+              `M 2 6 Q ${size * 0.25} 9 ${expr.mouthWidth} 6`,
+              `M 2 6 Q ${size * 0.25} 6 ${expr.mouthWidth} 6`]
+
             } : {}}
-            transition={{ duration: 0.5, repeat: isTalking ? Infinity : 0, ease: 'easeInOut' }}
-          />
+            transition={{ duration: 0.5, repeat: isTalking ? Infinity : 0, ease: 'easeInOut' }} />
+
         </svg>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 // ── ADVISORY BUBBLE ───────────────────────────────────────────────────────────
@@ -137,16 +137,16 @@ function AdvisoryBubble({ message, anchorType, onDismiss }) {
       exit={{ opacity: 0, x: -12 }}
       transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1] }}
       className="relative max-w-[240px]"
-      style={{ pointerEvents: 'auto' }}
-    >
+      style={{ pointerEvents: 'auto' }}>
+
       <div
         className="relative rounded-xl p-3 shadow-xl"
         style={{
           background: 'var(--cc-panel0, #1A1F26)',
           border: '1.5px solid rgba(139,92,246,0.55)',
-          boxShadow: '0 4px 24px rgba(139,92,246,0.22)',
-        }}
-      >
+          boxShadow: '0 4px 24px rgba(139,92,246,0.22)'
+        }}>
+
         {/* Header */}
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <div className="flex items-center gap-1.5">
@@ -157,8 +157,8 @@ function AdvisoryBubble({ message, anchorType, onDismiss }) {
           </div>
           <button
             onClick={onDismiss}
-            className="cc-sm-target w-5 h-5 min-h-0 min-w-0 flex items-center justify-center rounded-full hover:bg-violet-500/20 transition-colors"
-          >
+            className="cc-sm-target w-5 h-5 min-h-0 min-w-0 flex items-center justify-center rounded-full hover:bg-violet-500/20 transition-colors">
+
             <X className="h-3 w-3 text-violet-300" />
           </button>
         </div>
@@ -168,35 +168,35 @@ function AdvisoryBubble({ message, anchorType, onDismiss }) {
 
         {/* Tail */}
         {anchorType === 'tab' ? (
-          /* Points left toward the tab */
-          <div
-            className="absolute"
-            style={{
-              left: -7, top: '50%', marginTop: -6,
-              width: 12, height: 12,
-              background: 'var(--cc-panel0, #1A1F26)',
-              border: '1.5px solid rgba(139,92,246,0.55)',
-              transform: 'rotate(45deg)',
-              borderTop: 'none', borderRight: 'none',
-            }}
-          />
-        ) : (
-          /* Points left toward face */
-          <div
-            className="absolute"
-            style={{
-              left: -7, top: '50%', marginTop: -6,
-              width: 12, height: 12,
-              background: 'var(--cc-panel0, #1A1F26)',
-              border: '1.5px solid rgba(139,92,246,0.55)',
-              transform: 'rotate(45deg)',
-              borderTop: 'none', borderRight: 'none',
-            }}
-          />
-        )}
+        /* Points left toward the tab */
+        <div
+          className="absolute"
+          style={{
+            left: -7, top: '50%', marginTop: -6,
+            width: 12, height: 12,
+            background: 'var(--cc-panel0, #1A1F26)',
+            border: '1.5px solid rgba(139,92,246,0.55)',
+            transform: 'rotate(45deg)',
+            borderTop: 'none', borderRight: 'none'
+          }} />) : (
+
+
+        /* Points left toward face */
+        <div
+          className="absolute"
+          style={{
+            left: -7, top: '50%', marginTop: -6,
+            width: 12, height: 12,
+            background: 'var(--cc-panel0, #1A1F26)',
+            border: '1.5px solid rgba(139,92,246,0.55)',
+            transform: 'rotate(45deg)',
+            borderTop: 'none', borderRight: 'none'
+          }} />)
+
+        }
       </div>
-    </motion.div>
-  );
+    </motion.div>);
+
 }
 
 // ── MAIN COMPONENT ────────────────────────────────────────────────────────────
@@ -267,7 +267,7 @@ export default function AegisAssistant() {
     play('navigate', 0.1);
 
     // Mark unread only when closed
-    setPanelState(s => {
+    setPanelState((s) => {
       if (s === STATE.CLOSED) setHasUnread(true);
       return s;
     });
@@ -283,13 +283,13 @@ export default function AegisAssistant() {
   useEffect(() => {
     const first = setTimeout(showAdvisory, 12_000);
     const recurring = setInterval(showAdvisory, 90_000 + Math.random() * 60_000);
-    return () => { clearTimeout(first); clearInterval(recurring); };
+    return () => {clearTimeout(first);clearInterval(recurring);};
   }, [showAdvisory]);
 
   // ── Interaction handlers
   const handleTabPress = useCallback(() => {
     play('click', 0.2);
-    setPanelState(s => {
+    setPanelState((s) => {
       if (s === STATE.CLOSED) return STATE.DOCKED;
       if (s === STATE.DOCKED) return STATE.CLOSED;
       if (s === STATE.CHAT) return STATE.DOCKED;
@@ -322,8 +322,8 @@ export default function AegisAssistant() {
   const isChatOpen = panelState === STATE.CHAT;
 
   // Panel width
-  const FACE_W = 80;   // px – face dock
-  const CHAT_W = 320;  // px – chat panel
+  const FACE_W = 80; // px – face dock
+  const CHAT_W = 320; // px – chat panel
   const FACE_OFFSET = 12; // px buffer from left edge when face is docked
 
   // TAB_W must match the tab button width
@@ -349,13 +349,13 @@ export default function AegisAssistant() {
         style={{
           left: 0,
           bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
-          willChange: 'transform',
-        }}
-      >
+          willChange: 'transform'
+        }}>
+
         <button
           onClick={handleTabPress}
-          aria-label="Open A.E.G.I.S."
-          className="relative flex flex-col items-center justify-center gap-0.5 rounded-r-xl"
+          aria-label="Open A.E.G.I.S." className="rounded-[0px_16px_16px_0px] relative flex flex-col items-center justify-center gap-0.5"
+
           style={{
             width: TAB_W,
             paddingTop: 10,
@@ -364,24 +364,24 @@ export default function AegisAssistant() {
             background: 'var(--cc-panel0, #1A1F26)',
             border: '1.5px solid rgba(139,92,246,0.5)',
             borderLeft: 'none',
-            boxShadow: hasUnread
-              ? '0 0 12px rgba(139,92,246,0.7), 2px 0 12px rgba(139,92,246,0.4)'
-              : '2px 0 10px rgba(139,92,246,0.2)',
-            transition: 'box-shadow 300ms ease',
-          }}
-        >
+            boxShadow: hasUnread ?
+            '0 0 12px rgba(139,92,246,0.7), 2px 0 12px rgba(139,92,246,0.4)' :
+            '2px 0 10px rgba(139,92,246,0.2)',
+            transition: 'box-shadow 300ms ease'
+          }}>
+
           {/* Unread dot */}
           <AnimatePresence>
-            {hasUnread && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-                exit={{ scale: 0 }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-                className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-violet-400"
-                style={{ boxShadow: '0 0 6px rgba(167,139,250,0.8)' }}
-              />
-            )}
+            {hasUnread &&
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+              exit={{ scale: 0 }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+              className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-violet-400"
+              style={{ boxShadow: '0 0 6px rgba(167,139,250,0.8)' }} />
+
+            }
           </AnimatePresence>
 
           {/* Vertical label */}
@@ -392,9 +392,9 @@ export default function AegisAssistant() {
               transform: 'rotate(180deg)',
               color: hasUnread ? '#a78bfa' : 'rgba(139,92,246,0.8)',
               letterSpacing: '0.15em',
-              lineHeight: 1,
-            }}
-          >
+              lineHeight: 1
+            }}>
+
             A.E.G.I.S.
           </span>
           <ChevronRight className="h-3 w-3 text-violet-400" />
@@ -402,38 +402,38 @@ export default function AegisAssistant() {
       </motion.div>
 
       {/* ── DOCKED: bare face floating beside the tab position ─────────── */}
-      {!isChatOpen && (
-        <motion.div
-          aria-label="A.E.G.I.S. face"
-          animate={{ x: panelState === STATE.DOCKED ? FACE_OFFSET : -(FACE_W + 16) }}
-          initial={{ x: -(FACE_W + 16) }}
-          transition={{ duration: 0.27, ease: [0.2, 0.8, 0.2, 1] }}
-          drag={panelState === STATE.DOCKED ? 'x' : false}
-          dragConstraints={{ left: -(FACE_W + 40), right: FACE_OFFSET }}
-          dragElastic={0.1}
-          onDragEnd={handleDragEnd}
-          onClick={handleAegisInteraction}
-          className="fixed z-[60] touch-none select-none"
-          style={{
-            left: 0,
-            bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
-            pointerEvents: panelState === STATE.DOCKED ? 'auto' : 'none',
-            willChange: 'transform',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 4,
-          }}
-        >
+      {!isChatOpen &&
+      <motion.div
+        aria-label="A.E.G.I.S. face"
+        animate={{ x: panelState === STATE.DOCKED ? FACE_OFFSET : -(FACE_W + 16) }}
+        initial={{ x: -(FACE_W + 16) }}
+        transition={{ duration: 0.27, ease: [0.2, 0.8, 0.2, 1] }}
+        drag={panelState === STATE.DOCKED ? 'x' : false}
+        dragConstraints={{ left: -(FACE_W + 40), right: FACE_OFFSET }}
+        dragElastic={0.1}
+        onDragEnd={handleDragEnd}
+        onClick={handleAegisInteraction}
+        className="fixed z-[60] touch-none select-none"
+        style={{
+          left: 0,
+          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
+          pointerEvents: panelState === STATE.DOCKED ? 'auto' : 'none',
+          willChange: 'transform',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 4
+        }}>
+
           {/* Face — tap to open chat */}
           <div
-            role="button"
-            tabIndex={0}
-            aria-label="Open A.E.G.I.S. Chat"
-            className="cursor-pointer"
-            onClick={handleFacePress}
-            onKeyDown={e => e.key === 'Enter' && handleFacePress()}
-          >
+          role="button"
+          tabIndex={0}
+          aria-label="Open A.E.G.I.S. Chat"
+          className="cursor-pointer"
+          onClick={handleFacePress}
+          onKeyDown={(e) => e.key === 'Enter' && handleFacePress()}>
+
             <AegisFace expression={expression} isTalking={isTalking} size={52} />
           </div>
           {/* ONLINE + chat hint */}
@@ -445,7 +445,7 @@ export default function AegisAssistant() {
             </div>
           </div>
         </motion.div>
-      )}
+      }
 
       {/* ── CHAT PANEL (only when CHAT_OPEN) ─────────────────────────────── */}
       <motion.div
@@ -464,24 +464,24 @@ export default function AegisAssistant() {
           willChange: 'transform',
           display: 'flex',
           flexDirection: 'column',
-          overflow: 'hidden',
+          overflow: 'hidden'
         }}
-        onClick={handleAegisInteraction}
-      >
+        onClick={handleAegisInteraction}>
+
         <div
           className="flex flex-col h-full rounded-r-xl overflow-hidden"
           style={{
             background: 'var(--cc-panel0, #1A1F26)',
             border: '1.5px solid rgba(139,92,246,0.45)',
             borderLeft: 'none',
-            boxShadow: '4px 0 24px rgba(139,92,246,0.2)',
-          }}
-        >
+            boxShadow: '4px 0 24px rgba(139,92,246,0.2)'
+          }}>
+
           {/* Chat header with face anchor */}
           <div
             className="flex-shrink-0 flex flex-col items-center py-3 gap-1"
-            style={{ borderBottom: '1px solid rgba(139,92,246,0.25)', background: 'linear-gradient(180deg, rgba(109,40,217,0.12) 0%, transparent 100%)' }}
-          >
+            style={{ borderBottom: '1px solid rgba(139,92,246,0.25)', background: 'linear-gradient(180deg, rgba(109,40,217,0.12) 0%, transparent 100%)' }}>
+
             <div className="w-full flex items-center justify-between px-3">
               <div className="flex items-center gap-2">
                 <AegisFace expression={expression} isTalking={isTalking} size={36} />
@@ -493,8 +493,8 @@ export default function AegisAssistant() {
               <button
                 onClick={handleCloseChat}
                 aria-label="Close A.E.G.I.S. Chat"
-                className="cc-sm-target h-7 w-7 min-h-0 min-w-0 flex items-center justify-center rounded-lg hover:bg-violet-500/20 transition-colors"
-              >
+                className="cc-sm-target h-7 w-7 min-h-0 min-w-0 flex items-center justify-center rounded-lg hover:bg-violet-500/20 transition-colors">
+
                 <X className="h-4 w-4 text-violet-300" />
               </button>
             </div>
@@ -505,8 +505,8 @@ export default function AegisAssistant() {
             className="flex-1 overflow-hidden"
             onClick={handleAegisInteraction}
             onScroll={handleAegisInteraction}
-            onKeyDown={handleAegisInteraction}
-          >
+            onKeyDown={handleAegisInteraction}>
+
             <AegisInterface compact />
           </div>
         </div>
@@ -514,30 +514,30 @@ export default function AegisAssistant() {
 
       {/* ── ADVISORY BUBBLE ──────────────────────────────────────────────── */}
       <AnimatePresence>
-        {advisory && (
-          <div
-            key={advisory.id}
-            className="fixed z-[61] pointer-events-none"
-            style={{
-              // Always to the right of whatever is on the left edge
-              left: isVisible ? (isChatOpen ? CHAT_W : FACE_OFFSET + FACE_W) + 8 : TAB_W + 10,
-              // Vertically aligned with the tab centre
-              bottom: 'calc(env(safe-area-inset-bottom, 0px) + 90px)',
-              pointerEvents: 'none',
-            }}
-          >
+        {advisory &&
+        <div
+          key={advisory.id}
+          className="fixed z-[61] pointer-events-none"
+          style={{
+            // Always to the right of whatever is on the left edge
+            left: isVisible ? (isChatOpen ? CHAT_W : FACE_OFFSET + FACE_W) + 8 : TAB_W + 10,
+            // Vertically aligned with the tab centre
+            bottom: 'calc(env(safe-area-inset-bottom, 0px) + 90px)',
+            pointerEvents: 'none'
+          }}>
+
             <AdvisoryBubble
-              message={advisory.message}
-              anchorType={!isVisible ? 'tab' : 'face'}
-              onDismiss={() => {
-                setAdvisory(null);
-                setIsTalking(false);
-                setHasUnread(false);
-              }}
-            />
+            message={advisory.message}
+            anchorType={!isVisible ? 'tab' : 'face'}
+            onDismiss={() => {
+              setAdvisory(null);
+              setIsTalking(false);
+              setHasUnread(false);
+            }} />
+
           </div>
-        )}
+        }
       </AnimatePresence>
-    </>
-  );
+    </>);
+
 }
