@@ -253,8 +253,8 @@ function LayoutComponent({ children }) {
                   ))}
                 </nav>
 
-                {/* Character + Save */}
-                <div className="flex items-center gap-2">
+                {/* Character + Status Dot */}
+                <div className="flex items-center gap-4">
                   <div className="hidden lg:flex items-center">
                     {currentCharacter ? (
                       <button
@@ -279,35 +279,8 @@ function LayoutComponent({ children }) {
                     )}
                   </div>
 
-                  {/* Save Button */}
-                  <div className="flex flex-col items-center">
-                    <button
-                      onClick={handleSave}
-                      disabled={isSaving}
-                      className="flex items-center gap-1.5 px-2.5 h-8 rounded-md text-xs font-medium transition-all"
-                      style={{
-                            background: isSaving ? (theme?.colors?.success || '#00D1B2') : accentA,
-                            color: '#000',
-                            transition: `background ${theme?.motion?.med || 220}ms ease-out`,
-                          }}
-                    >
-                      <AnimatePresence mode="wait">
-                        {isSaving ? (
-                          <motion.div key="check" initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0 }}>
-                            <Check className="h-3 w-3" />
-                          </motion.div>
-                        ) : (
-                          <motion.div key="save" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                            <Save className="h-3 w-3" />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                      <span className="hidden sm:inline">Save</span>
-                    </button>
-                    <span className="text-[8px] mt-0.5 whitespace-nowrap leading-none font-mono" style={{ color: muted }}>
-                      {formatLastSaved()}
-                    </span>
-                  </div>
+                  {/* Save Status Dot */}
+                  <SaveStatusDot />
                 </div>
 
                 {/* Mobile menu toggle */}
