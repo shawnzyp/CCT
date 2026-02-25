@@ -24,6 +24,7 @@ export default function Settings() {
   const { settings, updateSettings } = useSettings();
   const { play } = useSoundEffects();
   const { theme } = useTheme();
+  const isDM = localStorage.getItem('isDM') === 'true';
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
