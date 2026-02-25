@@ -385,20 +385,18 @@ export default function AegisAssistant() {
           </AnimatePresence>
 
           {/* Vertical label */}
-          <div className="flex flex-col items-center" style={{ gap: 1 }}>
-            {'A.E.G.I.S.'.split('').map((ch, i) => (
-              <span
-                key={i}
-                className="font-mono text-[9px] font-bold uppercase"
-                style={{
-                  color: hasUnread ? '#a78bfa' : 'rgba(139,92,246,0.8)',
-                  lineHeight: 1,
-                  display: 'block',
-                }}>
-                {ch}
-              </span>
-            ))}
-          </div>
+          <span
+            className="font-mono text-[9px] font-bold uppercase"
+            style={{
+              writingMode: 'vertical-rl',
+              transform: 'rotate(180deg)',
+              color: hasUnread ? '#a78bfa' : 'rgba(139,92,246,0.8)',
+              letterSpacing: '0.15em',
+              lineHeight: 1
+            }}>
+
+            A.E.G.I.S.
+          </span>
           <ChevronRight className="h-3 w-3 text-violet-400" />
         </button>
       </motion.div>
