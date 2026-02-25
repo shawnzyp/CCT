@@ -161,14 +161,6 @@ export default function Layout({ children }) {
   return (
     <TutorialProvider>
       <AegisProvider>
-        {/* Boot sequence */}
-        {showBoot && (
-          <BootSequence
-            theme={theme}
-            reducedMotion={settings.reducedMotion}
-            onComplete={handleBootComplete}
-          />
-        )}
 
         <div
           className={cn("min-h-screen overflow-x-hidden relative", fontSizeClass, settings.highContrast && "contrast-125")}
