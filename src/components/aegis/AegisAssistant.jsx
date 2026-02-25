@@ -324,9 +324,22 @@ export default function AegisAssistant() {
   // Panel width
   const FACE_W = 80;   // px – face dock
   const CHAT_W = 320;  // px – chat panel
+  const FACE_OFFSET = 12; // px buffer from left edge when face is docked
 
   // TAB_W must match the tab button width
   const TAB_W = 32;
+
+  // ── Swipe-to-close for docked face
+  const dragX = useMotionValue(0);
+  const handleDragEnd = useCallback((_, info) => {
+    // If dragged left more than 40px, close
+    if (info.offset.x < -40) {
+      setPanelState(STATE.CLOSED);
+      play('click', 0.1);
+    } else {
+      dragX.set(0);
+    }
+  }, [dragX, play]);
 
   return (
     <>
