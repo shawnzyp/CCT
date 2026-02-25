@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor, FlaskConical, Radio } from "lucide-react";
+import { Settings as SettingsIcon, Play, Trash2, AlertTriangle, ShieldAlert, Palette, Monitor, FlaskConical, Radio, Shield } from "lucide-react";
 import AegisSettings from '@/components/aegis/AegisSettings';
 import SessionLinkPanel from '@/components/session/SessionLinkPanel';
 import EventInbox from '@/components/session/EventInbox';
