@@ -6,25 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search, BookOpen, Play, Pause, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import CreateCampaignDialog from "@/components/campaign/CreateCampaignDialog";
 import PullToRefresh from "@/components/utils/PullToRefresh";
+import { useSettings } from '@/components/utils/useSettings';
+import { useTheme } from '@/components/theme/useTheme';
 
 const STATUS_ICONS = {
   planning: Pause,
   active: Play,
   completed: CheckCircle,
   on_hold: Pause
-};
-
-const STATUS_COLORS = {
-  planning: 'bg-slate-500/20 text-slate-400 border-slate-500/50',
-  active: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50',
-  completed: 'bg-blue-500/20 text-blue-400 border-blue-500/50',
-  on_hold: 'bg-amber-500/20 text-amber-400 border-amber-500/50'
 };
 
 export default function Campaigns() {
