@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useBiometricAuth } from './useBiometricAuth';
+import OMNIBootSequence from './faction-boots/OMNIBootSequence';
+import PFVBootSequence from './faction-boots/PFVBootSequence';
+import GreylineBootSequence from './faction-boots/GreylineBootSequence';
+import CosmicConcaveBootSequence from './faction-boots/CosmicConcaveBootSequence';
+import { useSettings } from '@/components/utils/useSettings';
 
 const BOOT_LINES = [
   'BOOT VERIFIED',
