@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 import { useTheme } from '@/components/theme/useTheme';
 import BootGate from '@/components/theme/BootGate';
 
-export default function Layout({ children }) {
+function LayoutComponent({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
