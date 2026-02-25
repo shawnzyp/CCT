@@ -363,6 +363,8 @@ Answer the question based on the Catalyst Core rulebook. Follow all behavioral i
               <div className={`max-w-[85%] rounded-lg p-3 ${
                 msg.role === 'user'
                   ? 'bg-violet-600 text-white'
+                  : msg.isAction
+                  ? 'bg-slate-900 text-slate-200 border border-violet-800/60'
                   : 'bg-slate-800 text-slate-200 border border-slate-700'
               }`}>
                 {msg.role === 'assistant' ? (
