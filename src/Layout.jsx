@@ -10,6 +10,7 @@ import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
 import { motion, AnimatePresence } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
+import SaveStatusDot from '@/components/utils/SaveStatusDot';
 import AegisAssistant from '@/components/aegis/AegisAssistant';
 import { AegisProvider } from '@/components/aegis/AegisContext';
 import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
