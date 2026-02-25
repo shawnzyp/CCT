@@ -259,26 +259,26 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="arcs">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="py-8">
-                <h3 className="text-lg font-semibold text-white mb-4">Story Arcs</h3>
-                {campaign.story_arcs?.length > 0 ? (
-                  <div className="space-y-3">
-                    {campaign.story_arcs.map((arc, i) => (
-                      <div key={i} className="bg-slate-700/50 rounded-lg p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-medium text-white">{arc.title}</h4>
-                          <Badge variant="outline" className="text-xs">{arc.status}</Badge>
-                        </div>
-                        <p className="text-sm text-slate-300">{arc.description}</p>
+            <div className="rounded-lg border p-4 sm:p-6" style={{ background: panel0, borderColor: `${accentA}20` }}>
+              <h3 className="text-base sm:text-lg font-mono font-semibold mb-4" style={{ color: text0 }}>Story Arcs</h3>
+              {campaign.story_arcs?.length > 0 ? (
+                <div className="space-y-3">
+                  {campaign.story_arcs.map((arc, i) => (
+                    <div key={i} className="rounded-lg p-4" style={{ background: `${panel1}80`, borderLeft: `2px solid ${accentA}40` }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-mono font-semibold text-sm" style={{ color: text0 }}>{arc.title}</h4>
+                        <span className="text-[10px] sm:text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: `${accentA}20`, color: accentA, border: `1px solid ${accentA}40` }}>
+                          {arc.status}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-slate-400 text-center">No story arcs yet</p>
-                )}
-              </CardContent>
-            </Card>
+                      <p className="text-xs sm:text-sm" style={{ color: text1 }}>{arc.description}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-xs sm:text-sm font-mono" style={{ color: muted }}>No story arcs yet</p>
+              )}
+            </div>
           </TabsContent>
           
           <TabsContent value="journal">
