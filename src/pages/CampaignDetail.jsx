@@ -42,9 +42,19 @@ export default function CampaignDetail({ currentCharacter }) {
   const urlParams = new URLSearchParams(window.location.search);
   const campaignId = urlParams.get('id');
   const queryClient = useQueryClient();
+  const { settings } = useSettings();
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('player');
   const [currentUser, setCurrentUser] = React.useState(null);
   const [isDM, setIsDM] = React.useState(false);
+
+  const accentA = theme?.colors?.accentA || '#00E5FF';
+  const bg0 = theme?.colors?.bg0 || '#0F1216';
+  const panel0 = theme?.colors?.panel0 || '#1A1F26';
+  const panel1 = theme?.colors?.panel1 || '#202833';
+  const text0 = theme?.colors?.text0 || '#E6F1FF';
+  const text1 = theme?.colors?.text1 || '#8EA0B5';
+  const muted = theme?.colors?.muted || '#5F6E80';
   
   React.useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
