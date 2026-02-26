@@ -721,6 +721,15 @@ export default function CharacterSheet() {
           }}
         />
       )}
+
+      <AnimatePresence>
+        {showSaveSlots && (
+          <ManualSaveSlots
+            character={character}
+            onClose={() => setShowSaveSlots(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
