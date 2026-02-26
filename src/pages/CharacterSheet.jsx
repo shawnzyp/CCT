@@ -12,7 +12,7 @@ import { createPageUrl } from "@/utils";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Shield, Zap, Heart, User, Swords, 
-  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package, FileText, Dices
+  BookOpen, Settings, Plus, Pencil, Trash2, TrendingUp, ArrowUp, Package, FileText, Dices, Save
 } from "lucide-react";
 
 import StatBlock, { getModifier, formatModifier } from "@/components/character/StatBlock";
