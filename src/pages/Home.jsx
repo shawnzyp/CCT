@@ -9,6 +9,8 @@ import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
 import PullToRefresh from '@/components/utils/PullToRefresh';
 import { useTheme } from '@/components/theme/useTheme';
+import DashboardWidgets from '@/components/dashboard/DashboardWidgets';
+import NotificationCenter from '@/components/dashboard/NotificationCenter';
 
 export default function Home() {
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
