@@ -53,48 +53,83 @@ export default function OMNIBootSequence({ onComplete, glitchIntensity = 0.3 }) 
         />
       )}
 
-      {/* O.M.N.I. Seal */}
+      {/* O.M.N.I. Seal — logo image with layered animation */}
       {(phase === 'seal' || phase === 'readouts') && (
         <motion.div
-          className="absolute top-1/4 text-center"
-          initial={{ opacity: 0, scale: 0.8 }}
+          className="absolute top-1/2 -translate-y-1/2 flex flex-col items-center gap-4"
+          initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
+          transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <svg className="w-32 h-32 mx-auto" viewBox="0 0 100 100">
-            <motion.circle
-              cx="50"
-              cy="50"
-              r="45"
-              fill="none"
-              stroke="#00E5FF"
-              strokeWidth="1"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2 }}
-            />
-            <motion.polygon
-              points="50,20 80,50 50,80 20,50"
-              fill="none"
-              stroke="#00E5FF"
-              strokeWidth="1"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-            />
-            <motion.text
-              x="50"
-              y="55"
-              textAnchor="middle"
-              className="text-[8px] font-mono"
-              fill="#00E5FF"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-            >
-              O.M.N.I.
-            </motion.text>
-          </svg>
+          {/* Outer glow ring */}
+          <motion.div
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              width: 260, height: 260,
+              background: 'radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%)',
+              boxShadow: '0 0 60px 20px rgba(0,229,255,0.08)',
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: [0, 1, 0.6], scale: [0.5, 1.1, 1] }}
+            transition={{ duration: 1.8, ease: 'easeOut' }}
+          />
+
+          {/* Rotating scan ring */}
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{ width: 240, height: 240 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+          >
+            <svg width="240" height="240" viewBox="0 0 240 240">
+              <circle cx="120" cy="120" r="115" fill="none" stroke="#00E5FF" strokeWidth="0.5"
+                strokeDasharray="12 8" opacity="0.3" />
+            </svg>
+          </motion.div>
+
+          {/* Counter-rotating inner ring */}
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{ width: 200, height: 200 }}
+            animate={{ rotate: -360 }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          >
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="95" fill="none" stroke="#00E5FF" strokeWidth="0.4"
+                strokeDasharray="4 16" opacity="0.2" />
+            </svg>
+          </motion.div>
+
+          {/* The actual logo */}
+          <motion.img
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/ef28e9fdb_OMNI.png"
+            alt="O.M.N.I. Seal"
+            style={{
+              width: 200,
+              height: 200,
+              objectFit: 'contain',
+              filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(1.1)',
+              position: 'relative',
+              zIndex: 1,
+              mixBlendMode: 'screen',
+              WebkitMaskImage: 'radial-gradient(circle, white 60%, transparent 100%)',
+              maskImage: 'radial-gradient(circle, white 60%, transparent 100%)',
+            }}
+            initial={{ opacity: 0, scale: 0.8, filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(3) blur(8px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(1.1) blur(0px)' }}
+            transition={{ duration: 1.4, ease: 'easeOut' }}
+          />
+
+          {/* Cyan tint overlay pulse */}
+          <motion.div
+            className="absolute pointer-events-none rounded-full"
+            style={{
+              width: 180, height: 180,
+              background: 'radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 65%)',
+            }}
+            animate={{ opacity: [0.4, 0.8, 0.4] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          />
         </motion.div>
       )}
 
