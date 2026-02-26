@@ -203,7 +203,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.5 }}
-          className="grid grid-cols-3 gap-3 max-w-lg mx-auto"
+          className="grid grid-cols-3 gap-3 max-w-lg mx-auto mb-10"
         >
           {quickStats.map((s, i) => (
             <div
@@ -215,6 +215,15 @@ export default function Home() {
               <div className="text-[9px] sm:text-[10px] font-mono tracking-[0.12em] mt-0.5" style={{ color: muted }}>{s.label}</div>
             </div>
           ))}
+        </motion.div>
+
+        {/* ── DASHBOARD WIDGETS ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.75, duration: 0.4 }}
+        >
+          <DashboardWidgets colors={{ accentA, accentB, panel0, panel1, text0, text1, muted, bg0 }} />
         </motion.div>
       </div>
 
