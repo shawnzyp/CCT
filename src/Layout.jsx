@@ -149,6 +149,9 @@ function LayoutComponent({ children }) {
           className={cn("min-h-screen overflow-x-hidden relative", fontSizeClass, settings.highContrast && "contrast-125")}
           style={{ background: theme?.background?.gradient || '#0F1216' }}
         >
+          {/* Real-time sync engine (mounts once, no UI) */}
+          <SyncEngine />
+
           {/* Scanline */}
           {settings.scanlineEffect && !settings.reducedMotion && <div className="cc-scanline-layer" />}
 
