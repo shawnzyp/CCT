@@ -110,7 +110,7 @@ export default function BiometricScanner({
     setState(STATES.CONTACT);
     setScanProgress(0);
     setRidgeClarity(0);
-    setMotion('STABLE');
+    setMotionStatus('STABLE');
     setPressure('OK');
 
     // Simulate telemetry
