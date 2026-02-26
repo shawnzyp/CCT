@@ -82,6 +82,7 @@ export default function CharacterSheet() {
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [upgradingPower, setUpgradingPower] = useState(null);
   const [showCharacterEditor, setShowCharacterEditor] = useState(false);
+  const [showSaveSlots, setShowSaveSlots] = useState(false);
   
   const { data: character, isLoading } = useQuery({
     queryKey: ['character', characterId],
