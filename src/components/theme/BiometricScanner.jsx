@@ -24,7 +24,7 @@ export default function BiometricScanner({
   const [scanProgress, setScanProgress] = useState(0);
   const [ridgeClarity, setRidgeClarity] = useState(0);
   const [pressure, setPressure] = useState('—');
-  const [motion, setMotion] = useState('STABLE');
+  const [motionStatus, setMotionStatus] = useState('STABLE');
   const [failCount, setFailCount] = useState(0);
   const [lockoutTime, setLockoutTime] = useState(0);
   
