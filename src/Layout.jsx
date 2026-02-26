@@ -21,6 +21,7 @@ import { useSettings } from '@/components/utils/useSettings';
 import { toast } from 'sonner';
 import { useTheme } from '@/components/theme/useTheme';
 import { initializeSettingsApplication } from '@/components/utils/applySettings';
+import SyncEngine from '@/components/utils/SyncEngine';
 
 function LayoutComponent({ children }) {
   const location = useLocation();
