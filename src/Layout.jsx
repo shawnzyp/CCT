@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { useTheme } from '@/components/theme/useTheme';
 import { initializeSettingsApplication } from '@/components/utils/applySettings';
 import SyncEngine from '@/components/utils/SyncEngine';
+import NotificationCenter from '@/components/dashboard/NotificationCenter';
 
 function LayoutComponent({ children }) {
   const location = useLocation();
