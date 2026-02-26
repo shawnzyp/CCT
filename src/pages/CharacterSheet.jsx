@@ -42,6 +42,8 @@ import ProgressionTracker from '@/components/character/ProgressionTracker';
 import PlayerJournal from '@/components/character/PlayerJournal';
 import EnhancedLevelUpDialog from '@/components/character/EnhancedLevelUpDialog';
 import { canLevelUp } from '@/components/character/ProgressionData';
+import ManualSaveSlots from '@/components/character/ManualSaveSlots';
+import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
 const ORIGIN_LABELS = {
