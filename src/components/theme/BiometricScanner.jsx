@@ -332,7 +332,7 @@ export default function BiometricScanner({
           </div>
           <div className="flex justify-between">
             <span style={{ color: config.accentColor + '80' }}>MOTION:</span>
-            <span style={{ color: config.accentColor }}>{motion}</span>
+            <span style={{ color: config.accentColor }}>{motionStatus}</span>
           </div>
         </motion.div>
       )}
