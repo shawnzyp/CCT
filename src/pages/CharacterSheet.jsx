@@ -354,6 +354,15 @@ export default function CharacterSheet() {
             </Button>
             <ExportCharacterPDF character={character} />
             <ImportExportCharacter character={character} onImport={handleImport} />
+            <Button
+              onClick={() => setShowSaveSlots(true)}
+              variant="outline"
+              size="sm"
+              className="border-violet-500 text-violet-400 hover:bg-violet-500/20 text-[10px] sm:text-xs h-7 sm:h-8 px-2 sm:px-3"
+            >
+              <Save className="h-3 w-3 sm:h-3.5 sm:w-3.5 sm:mr-1.5" />
+              <span className="hidden sm:inline">Slots</span>
+            </Button>
           </div>
         </div>
         
