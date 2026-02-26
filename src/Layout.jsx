@@ -284,6 +284,17 @@ function LayoutComponent({ children }) {
                     )}
                   </div>
 
+                  {/* Notification Center */}
+                  <NotificationCenter
+                    accentA={accentA}
+                    panel0={panel0}
+                    panel1={panel1}
+                    text0={text0}
+                    text1={text1}
+                    muted={muted}
+                    bg0={bg0}
+                  />
+
                   {/* Save Status Dot */}
                   <SaveStatusDot />
                 </div>
