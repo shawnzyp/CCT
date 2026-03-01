@@ -107,6 +107,12 @@ Return JSON with:
           victory_narration: { type: 'string' },
           analysis: { type: 'string' },
           mvp_moment: { type: 'string' },
+          performance_score_a: { type: 'number' },
+          performance_score_b: { type: 'number' },
+          performance_analysis_a: { type: 'string' },
+          performance_analysis_b: { type: 'string' },
+          hero_code_rating: { type: 'string' },
+          hero_code_note: { type: 'string' },
         }
       }
     });
