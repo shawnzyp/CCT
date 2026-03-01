@@ -214,6 +214,7 @@ Return JSON with:
         environment={environment}
         statusA={statusA}
         statusB={statusB}
+        envActive={envActive}
       />
 
       {/* Environmental trigger flash */}
