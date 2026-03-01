@@ -179,7 +179,19 @@ Return JSON with:
     setTimeout(() => {
       onComplete([
         ...log,
-        { isConclusion: true, narration: result.victory_narration, analysis: result.analysis, winner: winnerName, mvp_moment: result.mvp_moment }
+        {
+          isConclusion: true,
+          narration: result.victory_narration,
+          analysis: result.analysis,
+          winner: winnerName,
+          mvp_moment: result.mvp_moment,
+          performance_score_a: result.performance_score_a,
+          performance_score_b: result.performance_score_b,
+          performance_analysis_a: result.performance_analysis_a,
+          performance_analysis_b: result.performance_analysis_b,
+          hero_code_rating: result.hero_code_rating,
+          hero_code_note: result.hero_code_note,
+        }
       ], winnerName);
     }, 1000);
   };
