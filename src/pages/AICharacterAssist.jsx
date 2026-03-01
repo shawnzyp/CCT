@@ -142,7 +142,11 @@ Return JSON with:
       recommended_alignment: { type: 'string' },
       recommended_alignment_reason: { type: 'string' },
       suggested_primary_stats: { type: 'object' },
+      stat_reasoning: { type: 'object' },
       signature_move_concept: { type: 'string' },
+      signature_move_description: { type: 'string' },
+      suggested_skills: { type: 'array', items: { type: 'string' } },
+      skill_reasoning: { type: 'object' },
     }
   });
 
