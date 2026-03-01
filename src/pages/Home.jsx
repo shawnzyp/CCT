@@ -120,7 +120,7 @@ export default function Home() {
           </div>
 
           <p className="text-sm max-w-md mx-auto mb-7 px-2" style={{ color: text1 }}>
-            Licensed vigilante field operating system. Manage characters, run missions, track combat.
+            Your O.M.N.I. licence is active. Deploy your operative, accept sanctioned missions, and engage hostiles — all activity is logged and reviewed by Command.
           </p>
 
           {/* CTA Buttons */}
