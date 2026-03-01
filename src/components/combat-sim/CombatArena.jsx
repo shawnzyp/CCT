@@ -152,7 +152,13 @@ export default function CombatArena({ charA, charB, hpA, hpB, maxHpA, maxHpB, cu
       <div className="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col items-center w-28">
         <motion.div
           className="relative"
-          animate={currentAttacker === 'A' ? { x: [0, 18, 0], rotate: [0, 5, 0] } : lastHitA ? { x: [0, -8, 0], rotate: [0, -4, 0] } : {}}
+          animate={
+            currentAttacker === 'A'
+              ? { x: [0, 18, 0], rotate: [0, 5, 0], scale: [1, 1.08, 1] }
+              : lastHitA
+              ? { x: [0, -12, 4, 0], rotate: [0, -6, 2, 0] }
+              : {}
+          }
           transition={{ duration: 0.35 }}
         >
           {charA?.portrait_url ? (
