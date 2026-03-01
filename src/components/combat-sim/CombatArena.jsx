@@ -58,7 +58,7 @@ function FloatingDamage({ damage, hit, side }) {
   );
 }
 
-function AttackBeam({ attacking, fromLeft, color }) {
+function AttackBeam({ attacking, fromLeft, color, isCritical }) {
   return (
     <AnimatePresence>
       {attacking && (
@@ -69,16 +69,57 @@ function AttackBeam({ attacking, fromLeft, color }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
         >
+          {/* Main beam */}
           <motion.div
-            className="h-1 rounded-full"
-            style={{ background: `linear-gradient(${fromLeft ? '90deg' : '270deg'}, transparent, ${color}, ${color}88)`, width: '45%', marginLeft: fromLeft ? '5%' : '50%' }}
+            className="h-1.5 rounded-full"
+            style={{ background: `linear-gradient(${fromLeft ? '90deg' : '270deg'}, transparent, ${color}, ${color}88)`, width: isCritical ? '60%' : '45%', marginLeft: fromLeft ? '5%' : isCritical ? '35%' : '50%' }}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             exit={{ scaleX: 0 }}
             transition={{ duration: 0.2 }}
           />
+          {/* Secondary particle trail for critical */}
+          {isCritical && (
+            <motion.div
+              className="absolute inset-0 flex items-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.6, 0] }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <div className="h-3 rounded-full opacity-30" style={{ background: color, width: '70%', marginLeft: fromLeft ? '0' : '30%', filter: `blur(6px)` }} />
+            </motion.div>
+          )}
+          {/* Screen flash on crit */}
+          {isCritical && (
+            <motion.div
+              className="absolute inset-0 rounded-xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.15, 0] }}
+              transition={{ duration: 0.3 }}
+              style={{ background: color }}
+            />
+          )}
         </motion.div>
       )}
+    </AnimatePresence>
+  );
+}
+
+function EnvParticles({ color, active }) {
+  if (!active) return null;
+  return (
+    <AnimatePresence>
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(5)].map((_, i) => (
+          <motion.div key={i}
+            className="absolute w-1 h-1 rounded-full"
+            style={{ background: color, left: `${15 + i * 18}%`, top: '50%' }}
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: [0, 0.8, 0], y: [-10, -40 - i * 10], x: [0, (i - 2) * 8] }}
+            transition={{ duration: 0.8 + i * 0.1, delay: i * 0.06 }}
+          />
+        ))}
+      </div>
     </AnimatePresence>
   );
 }
