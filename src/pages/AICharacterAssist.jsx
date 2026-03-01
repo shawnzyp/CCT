@@ -207,6 +207,18 @@ Return JSON with:
             <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: muted }}>AVOID THEMES</div>
             <Input value={avoidThemes} onChange={e => setAvoidThemes(e.target.value)} placeholder="e.g. no romance subplot, avoid magic" className="text-xs h-8" style={{ background: panel1, color: text0, borderColor: accentA + '30' }} />
           </div>
+          <div>
+            <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: muted }}>FEARS</div>
+            <Input value={fears} onChange={e => setFears(e.target.value)} placeholder="e.g. losing control, becoming her abuser" className="text-xs h-8" style={{ background: panel1, color: text0, borderColor: accentA + '30' }} />
+          </div>
+          <div>
+            <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: muted }}>GOALS</div>
+            <Input value={goals} onChange={e => setGoals(e.target.value)} placeholder="e.g. find her missing brother, earn redemption" className="text-xs h-8" style={{ background: panel1, color: text0, borderColor: accentA + '30' }} />
+          </div>
+          <div className="sm:col-span-2">
+            <div className="text-[9px] font-mono uppercase tracking-widest mb-1" style={{ color: muted }}>FLAWS</div>
+            <Input value={flaws} onChange={e => setFlaws(e.target.value)} placeholder="e.g. reckless when angry, distrusts authority figures" className="text-xs h-8" style={{ background: panel1, color: text0, borderColor: accentA + '30' }} />
+          </div>
         </div>
       </div>
 
