@@ -118,6 +118,7 @@ export default function AIMissionPlay() {
 
     const res = await base44.integrations.Core.InvokeLLM({
       prompt: buildGMPrompt(mData, [], 'START', mission.difficulty),
+      response_json_schema: gmSchema(),
     });
 
     appendGM(res.narration);
@@ -128,10 +129,8 @@ export default function AIMissionPlay() {
 
   // ── Player picks a choice ─────────────────────────────────────────────────
   const handleChoice = async (choice) => {
-    // Add player choice to log
     appendEntry('choice', `› ${choice.text}`);
 
-    // Apply immediate score impact if flagged
     let scoreDelta = 0;
     if (choice.score_impact) {
       scoreDelta = choice.score_impact;
@@ -139,24 +138,31 @@ export default function AIMissionPlay() {
     }
 
     setChoices([]);
+    setComplication(null);
     setLoadingGM(true);
 
     const mData = mission.ai_mission_data || {};
     const historyText = narrative.map(e => `[${e.type.toUpperCase()}] ${e.text}`).join('\n');
-
     const newTurn = turnCount + 1;
     setTurnCount(newTurn);
-
-    const isFinalTurn = newTurn >= 6; // 5 player turns then resolution
+    const isFinalTurn = newTurn >= 6;
+    const currentScoreNow = Math.max(0, Math.min(100, performanceScore + scoreDelta));
 
     const res = await base44.integrations.Core.InvokeLLM({
-      prompt: buildGMPrompt(mData, historyText, choice.text, mission.difficulty, isFinalTurn, performanceScore + scoreDelta),
+      prompt: buildGMPrompt(mData, historyText, choice.text, mission.difficulty, isFinalTurn, currentScoreNow, newTurn),
+      response_json_schema: gmSchema(),
     });
 
     appendGM(res.narration);
 
     if (res.score_impact) {
-      applyScore(res.score_impact, res.score_reason || 'AI GM evaluation');
+      applyScore(res.score_impact, res.score_reason || 'AI Director evaluation');
+    }
+
+    // Dynamic complication injected by the AI Director
+    if (res.complication && !isFinalTurn) {
+      setComplication(res.complication);
+      appendEntry('event', `⚠ COMPLICATION: ${res.complication}`);
     }
 
     if (res.mission_complete || isFinalTurn) {

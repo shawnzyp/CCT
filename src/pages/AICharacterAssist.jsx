@@ -56,6 +56,9 @@ export default function AICharacterAssist() {
       era && `Time setting: ${era}`,
       mustInclude && `MUST include these elements: ${mustInclude}`,
       avoidThemes && `Avoid these themes entirely: ${avoidThemes}`,
+      fears && `Character's FEARS (must shape their decisions and psychology): ${fears}`,
+      goals && `Character's GOALS (what they're striving toward): ${goals}`,
+      flaws && `Character's FLAWS (genuine weaknesses, not just quirks): ${flaws}`,
     ].filter(Boolean).join('\n');
 
     return `You are a creative writing assistant helping a player design their character for "Catalyst Core", a superhero TTRPG.
