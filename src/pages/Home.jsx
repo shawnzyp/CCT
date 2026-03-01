@@ -85,14 +85,12 @@ export default function Home() {
         >
           {/* Logo */}
           <div className="relative inline-flex mb-5">
-            <div
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden"
-              style={{ border: `1px solid ${accentA}35`, boxShadow: `0 0 24px ${accentA}22` }}
-            >
+            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                 alt="O.M.N.I. Logo"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
+                style={{ filter: `drop-shadow(0 0 8px ${accentA}55)` }}
               />
             </div>
             {/* Live indicator */}
