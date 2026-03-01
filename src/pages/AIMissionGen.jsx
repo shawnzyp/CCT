@@ -72,7 +72,6 @@ export default function AIMissionGen() {
   const [loading, setLoading] = useState(false);
   const [mission, setMission] = useState(null);
   const [posting, setPosting] = useState(false);
-  const [completingId, setCompletingId] = useState(null);
   const [joiningId, setJoiningId] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentCharacter, setCurrentCharacter] = useState(null);
