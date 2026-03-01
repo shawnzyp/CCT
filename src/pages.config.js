@@ -50,6 +50,7 @@
 import AICharacterAssist from './pages/AICharacterAssist';
 import AIGameSession from './pages/AIGameSession';
 import AIMissionGen from './pages/AIMissionGen';
+import AIMissionPlay from './pages/AIMissionPlay';
 import AegisLogs from './pages/AegisLogs';
 import CampaignDetail from './pages/CampaignDetail';
 import Campaigns from './pages/Campaigns';
@@ -67,7 +68,6 @@ import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import AIMissionPlay from './pages/AIMissionPlay';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +75,7 @@ export const PAGES = {
     "AICharacterAssist": AICharacterAssist,
     "AIGameSession": AIGameSession,
     "AIMissionGen": AIMissionGen,
+    "AIMissionPlay": AIMissionPlay,
     "AegisLogs": AegisLogs,
     "CampaignDetail": CampaignDetail,
     "Campaigns": Campaigns,
@@ -92,7 +93,6 @@ export const PAGES = {
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
-    "AIMissionPlay": AIMissionPlay,
 }
 
 export const pagesConfig = {

@@ -82,6 +82,7 @@ export default function AIMissionPlay() {
   const [finalRewards, setFinalRewards] = useState(null);
   const [distributing, setDistributing] = useState(false);
   const [turnCount, setTurnCount] = useState(0);
+  const [complication, setComplication] = useState(null); // active mid-mission complication
 
   useEffect(() => {
     base44.auth.me().then(u => setCurrentUser(u)).catch(() => {});

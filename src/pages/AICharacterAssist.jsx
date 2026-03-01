@@ -34,6 +34,10 @@ export default function AICharacterAssist() {
   const [era, setEra] = useState('');
   const [mustInclude, setMustInclude] = useState('');
   const [avoidThemes, setAvoidThemes] = useState('');
+  // Deeper character keywords
+  const [fears, setFears] = useState('');
+  const [goals, setGoals] = useState('');
+  const [flaws, setFlaws] = useState('');
 
   // Results
   const [loading, setLoading] = useState(false);
