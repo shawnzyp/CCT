@@ -338,13 +338,34 @@ Return JSON with:
                   </div>
                   {currentResult.suggested_primary_stats && (
                     <div className="mt-3">
-                      <div className="text-[9px] font-mono uppercase mb-1" style={{ color: muted }}>Suggested Primary Stats</div>
-                      {Object.entries(currentResult.suggested_primary_stats).map(([stat, reason]) => (
-                        <div key={stat} className="flex items-center gap-2 text-xs mb-1">
-                          <span className="font-mono font-bold w-8" style={{ color: accentA }}>{stat}</span>
-                          <span style={{ color: text1 }}>{reason}</span>
-                        </div>
-                      ))}
+                      <div className="text-[9px] font-mono uppercase mb-2" style={{ color: muted }}>Generated Ability Scores</div>
+                      <div className="grid grid-cols-3 gap-1.5 mb-2">
+                        {Object.entries(currentResult.suggested_primary_stats).map(([stat, val]) => {
+                          const isHigh = typeof val === 'number' && val >= 14;
+                          return (
+                            <div key={stat} className="rounded p-2 text-center" style={{ background: panel1, border: `1px solid ${isHigh ? accentA + '50' : accentA + '15'}` }}>
+                              <div className="text-[9px] font-mono uppercase" style={{ color: muted }}>{stat}</div>
+                              <div className="text-lg font-mono font-bold" style={{ color: isHigh ? accentA : text0 }}>{val}</div>
+                              {currentResult.stat_reasoning?.[stat] && (
+                                <div className="text-[9px] italic leading-tight mt-0.5" style={{ color: muted }}>{currentResult.stat_reasoning[stat]}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {currentResult.suggested_skills?.length > 0 && (
+                    <div className="mt-3">
+                      <div className="text-[9px] font-mono uppercase mb-1.5" style={{ color: muted }}>Suggested Skill Proficiencies</div>
+                      <div className="space-y-1">
+                        {currentResult.suggested_skills.map(skill => (
+                          <div key={skill} className="flex items-start gap-2 text-xs">
+                            <span className="font-mono font-bold flex-shrink-0 w-28" style={{ color: accentA }}>{skill}</span>
+                            <span style={{ color: text1 }}>{currentResult.skill_reasoning?.[skill] || ''}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
