@@ -286,9 +286,12 @@ Return JSON with:
                   </div>
                   {currentResult.real_name && <p className="text-xs" style={{ color: text1 }}>Secret Identity: <span style={{ color: text0 }}>{currentResult.real_name}</span></p>}
                   {currentResult.signature_move_concept && (
-                    <div className="mt-2 px-3 py-1.5 rounded inline-block" style={{ background: accentA + '10', border: `1px solid ${accentA}25` }}>
+                    <div className="mt-2 px-3 py-2 rounded" style={{ background: accentA + '10', border: `1px solid ${accentA}25` }}>
                       <span className="text-[9px] font-mono uppercase" style={{ color: muted }}>Signature Move: </span>
                       <span className="text-xs font-mono font-bold" style={{ color: accentA }}>{currentResult.signature_move_concept}</span>
+                      {currentResult.signature_move_description && (
+                        <p className="text-[11px] italic mt-1" style={{ color: text1 }}>{currentResult.signature_move_description}</p>
+                      )}
                     </div>
                   )}
                 </div>
