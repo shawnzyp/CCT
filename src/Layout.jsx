@@ -194,7 +194,7 @@ function LayoutComponent({ children }) {
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0"
                     style={{ border: `1px solid ${accentA}30` }}>
                     <img
-                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/f2f2a4ed9_3DLogoLab1.png"
+                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/f72e43670_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                       alt="O.M.N.I. Logo"
                       className="w-full h-full object-cover"
                     />
