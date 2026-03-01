@@ -58,7 +58,7 @@ export default function BootGate({ children }) {
         paddingRight: 'env(safe-area-inset-right)',
       }}
     >
-      <BootSequence theme={theme} reducedMotion={settings?.reducedMotion} />
+      <BootSequence theme={theme} reducedMotion={settings?.reducedMotion} onComplete={() => {}} />
     </div>
   );
 }
