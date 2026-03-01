@@ -64,12 +64,13 @@ import DiscordSettings from './pages/DiscordSettings';
 import Economy from './pages/Economy';
 import Help from './pages/Help';
 import Home from './pages/Home';
+import Missions from './pages/Missions';
 import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import Missions from './pages/Missions';
 import ThreatIntel from './pages/ThreatIntel';
+import Operations from './pages/Operations';
 import __Layout from './Layout.jsx';
 
 
@@ -91,12 +92,13 @@ export const PAGES = {
     "Economy": Economy,
     "Help": Help,
     "Home": Home,
+    "Missions": Missions,
     "OperationsMap": OperationsMap,
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
-    "Missions": Missions,
     "ThreatIntel": ThreatIntel,
+    "Operations": Operations,
 }
 
 export const pagesConfig = {
