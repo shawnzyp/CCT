@@ -352,18 +352,20 @@ Create a rich, detailed mission with a noir/superhero tone. Return JSON with:
                     {joined && <span style={{ color: accentA }}>· YOU'RE IN</span>}
                   </div>
                   <div className="flex gap-2">
-                    {!isOwner && !joined && !full && (
+                    {!joined && !full && (
                       <Button onClick={() => handleJoin(m)} disabled={joiningId === m.id || !currentCharacter} size="sm" className="gap-1.5 text-xs h-7" style={{ background: accentA, color: '#000' }}>
                         {joiningId === m.id ? <RefreshCw className="h-3 w-3 animate-spin" /> : <PlayCircle className="h-3 w-3" />}
                         Join
                       </Button>
                     )}
                     {full && !joined && <span className="text-[10px] font-mono" style={{ color: muted }}>FULL</span>}
-                    {isOwner && (
-                      <Button onClick={() => handleComplete(m)} disabled={completingId === m.id} size="sm" variant="outline" className="gap-1.5 text-xs h-7">
-                        {completingId === m.id ? <RefreshCw className="h-3 w-3 animate-spin" /> : <CheckCircle className="h-3 w-3" />}
-                        Complete & Reward
-                      </Button>
+                    {joined && (
+                      <Link to={createPageUrl(`AIMissionPlay?id=${m.id}`)}>
+                        <Button size="sm" className="gap-1.5 text-xs h-7" style={{ background: accentA, color: '#000' }}>
+                          <ChevronRight className="h-3 w-3" />
+                          Play Mission
+                        </Button>
+                      </Link>
                     )}
                   </div>
                 </div>
