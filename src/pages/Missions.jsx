@@ -3,8 +3,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/components/theme/useTheme';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Search, Filter, ChevronDown, Trash2, Edit2, CheckCircle, XCircle, Clock, Zap, Star, X, Save, Target, Shield, Award } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, CheckCircle, XCircle, Clock, Zap, Star, X, Save, Target, Shield, Bot, Layers } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import AIMissionBriefing from '@/components/missions/AIMissionBriefing';
 
 const STATUS_CONFIG = {
   active:    { label: 'ACTIVE',    color: '#00E5FF', icon: Clock },

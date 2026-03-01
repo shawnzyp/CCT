@@ -105,6 +105,7 @@ function LayoutComponent({ children }) {
         { name: 'Economy', path: 'Economy', icon: Package },
         { name: 'Operations Map', path: 'OperationsMap', icon: Map },
         { name: 'Missions', path: 'Missions', icon: BookOpen },
+        { name: 'Operations', path: 'Operations', icon: BookOpen },
         { name: 'Threat Intel', path: 'ThreatIntel', icon: Radio },
       ]
     },
