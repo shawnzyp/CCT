@@ -66,7 +66,9 @@ export default function Home() {
   { icon: Settings, title: 'Settings', desc: 'Configure HUD', link: 'Settings' },
   { icon: Bot, title: 'Combat Sim', desc: 'AI battle sim', link: 'CombatSimulator' },
   { icon: Wand2, title: 'AI Character', desc: 'AI-assisted creation', link: 'AICharacterAssist' },
-  { icon: Scroll, title: 'Mission Gen', desc: 'AI mission briefings', link: 'AIMissionGen' }];
+  { icon: Scroll, title: 'Mission Gen', desc: 'AI mission briefings', link: 'AIMissionGen' },
+  { icon: FileText, title: 'Missions', desc: 'Manage operations', link: 'Missions' },
+  { icon: Shield, title: 'Threat Intel', desc: 'Live intel feed', link: 'ThreatIntel' }];
 
 
   const quickStats = [
