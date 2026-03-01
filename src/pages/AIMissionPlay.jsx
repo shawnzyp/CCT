@@ -191,8 +191,10 @@ export default function AIMissionPlay() {
   };
 
   // ── Build the GM prompt ───────────────────────────────────────────────────
-  const buildGMPrompt = (mData, history, lastAction, difficulty, isFinal = false, currentScore = 100) => {
-    return `You are the AI Game Master for "Catalyst Core", a superhero TTRPG mission.
+  const buildGMPrompt = (mData, history, lastAction, difficulty, isFinal = false, currentScore = 100, turn = 1) => {
+    // Director injects complications at turns 2-4 if score is sliding
+    const shouldInjectComplication = !isFinal && turn >= 2 && turn <= 4 && currentScore < 80;
+    return `You are the AI Director for "Catalyst Core", a superhero TTRPG mission. You dynamically adapt the story based on hero performance.
 
 MISSION: ${mData.title || 'Unknown'}
 BRIEFING: ${mData.briefing || ''}
@@ -200,15 +202,18 @@ PRIMARY OBJECTIVE: ${mData.primary_objective || ''}
 SETTING: ${mission?.mission_setting || 'urban'}
 DIFFICULTY: ${difficulty}
 ENEMIES: ${mData.enemy_types?.map(e => e.name).join(', ') || 'unknown hostiles'}
-COMPLICATIONS: ${mData.complications?.join('; ') || 'none'}
+POTENTIAL COMPLICATIONS: ${mData.complications?.join('; ') || 'none'}
 
-HEROES ARE ALWAYS EXPECTED TO:
-- Protect civilians and minimize casualties AT ALL COSTS
-- Minimize property and collateral damage
-- Use non-lethal force when possible
-- Preserve life, even of enemies if possible
+TURN: ${turn} of 6
+CURRENT PERFORMANCE SCORE: ${currentScore}/100
+${currentScore < 60 ? '⚠ HEROES ARE STRUGGLING — escalate pressure and moral weight of choices.' : ''}
+${currentScore >= 85 ? '✓ HEROES PERFORMING WELL — raise the stakes to keep it challenging.' : ''}
 
-Current performance score: ${currentScore}/100 (starts at 100, degrades on poor choices)
+HERO CODE (heroes are always judged on):
+- Protecting civilians and minimizing casualties
+- Minimizing property and collateral damage
+- Using proportionate, non-lethal force when possible
+- Preserving life even of enemies when feasible
 
 PREVIOUS EVENTS:
 ${Array.isArray(history) ? 'none yet' : history || 'none yet'}
@@ -216,17 +221,30 @@ ${Array.isArray(history) ? 'none yet' : history || 'none yet'}
 LAST PLAYER ACTION: ${lastAction}
 
 ${isFinal
-  ? `This is the FINAL SCENE. Resolve the mission dramatically. Do NOT give more choices. Evaluate overall hero conduct.`
-  : `Continue the mission. Present 3 distinct choices that test the heroes' values. Choices that endanger civilians or cause collateral damage should feel tempting but wrong.`
+  ? `FINAL SCENE: Resolve the mission dramatically based on ALL prior choices. Deliver a conclusion that reflects the heroes' overall conduct. Write a final evaluation in score_reason summarizing their heroism.`
+  : `Continue the mission narrative. Present exactly 3 distinct choices. At least one choice should be a morally complex shortcut (tempting but harmful to civilians/property). ${shouldInjectComplication ? 'INJECT A COMPLICATION now — a twist that raises the stakes based on the current situation (e.g. hostages revealed, structural collapse, collateral civilian emergence).' : ''}`
 }
 
 Return JSON with:
-- narration: 2-4 sentences of vivid GM narration responding to the last action and advancing the scene
-- choices: ${isFinal ? '[]' : 'array of exactly 3 choice objects, each with: text (short action label), score_impact (number, -20 to +10, negative for choices that harm civilians/property/cause unnecessary damage), score_reason (brief explanation of why score changes)'}
-- score_impact: number (-25 to +5) reflecting overall hero conduct this turn (null if no change)
-- score_reason: string explaining the evaluation
-- mission_complete: ${isFinal ? 'true' : 'false (unless mission ends naturally)'}`;
+- narration: 2-4 vivid sentences responding to last action and advancing the scene
+- choices: ${isFinal ? '[]' : 'array of exactly 3 objects: { text, score_impact (−20 to +10), score_reason }'}
+- score_impact: number (−25 to +5) for AI Director evaluation of this turn's conduct (null if no change)
+- score_reason: brief string evaluating hero conduct this turn
+- complication: ${shouldInjectComplication ? 'string describing the new complication twist (1 sentence, urgent)' : 'null'}
+- mission_complete: ${isFinal ? 'true' : 'false'}`;
   };
+
+  const gmSchema = () => ({
+    type: 'object',
+    properties: {
+      narration: { type: 'string' },
+      choices: { type: 'array', items: { type: 'object', properties: { text: { type: 'string' }, score_impact: { type: 'number' }, score_reason: { type: 'string' } } } },
+      score_impact: { type: 'number' },
+      score_reason: { type: 'string' },
+      complication: { type: 'string' },
+      mission_complete: { type: 'boolean' },
+    }
+  });
 
   // ── Final scoring & reward distribution ──────────────────────────────────
   const handleDistributeRewards = async () => {
