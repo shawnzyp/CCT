@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart, Settings, Scroll, DollarSign, BookMarked, Award, Map, Radio } from 'lucide-react';
+import { Zap, Users, BookOpen, Swords, Shield, ArrowRight, Sparkles, User, FileText, Dices, Heart, Settings, Scroll, DollarSign, BookMarked, Award, Map, Radio, Wand2, Bot } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import CharacterSelector from '@/components/character/CharacterSelector';
@@ -64,6 +64,9 @@ export default function Home() {
     { icon: Scroll,     title: 'Rules',          desc: 'System reference',         link: 'Rules' },
     { icon: BookOpen,   title: 'Campaigns',      desc: 'Mission logs',             link: 'Campaigns' },
     { icon: Settings,   title: 'Settings',       desc: 'Configure HUD',            link: 'Settings' },
+    { icon: Bot,        title: 'Combat Sim',     desc: 'AI battle sim',            link: 'CombatSimulator' },
+    { icon: Wand2,      title: 'AI Character',   desc: 'AI-assisted creation',     link: 'AICharacterAssist' },
+    { icon: Scroll,     title: 'Mission Gen',    desc: 'AI mission briefings',     link: 'AIMissionGen' },
   ];
 
   const quickStats = [
