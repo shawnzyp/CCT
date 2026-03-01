@@ -64,6 +64,9 @@ import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
+import CombatSimulator from './pages/CombatSimulator';
+import AICharacterAssist from './pages/AICharacterAssist';
+import AIMissionGen from './pages/AIMissionGen';
 import __Layout from './Layout.jsx';
 
 
@@ -85,6 +88,9 @@ export const PAGES = {
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
+    "CombatSimulator": CombatSimulator,
+    "AICharacterAssist": AICharacterAssist,
+    "AIMissionGen": AIMissionGen,
 }
 
 export const pagesConfig = {
