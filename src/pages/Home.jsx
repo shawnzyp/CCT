@@ -88,7 +88,7 @@ export default function Home() {
 
           {/* Logo */}
           <div className="relative inline-flex mb-5">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                 alt="O.M.N.I. Logo"
