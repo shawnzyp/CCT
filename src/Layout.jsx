@@ -191,14 +191,11 @@ function LayoutComponent({ children }) {
 
                 {/* Logo */}
                 <Link to={createPageUrl('Home')} className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0"
-                    style={{ border: `1px solid ${accentA}30` }}>
-                    <img
-                      src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
-                      alt="O.M.N.I. Logo"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <img
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
+                    alt="O.M.N.I. Logo"
+                    className="w-16 h-16 sm:w-20 sm:h-20 object-contain flex-shrink-0"
+                  />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1 sm:gap-2">
                       <span className="font-bold text-sm sm:text-base lg:text-lg tracking-wider truncate"
