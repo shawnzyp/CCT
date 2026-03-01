@@ -6,7 +6,9 @@ import { useTheme } from '@/components/theme/useTheme';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Scroll, RefreshCw, Zap, Target, Skull, Gift, Clock, MapPin, Save, Users, CheckCircle, PlayCircle, Globe, PlusCircle, Lock } from 'lucide-react';
+import { Scroll, RefreshCw, Zap, Target, Skull, Gift, Clock, MapPin, Users, PlayCircle, Globe, PlusCircle, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
 
 const DIFFICULTY_OPTIONS = ['easy', 'medium', 'hard', 'deadly'];
@@ -211,56 +213,6 @@ Create a rich, detailed mission with a noir/superhero tone. Return JSON with:
     setJoiningId(null);
   };
 
-  const handleComplete = async (m) => {
-    if (!currentUser) return;
-    setCompletingId(m.id);
-
-    // Distribute rewards to all joined characters
-    const characterIds = m.joined_character_ids || [];
-    if (characterIds.length === 0) {
-      toast.error('No one has joined this mission yet');
-      setCompletingId(null);
-      return;
-    }
-
-    // Fetch all joined characters and give them credits + item
-    const characters = await Promise.all(characterIds.map(id => base44.entities.Character.filter({ id })));
-    const flatChars = characters.flat();
-
-    const itemReward = m.reward_items?.[0];
-
-    await Promise.all(flatChars.map(char => {
-      const newInventory = [...(char.inventory || [])];
-      if (itemReward) {
-        newInventory.push({
-          id: `ai_mission_reward_${Date.now()}_${char.id}`,
-          name: itemReward.name || 'Mission Reward Item',
-          description: itemReward.description || '',
-          tier: itemReward.tier || 'common',
-          quantity: 1,
-          source: 'AI Mission Reward',
-        });
-      }
-      return base44.entities.Character.update(char.id, {
-        credits: (char.credits || 0) + (m.reward_credits || 0),
-        inventory: newInventory,
-      });
-    }));
-
-    // Mark mission as completed
-    await base44.entities.Mission.update(m.id, {
-      status: 'completed',
-      rewards_distributed: true,
-      completed_at: new Date().toISOString(),
-    });
-
-    toast.success(`Mission complete! Rewards distributed to ${flatChars.length} operative(s)!`);
-    queryClient.invalidateQueries({ queryKey: ['community-missions'] });
-    queryClient.invalidateQueries({ queryKey: ['my-missions'] });
-    setCompletingId(null);
-  };
-
-  const canComplete = (m) => m.created_by === currentUser?.email;
   const hasJoined = (m) => (m.joined_player_emails || []).includes(currentUser?.email || '');
 
   return (
