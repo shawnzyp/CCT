@@ -86,7 +86,13 @@ Return JSON with:
 - winner: "A" or "B"
 - victory_narration: 2-3 sentence dramatic conclusion
 - analysis: 2-3 sentence tactical breakdown
-- mvp_moment: the single most dramatic moment of the fight`,
+- mvp_moment: the single most dramatic moment of the fight
+- performance_score_a: number 0-100 rating Character A's tactical performance based on their choices, positioning, and use of powers
+- performance_score_b: number 0-100 rating Character B's tactical performance
+- performance_analysis_a: 1-2 sentences evaluating Character A's combat style and decisions
+- performance_analysis_b: 1-2 sentences evaluating Character B's combat style and decisions
+- hero_code_rating: "EXEMPLARY"|"COMMENDABLE"|"ACCEPTABLE"|"CONCERNING"|"VIOLATION" — based on how the victor handled the fight (use of proportionate force, minimizing environmental damage)
+- hero_code_note: 1 sentence justifying the hero code rating`,
       response_json_schema: {
         type: 'object',
         properties: {
