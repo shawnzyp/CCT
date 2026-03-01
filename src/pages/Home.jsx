@@ -90,8 +90,8 @@ export default function Home() {
               style={{ border: `1px solid ${accentA}35`, boxShadow: `0 0 24px ${accentA}22` }}
             >
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6fb07bdd9_IMG_4419.jpeg"
-                alt="CC"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/3284f174b_IMG_3591.jpeg"
+                alt="O.M.N.I. Logo"
                 className="w-full h-full object-cover"
               />
             </div>
