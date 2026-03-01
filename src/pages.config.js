@@ -68,6 +68,8 @@ import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
+import Missions from './pages/Missions';
+import ThreatIntel from './pages/ThreatIntel';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +95,8 @@ export const PAGES = {
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
+    "Missions": Missions,
+    "ThreatIntel": ThreatIntel,
 }
 
 export const pagesConfig = {
