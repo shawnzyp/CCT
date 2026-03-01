@@ -29,6 +29,7 @@ export default function CombatSimBattle({ combatants, onComplete, colors, battle
   const [statusA, setStatusA] = useState([]);
   const [statusB, setStatusB] = useState([]);
   const [envTrigger, setEnvTrigger] = useState(null);
+  const [envActive, setEnvActive] = useState(false);
 
   const environment = battleConfig.environment || 'urban';
   const speedMultiplier = { slow: 1.8, normal: 1.0, fast: 0.5 }[battleConfig.speed || 'normal'];
