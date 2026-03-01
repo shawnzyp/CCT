@@ -124,7 +124,7 @@ function EnvParticles({ color, active }) {
   );
 }
 
-export default function CombatArena({ charA, charB, hpA, hpB, maxHpA, maxHpB, currentAttacker, lastRound, environment, statusA = [], statusB = [] }) {
+export default function CombatArena({ charA, charB, hpA, hpB, maxHpA, maxHpB, currentAttacker, lastRound, environment, statusA = [], statusB = [], envActive = false }) {
   const fxA = POWER_FX[charA?.primary_power_style] || { color: '#00E5FF', icon: '⚡', label: 'ENERGY' };
   const fxB = POWER_FX[charB?.primary_power_style] || { color: '#FF6B6B', icon: '💢', label: 'POWER' };
   const env = ENV_FX[environment] || ENV_FX['urban'];
