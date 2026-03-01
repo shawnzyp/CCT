@@ -102,21 +102,18 @@ export default function OMNIBootSequence({ onComplete, glitchIntensity = 0.3 }) 
 
           {/* The actual logo */}
           <motion.img
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/ef28e9fdb_OMNI.png"
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
             alt="O.M.N.I. Seal"
             style={{
               width: 200,
               height: 200,
               objectFit: 'contain',
-              filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(1.1)',
               position: 'relative',
-              zIndex: 1,
-              mixBlendMode: 'screen',
-              WebkitMaskImage: 'radial-gradient(circle, white 60%, transparent 100%)',
-              maskImage: 'radial-gradient(circle, white 60%, transparent 100%)',
+              zIndex: 10,
+              filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(1.1) drop-shadow(0 0 12px rgba(0,229,255,0.6))',
             }}
-            initial={{ opacity: 0, scale: 0.8, filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(3) blur(8px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'invert(1) sepia(1) saturate(3) hue-rotate(155deg) brightness(1.1) blur(0px)' }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4, ease: 'easeOut' }}
           />
 
