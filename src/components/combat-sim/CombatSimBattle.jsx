@@ -151,8 +151,8 @@ Return JSON with:
 
       if (round.env_trigger) {
         setEnvTrigger(round.env_trigger);
-        // Pass envActive flag to arena for particle burst
-        setEnvTrigger(round.env_trigger);
+        setEnvActive(true);
+        setTimeout(() => setEnvActive(false), 1000);
       }
 
       const line = {
