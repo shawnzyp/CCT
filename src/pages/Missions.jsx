@@ -217,11 +217,21 @@ export default function Missions() {
             <h1 className="text-xl font-mono font-bold tracking-widest" style={{ color: text0 }}>MISSION CONTROL</h1>
             <p className="text-[10px] font-mono mt-0.5" style={{ color: muted }}>MANAGE & TRACK FIELD OPERATIONS</p>
           </div>
-          <button onClick={() => { setEditing(null); setShowForm(true); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-mono font-bold"
-            style={{ background: accentA, color: '#000' }}>
-            <Plus className="h-4 w-4" /> NEW MISSION
-          </button>
+          <div className="flex items-center gap-2">
+            <Link to={createPageUrl('Operations')} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-mono border" style={{ color: muted, borderColor: muted + '30' }}>
+              <Layers className="h-3.5 w-3.5" /> OPERATIONS
+            </Link>
+            <button onClick={() => { setAiPrefill(null); setShowAI(true); }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-mono border transition-all"
+              style={{ color: accentA, borderColor: accentA + '50', background: accentA + '10' }}>
+              <Bot className="h-4 w-4" /> AI GEN
+            </button>
+            <button onClick={() => { setEditing(null); setShowForm(true); }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-mono font-bold"
+              style={{ background: accentA, color: '#000' }}>
+              <Plus className="h-4 w-4" /> NEW MISSION
+            </button>
+          </div>
         </div>
 
         {/* Status summary */}
