@@ -124,7 +124,7 @@ function LayoutComponent({ children }) {
 
   const isActive = (path) => location.pathname.includes(path);
 
-  const isSubPage = location.search.length > 0 ||
+  const isSubPage = location.search.length > 0 && !location.pathname.includes('Home') ||
     (location.pathname !== '/' && !['Home', 'Campaigns', 'Settings', 'CreateCharacter', 'OperationsMap'].some(p => location.pathname.includes(p)));
 
   const bottomNavItems = [

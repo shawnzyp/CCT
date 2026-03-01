@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AIGameSession from './pages/AIGameSession';
 import AegisLogs from './pages/AegisLogs';
 import CampaignDetail from './pages/CampaignDetail';
 import Campaigns from './pages/Campaigns';
@@ -63,11 +64,11 @@ import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import AIGameSession from './pages/AIGameSession';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AIGameSession": AIGameSession,
     "AegisLogs": AegisLogs,
     "CampaignDetail": CampaignDetail,
     "Campaigns": Campaigns,
@@ -84,7 +85,6 @@ export const PAGES = {
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
-    "AIGameSession": AIGameSession,
 }
 
 export const pagesConfig = {
