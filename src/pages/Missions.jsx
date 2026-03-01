@@ -166,6 +166,8 @@ export default function Missions() {
   const [sortBy, setSortBy] = useState('created_date');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [showAI, setShowAI] = useState(false);
+  const [aiPrefill, setAiPrefill] = useState(null);
 
   const { data: missions = [] } = useQuery({ queryKey: ['missions'], queryFn: () => base44.entities.Mission.list('-created_date') });
   const { data: characters = [] } = useQuery({ queryKey: ['characters'], queryFn: () => base44.entities.Character.list('-created_date') });
