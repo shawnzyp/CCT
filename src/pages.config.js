@@ -47,11 +47,14 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AICharacterAssist from './pages/AICharacterAssist';
 import AIGameSession from './pages/AIGameSession';
+import AIMissionGen from './pages/AIMissionGen';
 import AegisLogs from './pages/AegisLogs';
 import CampaignDetail from './pages/CampaignDetail';
 import Campaigns from './pages/Campaigns';
 import CharacterSheet from './pages/CharacterSheet';
+import CombatSimulator from './pages/CombatSimulator';
 import CreateCharacter from './pages/CreateCharacter';
 import DMHub from './pages/DMHub';
 import DMTools from './pages/DMTools';
@@ -64,18 +67,18 @@ import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
-import CombatSimulator from './pages/CombatSimulator';
-import AICharacterAssist from './pages/AICharacterAssist';
-import AIMissionGen from './pages/AIMissionGen';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AICharacterAssist": AICharacterAssist,
     "AIGameSession": AIGameSession,
+    "AIMissionGen": AIMissionGen,
     "AegisLogs": AegisLogs,
     "CampaignDetail": CampaignDetail,
     "Campaigns": Campaigns,
     "CharacterSheet": CharacterSheet,
+    "CombatSimulator": CombatSimulator,
     "CreateCharacter": CreateCharacter,
     "DMHub": DMHub,
     "DMTools": DMTools,
@@ -88,9 +91,6 @@ export const PAGES = {
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
-    "CombatSimulator": CombatSimulator,
-    "AICharacterAssist": AICharacterAssist,
-    "AIMissionGen": AIMissionGen,
 }
 
 export const pagesConfig = {
