@@ -142,9 +142,11 @@ export default function CombatArena({ charA, charB, hpA, hpB, maxHpA, maxHpB, cu
       {/* Environment label */}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] font-mono uppercase tracking-widest opacity-40 text-white z-10">{env.label}</div>
 
-      {/* Attack beam */}
-      <AttackBeam attacking={currentAttacker === 'A'} fromLeft color={fxA.color} />
-      <AttackBeam attacking={currentAttacker === 'B'} fromLeft={false} color={fxB.color} />
+      {/* Attack beams with crit support */}
+      <AttackBeam attacking={currentAttacker === 'A'} fromLeft color={fxA.color} isCritical={lastRound?.critical && lastRound?.attacker === charA?.name} />
+      <AttackBeam attacking={currentAttacker === 'B'} fromLeft={false} color={fxB.color} isCritical={lastRound?.critical && lastRound?.attacker === charB?.name} />
+      {/* Environmental particles */}
+      <EnvParticles color={env.particle} active={envActive} />
 
       {/* Fighter A */}
       <div className="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col items-center w-28">
