@@ -25,18 +25,18 @@ export default function BootGate({ children }) {
     };
   }, [isAuthenticated]);
 
-  // Boot not enabled or already authenticated
-  if (isAuthenticated) {
+  // Check if boot is disabled in settings
+  const bootEnabled = (() => {
+    try {
+      const s = JSON.parse(localStorage.getItem('catalystCoreSettings') || '{}');
+      return s.bootEnabled !== false;
+    } catch { return true; }
+  })();
+
+  // Boot not enabled or already authenticated — show children
+  if (isAuthenticated || !bootEnabled) {
     return children;
   }
-
-  // Check if boot is disabled in settings
-  try {
-    const settings_stored = JSON.parse(localStorage.getItem('catalystCoreSettings') || '{}');
-    if (settings_stored.bootEnabled === false) {
-      return children;
-    }
-  } catch {}
 
   // Render full-screen boot gate
   return (
