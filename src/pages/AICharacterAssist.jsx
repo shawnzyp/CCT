@@ -88,8 +88,12 @@ Return JSON with:
 - recommended_power_style_reason: 1 sentence why
 - recommended_alignment: one of: paragon, guardian, vigilante, sentinel, outsider, wildcard, inquisitor, anti_hero, renegade
 - recommended_alignment_reason: 1 sentence why
-- suggested_primary_stats: object with top 2 stats and why (e.g. {"STR": "primary bruiser concept", "CON": "takes hits for others"})
-- signature_move_concept: a unique, flavourful name for their signature ability (e.g. "Resonance Collapse", "Ghostwalk")`;
+- suggested_primary_stats: object with ALL 6 ability scores as keys (STR, DEX, CON, INT, WIS, CHA) — values are numbers 8-18 reflecting the character concept, with the character's top 2 highlighted by being ≥14
+- stat_reasoning: object with same 6 keys, values are 1-sentence reasons why each stat has that value
+- signature_move_concept: a unique, flavourful name for their signature ability (e.g. "Resonance Collapse", "Ghostwalk")
+- signature_move_description: 1-2 sentences explaining what the move does in the fiction
+- suggested_skills: array of 4-6 skill names this character would naturally be proficient in, drawn from: Athletics, Acrobatics, Stealth, Perception, Investigation, Insight, Persuasion, Intimidation, Deception, Medicine, Technology, Survival, History, Arcana
+- skill_reasoning: object where keys are skill names from suggested_skills and values are 1-sentence reasons based on background/stats`;
   };
 
   const handleGenerate = async () => {
