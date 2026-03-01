@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { useTheme } from '@/components/theme/useTheme';
 import { Button } from '@/components/ui/button';
-import { Swords, Zap, ChevronRight, RotateCcw, Users, Trophy, Shield } from 'lucide-react';
+import { Swords, RotateCcw } from 'lucide-react';
 import CombatSimSetup from '@/components/combat-sim/CombatSimSetup';
 import CombatSimBattle from '@/components/combat-sim/CombatSimBattle';
 import CombatSimResults from '@/components/combat-sim/CombatSimResults';
@@ -14,12 +14,14 @@ export default function CombatSimulator() {
   const c = theme?.colors || {};
   const accentA = c.accentA || '#00E5FF';
   const panel0 = c.panel0 || '#1A1F26';
+  const panel1 = c.panel1 || '#202833';
   const text0 = c.text0 || '#E6F1FF';
   const text1 = c.text1 || '#8EA0B5';
   const muted = c.muted || '#5F6E80';
 
-  const [phase, setPhase] = useState('setup'); // setup | battle | results
+  const [phase, setPhase] = useState('setup');
   const [combatants, setCombatants] = useState({ a: null, b: null });
+  const [battleConfig, setBattleConfig] = useState({});
   const [battleLog, setBattleLog] = useState([]);
   const [winner, setWinner] = useState(null);
 
@@ -28,8 +30,9 @@ export default function CombatSimulator() {
     queryFn: () => base44.entities.Character.list('-created_date'),
   });
 
-  const handleStartBattle = (selected) => {
+  const handleStartBattle = (selected, config) => {
     setCombatants(selected);
+    setBattleConfig(config || {});
     setPhase('battle');
   };
 
@@ -42,13 +45,15 @@ export default function CombatSimulator() {
   const handleReset = () => {
     setPhase('setup');
     setCombatants({ a: null, b: null });
+    setBattleConfig({});
     setBattleLog([]);
     setWinner(null);
   };
 
+  const colors = { accentA, panel0, panel1, text0, text1, muted };
+
   return (
     <div className="min-h-screen p-4 sm:p-6 max-w-4xl mx-auto pb-24">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: accentA + '20', border: `1px solid ${accentA}40` }}>
@@ -83,17 +88,17 @@ export default function CombatSimulator() {
       <AnimatePresence mode="wait">
         {phase === 'setup' && (
           <motion.div key="setup" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}>
-            <CombatSimSetup characters={characters} onStart={handleStartBattle} colors={{ accentA, panel0, text0, text1, muted }} />
+            <CombatSimSetup characters={characters} onStart={handleStartBattle} colors={colors} />
           </motion.div>
         )}
         {phase === 'battle' && (
           <motion.div key="battle" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}>
-            <CombatSimBattle combatants={combatants} onComplete={handleBattleComplete} colors={{ accentA, panel0, text0, text1, muted }} />
+            <CombatSimBattle combatants={combatants} onComplete={handleBattleComplete} colors={colors} battleConfig={battleConfig} />
           </motion.div>
         )}
         {phase === 'results' && (
           <motion.div key="results" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}>
-            <CombatSimResults battleLog={battleLog} winner={winner} combatants={combatants} onReset={handleReset} colors={{ accentA, panel0, text0, text1, muted }} />
+            <CombatSimResults battleLog={battleLog} winner={winner} combatants={combatants} onReset={handleReset} colors={colors} />
           </motion.div>
         )}
       </AnimatePresence>
