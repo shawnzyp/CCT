@@ -10,10 +10,11 @@ export default function BootSequence({ theme, onComplete, reducedMotion }) {
   const { isAuthenticated, authenticate } = useBiometricAuth();
   const { settings } = useSettings();
 
-  // If already authenticated, skip boot
+  // If already authenticated, skip boot — BootGate handles rendering children
   if (isAuthenticated) {
     return null;
   }
+
 
   // Select faction-specific boot sequence
   const getFactionBoot = () => {
