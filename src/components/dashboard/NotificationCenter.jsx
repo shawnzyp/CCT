@@ -134,7 +134,7 @@ export default function NotificationCenter({ accentA, panel0, panel1, text0, tex
         <button
           onClick={() => { setOpen(o => !o); setShowPrefs(false); }}
           className="relative flex items-center justify-center w-9 h-9 rounded-lg transition-all"
-          style={{ background: open ? accentA + '20' : 'transparent', border }}
+          style={{ background: open ? accentA + '20' : 'transparent' }}
         >
           <Bell className="h-4 w-4" style={{ color: accentA }} />
           {unread > 0 && (
