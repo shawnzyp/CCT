@@ -148,7 +148,11 @@ Return JSON with:
         }
       }
 
-      if (round.env_trigger) setEnvTrigger(round.env_trigger);
+      if (round.env_trigger) {
+        setEnvTrigger(round.env_trigger);
+        // Pass envActive flag to arena for particle burst
+        setEnvTrigger(round.env_trigger);
+      }
 
       const line = {
         round: round.round_number,
