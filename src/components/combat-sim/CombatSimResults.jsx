@@ -64,6 +64,38 @@ export default function CombatSimResults({ battleLog, winner, combatants, onRese
         </div>
       </div>
 
+      {/* AI Performance Scores */}
+      {(conclusion?.performance_score_a != null || conclusion?.performance_score_b != null) && (
+        <div className="rounded-lg p-4" style={{ background: panel0, border: `1px solid ${accentA}20` }}>
+          <div className="text-[10px] font-mono uppercase tracking-widest mb-3" style={{ color: accentA }}>AI Performance Analysis</div>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            {[
+              { name: combatants.a?.name, score: conclusion.performance_score_a, analysis: conclusion.performance_analysis_a, color: accentA },
+              { name: combatants.b?.name, score: conclusion.performance_score_b, analysis: conclusion.performance_analysis_b, color: '#FF6B6B' },
+            ].map(({ name, score, analysis, color }) => (
+              <div key={name} className="rounded p-3" style={{ background: panel1 }}>
+                <div className="text-[9px] font-mono uppercase mb-1" style={{ color: muted }}>{name}</div>
+                <div className="text-2xl font-mono font-black mb-1" style={{ color }}>{score ?? '—'}</div>
+                <div className="w-full h-1.5 rounded-full overflow-hidden mb-2" style={{ background: '#ffffff10' }}>
+                  <div className="h-full rounded-full" style={{ width: `${score || 0}%`, background: color }} />
+                </div>
+                {analysis && <p className="text-[10px] italic leading-relaxed" style={{ color: muted }}>{analysis}</p>}
+              </div>
+            ))}
+          </div>
+          {conclusion.hero_code_rating && (
+            <div className="flex items-center gap-2 p-2 rounded text-xs font-mono" style={{
+              background: { EXEMPLARY: '#00D1B220', COMMENDABLE: '#00E5FF15', ACCEPTABLE: '#FFC85720', CONCERNING: '#FF950020', VIOLATION: '#FF3B3B20' }[conclusion.hero_code_rating] || '#ffffff10',
+              borderLeft: `3px solid ${{ EXEMPLARY: '#00D1B2', COMMENDABLE: '#00E5FF', ACCEPTABLE: '#FFC857', CONCERNING: '#FF9500', VIOLATION: '#FF3B3B' }[conclusion.hero_code_rating] || muted}`,
+            }}>
+              <span style={{ color: muted }}>HERO CODE:</span>
+              <span className="font-bold" style={{ color: { EXEMPLARY: '#00D1B2', COMMENDABLE: '#00E5FF', ACCEPTABLE: '#FFC857', CONCERNING: '#FF9500', VIOLATION: '#FF3B3B' }[conclusion.hero_code_rating] || text1 }}>{conclusion.hero_code_rating}</span>
+              {conclusion.hero_code_note && <span style={{ color: text1 }}>— {conclusion.hero_code_note}</span>}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* AI Analysis */}
       {conclusion?.analysis && (
         <div className="rounded-lg p-4" style={{ background: panel0, border: `1px solid ${accentA}20` }}>
