@@ -112,9 +112,7 @@ export default function Home() {
           </h1>
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="h-px w-12" style={{ background: accentA, opacity: 0.35 }} />
-            <span className="text-[10px] font-mono tracking-[0.28em]" style={{ color: muted }}>
-              {theme?.faction || 'O.M.N.I.'} // FIELD EDITION
-            </span>
+            <span className="text-[10px] font-mono tracking-[0.28em] whitespace-nowrap" style={{ color: muted }}>{theme?.faction || 'O.M.N.I.'} // FIELD EDITION</span>
             <Radio className="h-2.5 w-2.5 animate-pulse" style={{ color: accentA }} />
             <div className="h-px w-12" style={{ background: accentA, opacity: 0.35 }} />
           </div>
