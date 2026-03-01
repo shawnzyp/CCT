@@ -288,11 +288,19 @@ export default function Missions() {
 
       {showForm && (
         <MissionForm
-          initial={editing}
+          initial={editing || aiPrefill}
           colors={colors}
           characters={characters}
           onSave={handleSave}
-          onCancel={() => { setShowForm(false); setEditing(null); }} />
+          onCancel={() => { setShowForm(false); setEditing(null); setAiPrefill(null); }} />
+      )}
+
+      {showAI && (
+        <AIMissionBriefing
+          colors={colors}
+          characters={characters}
+          onApply={(data) => { setAiPrefill(data); setShowAI(false); setShowForm(true); }}
+          onClose={() => setShowAI(false)} />
       )}
     </div>
   );
