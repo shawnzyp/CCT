@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, MapPin, User, Book, Pencil, Trash2 } from "lucide-react";
 import CollaborativeNotes from "./CollaborativeNotes";
+import AILoreEngine from "./AILoreEngine";
 
 export default function WorldBuilder({ campaign, onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
