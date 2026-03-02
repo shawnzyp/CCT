@@ -44,6 +44,7 @@ import EnhancedLevelUpDialog from '@/components/character/EnhancedLevelUpDialog'
 import { canLevelUp } from '@/components/character/ProgressionData';
 import ManualSaveSlots from '@/components/character/ManualSaveSlots';
 import CharacterHistoryLog from '@/components/character/CharacterHistoryLog';
+import PageWrapper from '@/components/utils/PageWrapper';
 import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
