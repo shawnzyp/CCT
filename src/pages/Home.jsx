@@ -233,14 +233,7 @@ export default function Home() {
           )}
         </motion.div>
 
-        {/* ── DASHBOARD WIDGETS ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75, duration: 0.4 }}>
 
-          <DashboardWidgets colors={{ accentA, accentB, panel0, panel1, text0, text1, muted, bg0 }} />
-        </motion.div>
       </div>
 
       {showCharacterSelector &&
