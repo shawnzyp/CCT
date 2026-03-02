@@ -29,11 +29,13 @@ function saveNotifications(notifs) {
 }
 
 const typeStyle = {
-  security: { icon: ShieldAlert, color: '#FF3B3B' },
+  security: { icon: ShieldAlert,   color: '#FF3B3B' },
   warning:  { icon: AlertTriangle, color: '#FFC857' },
   system:   { icon: Info,          color: '#00E5FF' },
   success:  { icon: CheckCircle,   color: '#00D1B2' },
   update:   { icon: Bell,          color: '#9C27B0' },
+  mission:  { icon: Swords,        color: '#FFC857' },
+  feed:     { icon: Radio,         color: '#00E5FF' },
 };
 
 export default function NotificationCenter({ accentA, panel0, panel1, text0, text1, muted, bg0 }) {
