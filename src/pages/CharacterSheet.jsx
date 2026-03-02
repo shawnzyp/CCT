@@ -593,6 +593,11 @@ export default function CharacterSheet() {
             />
           </TabsContent>
 
+          {/* History Log Tab */}
+          <TabsContent value="history">
+            <CharacterHistoryLog character={character} />
+          </TabsContent>
+
           {/* Info Tab */}
           <TabsContent value="info" className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
