@@ -72,6 +72,7 @@ import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
 import ThreatIntel from './pages/ThreatIntel';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +102,7 @@ export const PAGES = {
     "Rules": Rules,
     "Settings": Settings,
     "ThreatIntel": ThreatIntel,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {
