@@ -73,6 +73,7 @@ import Rules from './pages/Rules';
 import Settings from './pages/Settings';
 import ThreatIntel from './pages/ThreatIntel';
 import Dashboard from './pages/Dashboard';
+import MissionHub from './pages/MissionHub';
 import __Layout from './Layout.jsx';
 
 
@@ -103,6 +104,7 @@ export const PAGES = {
     "Settings": Settings,
     "ThreatIntel": ThreatIntel,
     "Dashboard": Dashboard,
+    "MissionHub": MissionHub,
 }
 
 export const pagesConfig = {
