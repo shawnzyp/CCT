@@ -123,9 +123,21 @@ export default function Home() {
             <div className="h-px w-12" style={{ background: accentA, opacity: 0.35 }} />
           </div>
 
-          <p className="text-sm max-w-md mx-auto mb-7 px-2" style={{ color: text1 }}>
-            Your O.M.N.I. licence is active. Deploy your operative, accept sanctioned missions, and engage hostiles — all activity is logged and reviewed by Command.
-          </p>
+          {/* Status Clearance Block */}
+          <div className="mb-6 mx-auto max-w-xs w-full rounded-lg border px-4 py-3 text-left"
+            style={{ borderColor: accentA + '25', background: '#0F1216CC' }}>
+            {[
+              { label: 'O.M.N.I. Certification', value: 'APPROVED', ok: true },
+              { label: 'Vigilante Licence', value: 'ACTIVE', ok: true },
+              { label: 'Field Deployment', value: 'APPROVED', ok: true },
+              { label: 'Rank', value: 'FIELD AGENT (POWERED)', ok: true },
+            ].map((row) => (
+              <div key={row.label} className="flex items-center justify-between py-0.5">
+                <span className="text-[10px] font-mono" style={{ color: muted }}>{row.label}:</span>
+                <span className="text-[10px] font-mono font-bold" style={{ color: accentA }}>{row.value}</span>
+              </div>
+            ))}
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col gap-2.5 items-center w-full max-w-xs mx-auto">
