@@ -158,7 +158,7 @@ function CombatStatus({ character, onUpdate }) {
           currentHP <= 0 ? "border-red-500/70 bg-red-950/30" : "border-red-900/50 bg-red-950/20"
         )}>
           <Heart className={cn("h-4 w-4", currentHP <= 0 ? "text-red-400 animate-pulse" : "text-red-400")} />
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Hit Points</span>
+          <span className="text-slate-400 text-xs font-semibold text-center uppercase tracking-wider">HIT POINTS</span>
           
           {editingHP ?
           <Input
@@ -205,7 +205,7 @@ function CombatStatus({ character, onUpdate }) {
         {/* Initiative */}
         <div className="bg-slate-800/70 border border-slate-700 rounded-xl p-3 flex flex-col items-center gap-1">
           <Dices className="h-4 w-4 text-emerald-400" />
-          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Initiative</span>
+          <span className="text-slate-400 mb-1 text-sm font-semibold text-center uppercase tracking-wider">INITIATIVE</span>
           {editingInit ?
           <Input
             autoFocus
@@ -217,8 +217,8 @@ function CombatStatus({ character, onUpdate }) {
             className="h-8 w-16 text-center text-lg font-bold bg-slate-900 border-violet-500 text-white" /> :
 
 
-          <button onClick={() => {setInitInput(String(initiativeMod));setEditingInit(true);}}
-          className="text-3xl font-bold text-white hover:text-emerald-300 transition-colors tabular-nums">
+          <button onClick={() => {setInitInput(String(initiativeMod));setEditingInit(true);}} className="text-white mt-3 text-3xl font-bold hover:text-emerald-300 transition-colors tabular-nums">
+
               {formatModifier(initiativeMod)}
             </button>
           }
