@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import PageWrapper from '@/components/utils/PageWrapper';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

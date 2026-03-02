@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PageWrapper from '@/components/utils/PageWrapper';
 import { useSettings } from '@/components/utils/useSettings';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';

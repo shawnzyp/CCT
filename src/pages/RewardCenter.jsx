@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PageWrapper from '@/components/utils/PageWrapper';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

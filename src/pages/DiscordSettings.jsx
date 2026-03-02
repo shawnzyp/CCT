@@ -1,4 +1,5 @@
 import React from 'react';
+import PageWrapper from '@/components/utils/PageWrapper';
 import DiscordIntegration from '@/components/dm/DiscordIntegration';
 
 export default function DiscordSettings() {
