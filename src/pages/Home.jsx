@@ -33,12 +33,18 @@ export default function Home() {
     window.dispatchEvent(new CustomEvent('characterChanged', { detail: character }));
   };
 
-  const currentCharacter = (() => {
+  const [currentCharacter, setCurrentCharacter] = useState(() => {
     try {
       const stored = localStorage.getItem('currentCharacter');
       return stored ? JSON.parse(stored) : null;
-    } catch {return null;}
-  })();
+    } catch { return null; }
+  });
+
+  useEffect(() => {
+    const handler = (e) => setCurrentCharacter(e.detail);
+    window.addEventListener('characterChanged', handler);
+    return () => window.removeEventListener('characterChanged', handler);
+  }, []);
 
   const c = theme?.colors || {};
   const m = theme?.motion || {};
