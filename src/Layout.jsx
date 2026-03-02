@@ -201,7 +201,8 @@ function LayoutComponent({ children }) {
                   <img
                     src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                     alt="O.M.N.I. Logo"
-                    className="w-16 h-16 sm:w-20 sm:h-20 object-contain flex-shrink-0"
+                    className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0"
+                    style={{ filter: `drop-shadow(0 0 10px ${accentA}90) drop-shadow(0 0 4px ${accentA}60)`, imageRendering: 'crisp-edges' }}
                   />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1 sm:gap-2">
