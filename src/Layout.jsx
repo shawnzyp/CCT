@@ -16,6 +16,7 @@ import AegisContextWatcher from '@/components/aegis/AegisContextWatcher';
 import { AegisProvider } from '@/components/aegis/AegisContext';
 import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
 import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
+import TutorialInitializer from '@/components/tutorial/TutorialInitializer';
 import BootGate from '@/components/theme/BootGate';
 import DMLoginFooter from '@/components/dm/DMLoginFooter';
 import { useSettings } from '@/components/utils/useSettings';
