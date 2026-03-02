@@ -85,6 +85,12 @@ export default function Home() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh} className="min-h-screen relative">
+
+      {/* ── WORLD NEWS TICKER ── */}
+      <div className="sticky top-14 sm:top-16 z-40">
+        <WorldNewsTicker accentA={accentA} bg0={bg0} muted={muted} text0={text0} />
+      </div>
+
       <div className="relative max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-8 pb-24">
 
         {/* ── HERO ── */}
