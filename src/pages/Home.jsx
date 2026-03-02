@@ -87,7 +87,7 @@ export default function Home() {
     <PullToRefresh onRefresh={handleRefresh} className="min-h-screen relative">
 
       {/* ── WORLD NEWS TICKER ── */}
-      <div className="sticky top-0 z-40">
+      <div className="w-full overflow-hidden">
         <WorldNewsTicker accentA={accentA} bg0={bg0} muted={muted} text0={text0} />
       </div>
 
