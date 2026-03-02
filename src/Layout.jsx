@@ -106,6 +106,7 @@ function LayoutComponent({ children }) {
         { name: 'Operations Map', path: 'OperationsMap', icon: Map },
         { name: 'Missions', path: 'Missions', icon: BookOpen },
         { name: 'Operations', path: 'Operations', icon: BookOpen },
+        { name: 'Factions', path: 'Factions', icon: Shield },
         { name: 'Threat Intel', path: 'ThreatIntel', icon: Radio },
       ]
     },
