@@ -1302,6 +1302,6 @@ export default function Help() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
