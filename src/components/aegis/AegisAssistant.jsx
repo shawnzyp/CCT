@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Radio, ChevronRight, MessageSquare, X } from 'lucide-react';
+import { Radio, ChevronRight, MessageSquare, X, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import AegisInterface from './AegisInterface';
+import AegisGMInterface from './AegisGMInterface';
 
 // ── STATES ───────────────────────────────────────────────────────────────────
 const STATE = { CLOSED: 'CLOSED', DOCKED: 'DOCKED', CHAT: 'CHAT' };
@@ -206,6 +207,9 @@ export default function AegisAssistant() {
   const [isTalking, setIsTalking] = useState(false);
   const [advisory, setAdvisory] = useState(null); // { message, id }
   const [hasUnread, setHasUnread] = useState(false);
+  const [activeTab, setActiveTab] = useState('aegis'); // 'aegis' | 'gm'
+  const [pendingPrompt, setPendingPrompt] = useState(null);
+  const [pendingTab, setPendingTab] = useState('aegis');
   const { play } = useSoundEffects();
 
   const autoHideTimerRef = useRef(null);
@@ -246,6 +250,38 @@ export default function AegisAssistant() {
     }
     return clearAutoHide;
   }, [panelState, startAutoHide, clearAutoHide]);
+
+  // ── External prompt listener (useAIPrompt hook)
+  useEffect(() => {
+    const handler = (e) => {
+      const { prompt, tab = 'aegis' } = e.detail || {};
+      setPendingPrompt(prompt);
+      setPendingTab(tab);
+      setActiveTab(tab);
+      setPanelState(STATE.CHAT);
+      clearAutoHide();
+      setHasUnread(false);
+    };
+    window.addEventListener('aegis:openWithPrompt', handler);
+    return () => window.removeEventListener('aegis:openWithPrompt', handler);
+  }, [clearAutoHide]);
+
+  // ── Context hint listener (AegisContextWatcher)
+  useEffect(() => {
+    const handler = (e) => {
+      const { message } = e.detail || {};
+      if (message) {
+        setAdvisory({ message, id: Date.now() });
+        setIsTalking(true);
+        setExpression('alert');
+        setPanelState((s) => { if (s === STATE.CLOSED) setHasUnread(true); return s; });
+        clearTimeout(advisoryTimerRef.current);
+        advisoryTimerRef.current = setTimeout(() => { setAdvisory(null); setIsTalking(false); setExpression('neutral'); }, BUBBLE_DURATION_MS);
+      }
+    };
+    window.addEventListener('aegis:contextHint', handler);
+    return () => window.removeEventListener('aegis:contextHint', handler);
+  }, []);
 
   // ── Advisory message system
   const showAdvisory = useCallback(() => {
@@ -477,26 +513,43 @@ export default function AegisAssistant() {
             boxShadow: '4px 0 24px rgba(139,92,246,0.2)'
           }}>
 
-          {/* Chat header with face anchor */}
+          {/* Chat header */}
           <div
-            className="flex-shrink-0 flex flex-col items-center py-3 gap-1"
+            className="flex-shrink-0"
             style={{ borderBottom: '1px solid rgba(139,92,246,0.25)', background: 'linear-gradient(180deg, rgba(109,40,217,0.12) 0%, transparent 100%)' }}>
-
-            <div className="w-full flex items-center justify-between px-3">
+            <div className="flex items-center justify-between px-3 pt-3 pb-2">
               <div className="flex items-center gap-2">
-                <AegisFace expression={expression} isTalking={isTalking} size={36} />
+                <AegisFace expression={expression} isTalking={isTalking} size={32} />
                 <div>
-                  <div className="text-xs font-bold font-mono text-violet-300">A.E.G.I.S.</div>
-                  <div className="text-[9px] font-mono text-violet-500 uppercase tracking-widest">Adaptive Intelligence</div>
+                  <div className="text-xs font-bold font-mono text-violet-300">
+                    {activeTab === 'aegis' ? 'A.E.G.I.S.' : 'A.I. Director'}
+                  </div>
+                  <div className="text-[9px] font-mono text-violet-500 uppercase tracking-widest">
+                    {activeTab === 'aegis' ? 'Rules & Lore' : 'Narrative GM'}
+                  </div>
                 </div>
               </div>
               <button
                 onClick={handleCloseChat}
-                aria-label="Close A.E.G.I.S. Chat"
+                aria-label="Close panel"
                 className="cc-sm-target h-7 w-7 min-h-0 min-w-0 flex items-center justify-center rounded-lg hover:bg-violet-500/20 transition-colors">
-
                 <X className="h-4 w-4 text-violet-300" />
               </button>
+            </div>
+            {/* Tab switcher */}
+            <div className="flex px-3 pb-2 gap-1">
+              {[{ id: 'aegis', label: 'A.E.G.I.S.', icon: Radio }, { id: 'gm', label: 'A.I. GM', icon: Bot }].map(tab => (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-mono font-bold transition-all"
+                  style={{
+                    background: activeTab === tab.id ? 'rgba(139,92,246,0.3)' : 'transparent',
+                    color: activeTab === tab.id ? '#a78bfa' : 'rgba(139,92,246,0.5)',
+                    border: `1px solid ${activeTab === tab.id ? 'rgba(139,92,246,0.5)' : 'transparent'}`,
+                  }}>
+                  <tab.icon className="h-2.5 w-2.5" />
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -506,8 +559,10 @@ export default function AegisAssistant() {
             onClick={handleAegisInteraction}
             onScroll={handleAegisInteraction}
             onKeyDown={handleAegisInteraction}>
-
-            <AegisInterface compact />
+            {activeTab === 'aegis'
+              ? <AegisInterface compact initialPrompt={pendingTab === 'aegis' ? pendingPrompt : null} onPromptConsumed={() => setPendingPrompt(null)} />
+              : <AegisGMInterface initialPrompt={pendingTab === 'gm' ? pendingPrompt : null} onPromptConsumed={() => setPendingPrompt(null)} />
+            }
           </div>
         </div>
       </motion.div>
