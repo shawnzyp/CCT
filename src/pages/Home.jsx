@@ -94,20 +94,14 @@ export default function Home() {
           className="text-center mb-4 sm:mb-6">
 
           {/* Logo */}
-          <div className="relative inline-flex mb-2">
-            <div className="w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center">
+          <div className="inline-flex mb-1">
+            <div className="w-28 h-28 sm:w-40 sm:h-40 flex items-center justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                 alt="O.M.N.I. Logo"
                 className="w-full h-full object-contain"
-                style={{ filter: `drop-shadow(0 0 8px ${accentA}55)` }} />
-
+                style={{ filter: `drop-shadow(0 0 18px ${accentA}90) drop-shadow(0 0 6px ${accentA}60)`, imageRendering: 'crisp-edges' }} />
             </div>
-            {/* Live indicator */}
-            <span
-              className="absolute -top-1 -right-1 h-3 w-3 rounded-full animate-pulse"
-              style={{ background: c.success || '#00D1B2', boxShadow: `0 0 6px ${c.success || '#00D1B2'}` }} />
-
           </div>
 
           {/* Title */}
