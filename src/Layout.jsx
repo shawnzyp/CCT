@@ -172,7 +172,7 @@ function LayoutComponent({ children }) {
 
           {/* ── HEADER ── */}
           <header
-            className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b"
+            className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b overflow-hidden"
             style={{
               background: bg0 + 'F0',
               borderColor: accentA + '30',
