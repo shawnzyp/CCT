@@ -432,6 +432,6 @@ export default function Settings() {
           </div>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageWrapper>
   );
 }

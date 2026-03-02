@@ -291,6 +291,6 @@ export default function DMHub() {
         open={showAllCharacters} 
         onClose={() => setShowAllCharacters(false)} 
       />
-    </div>
+    </PageWrapper>
   );
 }

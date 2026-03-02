@@ -103,6 +103,6 @@ export default function EconomyPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

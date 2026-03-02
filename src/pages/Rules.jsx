@@ -632,6 +632,6 @@ export default function Rules() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

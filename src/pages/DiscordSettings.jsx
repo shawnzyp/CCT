@@ -8,6 +8,6 @@ export default function DiscordSettings() {
       <div className="max-w-5xl mx-auto">
         <DiscordIntegration />
       </div>
-    </div>
+    </PageWrapper>
   );
 }

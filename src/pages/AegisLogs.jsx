@@ -177,6 +177,6 @@ export default function AegisLogs() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

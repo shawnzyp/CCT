@@ -397,6 +397,6 @@ export default function DiceRoller() {
           </Card>
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 }
