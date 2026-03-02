@@ -384,7 +384,7 @@ function LayoutComponent({ children }) {
               transition: 'background 400ms, border-color 250ms',
             }}
           >
-            <div className="flex items-center justify-around h-16">
+            <div className="grid h-16" style={{ gridTemplateColumns: `repeat(${bottomNavItems.length}, 1fr)` }}>
               {bottomNavItems.map(item => {
                 const active = isActive(item.path);
                 const isCharacterAction = item.action === 'characterSelector';
