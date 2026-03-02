@@ -10,6 +10,7 @@ import CharacterSelector from '@/components/character/CharacterSelector';
 import PullToRefresh from '@/components/utils/PullToRefresh';
 import { useTheme } from '@/components/theme/useTheme';
 import NotificationCenter from '@/components/dashboard/NotificationCenter';
+import WorldNewsTicker from '@/components/home/WorldNewsTicker';
 
 export default function Home() {
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
