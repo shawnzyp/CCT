@@ -156,7 +156,7 @@ function LayoutComponent({ children }) {
       <AegisProvider>
 
         <div
-          className={cn("min-h-screen overflow-x-hidden relative", fontSizeClass, settings.highContrast && "contrast-125")}
+          className={cn("min-h-screen overflow-x-hidden relative w-screen max-w-full", fontSizeClass, settings.highContrast && "contrast-125")}
           style={{ background: theme?.background?.gradient || '#0F1216' }}
         >
           {/* Real-time sync engine (mounts once, no UI) */}
