@@ -117,15 +117,14 @@ export default function Home() {
 
             CATALYST CORE
           </h1>
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="h-px w-12" style={{ background: accentA, opacity: 0.35 }} />
-            <span className="font-mono tracking-[0.28em] whitespace-nowrap" style={{ color: muted }}>
+          <div className="flex items-center justify-center gap-2 mb-4 w-full">
+            <div className="h-px w-12 flex-shrink-0" style={{ background: accentA, opacity: 0.35 }} />
+            <span className="font-mono tracking-[0.28em] whitespace-nowrap text-center" style={{ color: muted }}>
               <span className="text-[10px]">O.M.N.I. // Tactical Console</span>
               <span className="block text-[9px] sm:hidden mt-0.5 tracking-widest">Field Edition</span>
               <span className="hidden sm:block text-[9px] mt-0.5 tracking-widest">Secured Edition</span>
             </span>
-            <Radio className="h-2.5 w-2.5 animate-pulse" style={{ color: accentA }} />
-            <div className="h-px w-12" style={{ background: accentA, opacity: 0.35 }} />
+            <div className="h-px w-12 flex-shrink-0" style={{ background: accentA, opacity: 0.35 }} />
           </div>
 
           {/* Status Clearance Block */}
