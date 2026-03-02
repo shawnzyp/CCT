@@ -91,18 +91,18 @@ export default function Home() {
         <WorldNewsTicker accentA={accentA} bg0={bg0} muted={muted} text0={text0} />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-8 pb-24">
+      <div className="relative max-w-5xl mx-auto px-3 sm:px-4 lg:px-6 py-2 pb-24">
 
         {/* ── HERO ── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: easing }}
-          className="text-center mb-2 sm:mb-4">
+          className="text-center mb-2">
 
           {/* Logo */}
           <div className="inline-flex mb-0">
-            <div className="w-40 h-40 sm:w-56 sm:h-56 flex items-center justify-center">
+            <div className="w-32 h-32 sm:w-44 sm:h-44 flex items-center justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                 alt="O.M.N.I. Logo"
