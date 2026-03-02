@@ -390,7 +390,7 @@ function LayoutComponent({ children }) {
                 const isCharacterAction = item.action === 'characterSelector';
                 
                 const NavElement = (
-                  <div className="flex flex-col items-center justify-center gap-0.5 min-w-[44px] h-full px-3 relative"
+                  <div className="flex flex-col items-center justify-center gap-0.5 w-full h-full relative"
                     style={{
                               color: active ? accentA : muted,
                               transition: `color ${theme?.motion?.fast || 120}ms ease-out`,
