@@ -140,7 +140,7 @@ export default function WorldNewsTicker({ accentA, bg0, muted, text0 }) {
       >
         <Radio className="h-3 w-3 animate-pulse" style={{ color: accent }} />
         <span className="text-[9px] font-mono font-bold tracking-[0.2em] whitespace-nowrap" style={{ color: accent }}>
-          A.I. WORLD FEED
+          NEWS FEED
         </span>
         {isLoading && (
           <Zap className="h-2.5 w-2.5 animate-spin" style={{ color: accent, opacity: 0.7 }} />
