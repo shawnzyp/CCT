@@ -552,43 +552,13 @@ Generated: ${new Date().toLocaleString()}
           />
         </TabsContent>
 
-        {/* Credits Tab */}
+        {/* Credits/Economy Tab */}
         <TabsContent value="credits" className="space-y-3">
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-emerald-400" />
-                Credits Manager
-              </CardTitle>
-              <p className="text-xs text-slate-400">Manage character currency</p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                {characters.map(char => (
-                  <Card key={char.id} className="bg-slate-700/50 border-slate-600">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-semibold text-white">{char.name}</p>
-                          <p className="text-sm text-emerald-400 font-mono">
-                            💰 {char.credits || 0} Credits
-                          </p>
-                        </div>
-                        <Button
-                          size="sm"
-                          onClick={() => handleCreditsAdjust(char.id, char.credits, char.name)}
-                          className="bg-emerald-600 hover:bg-emerald-700"
-                        >
-                          <DollarSign className="h-4 w-4 mr-2" />
-                          Adjust
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <CampaignEconomyPanel
+            campaign={campaign}
+            characters={characters}
+            onUpdate={onUpdate}
+          />
         </TabsContent>
 
         {/* GM Notes Tab */}
