@@ -91,16 +91,16 @@ export default function Home() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: easing }}
-          className="text-center mb-4 sm:mb-6">
+          className="text-center mb-2 sm:mb-4">
 
           {/* Logo */}
-          <div className="inline-flex mb-1">
-            <div className="w-28 h-28 sm:w-40 sm:h-40 flex items-center justify-center">
+          <div className="inline-flex mb-0">
+            <div className="w-40 h-40 sm:w-56 sm:h-56 flex items-center justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                 alt="O.M.N.I. Logo"
                 className="w-full h-full object-contain"
-                style={{ filter: `drop-shadow(0 0 18px ${accentA}90) drop-shadow(0 0 6px ${accentA}60)`, imageRendering: 'crisp-edges' }} />
+                style={{ filter: `drop-shadow(0 0 28px ${accentA}95) drop-shadow(0 0 10px ${accentA}70)`, imageRendering: 'crisp-edges', transform: 'scale(1.08)' }} />
             </div>
           </div>
 
