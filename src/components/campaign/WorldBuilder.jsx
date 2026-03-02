@@ -73,6 +73,11 @@ export default function WorldBuilder({ campaign, characters = [], onUpdate }) {
   
   return (
     <div className="space-y-6">
+      {/* AI Lore Engine */}
+      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+        <AILoreEngine campaign={campaign} characters={characters} onUpdate={onUpdate} />
+      </div>
+
       <Tabs defaultValue="locations" className="space-y-4">
         <TabsList className="bg-slate-800/50 border border-slate-700">
           <TabsTrigger value="locations">
