@@ -394,6 +394,7 @@ export default function CharacterSheet() {
               <SelectItem value="notes">📝 Notes</SelectItem>
               <SelectItem value="items">📦 Items Reference</SelectItem>
               <SelectItem value="questionnaire">📖 Questionnaire</SelectItem>
+              <SelectItem value="history">📜 History Log</SelectItem>
             </SelectContent>
           </Select>
           
