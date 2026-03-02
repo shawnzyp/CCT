@@ -130,16 +130,21 @@ export default function Home() {
 
           {/* Status Clearance Block */}
           <div className="mb-6 mx-auto max-w-xs w-full rounded-lg border px-4 py-3 text-left"
-            style={{ borderColor: accentA + '25', background: '#0F1216CC' }}>
-            {[
-              { label: 'O.M.N.I. Certification', value: 'APPROVED', ok: true },
-              { label: 'Vigilante Licence', value: 'ACTIVE', ok: true },
-              { label: 'Field Deployment', value: 'APPROVED', ok: true },
-              { label: 'Rank', value: 'FIELD AGENT (POWERED)', ok: true },
-            ].map((row) => (
+            style={{ borderColor: currentCharacter ? accentA + '40' : '#FF3B3B25', background: '#0F1216CC' }}>
+            {currentCharacter ? [
+              { label: 'Operative', value: currentCharacter.name },
+              { label: 'Clearance', value: 'APPROVED' },
+              { label: 'Level', value: `${currentCharacter.level || 1} · TIER ${currentCharacter.tier ?? '?'}` },
+              { label: 'Status', value: 'FIELD ACTIVE' },
+            ] : [
+              { label: 'Operative', value: 'UNASSIGNED', warn: true },
+              { label: 'Clearance', value: 'PENDING', warn: true },
+              { label: 'Field Deployment', value: 'LOCKED', warn: true },
+              { label: 'Status', value: 'NO OPERATIVE', warn: true },
+            ].map((row) => row)}.map((row) => (
               <div key={row.label} className="flex items-center justify-between py-0.5">
                 <span className="text-[10px] font-mono" style={{ color: muted }}>{row.label}:</span>
-                <span className="text-[10px] font-mono font-bold" style={{ color: accentA }}>{row.value}</span>
+                <span className="text-[10px] font-mono font-bold" style={{ color: row.warn ? '#FF3B3B' : accentA }}>{row.value}</span>
               </div>
             ))}
           </div>
