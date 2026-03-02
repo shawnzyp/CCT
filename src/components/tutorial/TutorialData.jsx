@@ -168,6 +168,54 @@ export const TUTORIALS = {
     ]
   },
 
+  INVENTORY_MANAGEMENT: {
+    id: 'inventory_management',
+    name: 'Inventory Management',
+    steps: [
+      {
+        title: 'Managing Your Gear',
+        description: 'Your character carries weapons, armor, and gadgets. Proper gear management improves your combat effectiveness.',
+        position: 'center',
+        icon: 'sparkles'
+      },
+      {
+        title: 'Equipment Slots',
+        description: 'You have limited equipment slots. Equip your best gear to get bonuses. Each equipped item provides stat boosts or special effects.',
+        target: '[data-tutorial="equipment-slots"]',
+        position: 'bottom',
+        tips: ['Weapons increase attack damage', 'Armor increases TC (Toughness Class)', 'Gadgets provide unique abilities']
+      },
+      {
+        title: 'Item Rarity',
+        description: 'Items have rarity levels: Common < Uncommon < Rare < Epic < Legendary. Rarer items are more powerful.',
+        target: '[data-tutorial="item-rarity"]',
+        position: 'bottom',
+        tips: ['Find rare items in missions', 'Higher rarity = better bonuses', 'Legendary items are game-changers']
+      },
+      {
+        title: 'Inventory vs Equipment',
+        description: 'Inventory holds everything you carry. Only equipped items give bonuses. Swap items in and out as needed.',
+        target: '[data-tutorial="inventory-panel"]',
+        position: 'bottom',
+        action: 'Drag items from inventory to equipment slots to equip them'
+      },
+      {
+        title: 'Consumables',
+        description: 'Healing potions, stat boosters, and one-time use items. Use them from your inventory during missions or rest.',
+        target: '[data-tutorial="consumables"]',
+        position: 'bottom',
+        tips: ['Healing items restore HP instantly', 'Stat boosters last for the current session', 'Some items have special effects']
+      },
+      {
+        title: 'Trading',
+        description: 'Trade items with other characters or sell unwanted gear for credits. Use credits to buy better equipment.',
+        target: '[data-tutorial="trading-panel"]',
+        position: 'bottom',
+        action: 'Visit the Economy tab to trade with teammates'
+      }
+    ]
+  },
+
   FIRST_SESSION: {
     id: 'first_session',
     name: 'Your First Session',
