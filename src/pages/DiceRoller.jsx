@@ -140,7 +140,7 @@ export default function DiceRoller() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 p-6">
+    <PageWrapper className="p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3">

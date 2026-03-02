@@ -61,7 +61,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 to-black p-4 sm:p-6">
+    <PageWrapper className="p-4 sm:p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-6">

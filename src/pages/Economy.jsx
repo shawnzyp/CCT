@@ -37,16 +37,16 @@ export default function EconomyPage() {
 
   if (!currentCharacter) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 p-6">
+      <PageWrapper className="p-6">
         <div className="max-w-2xl mx-auto text-center py-12">
           <p className="text-slate-400">Select a character to access economy features</p>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 p-6">
+    <PageWrapper className="p-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-6">Economy & Trading</h1>
 

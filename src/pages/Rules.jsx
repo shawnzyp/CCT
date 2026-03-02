@@ -11,7 +11,7 @@ import AskAIButton from "@/components/aegis/AskAIButton";
 export default function Rules() {
   const [activeTab, setActiveTab] = useState('rulebook');
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 overflow-x-hidden">
+    <PageWrapper className="overflow-x-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
