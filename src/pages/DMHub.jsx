@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import MedalsAchievementsManager from '@/components/dm/MedalsAchievementsManager';
 import AllCharactersModal from '@/components/dm/AllCharactersModal';
+import AIDirectorPanel from '@/components/director/AIDirectorPanel';
 
 export default function DMHub() {
   const [showAllCharacters, setShowAllCharacters] = useState(false);
@@ -224,6 +225,22 @@ export default function DMHub() {
               </Card>
             );
           })}
+        </div>
+
+        {/* A.I. Director Panel */}
+        <div className="mt-8">
+          <div className="bg-slate-800/50 border-2 border-violet-500/30 rounded-xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center">
+                <Bot className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-white font-bold text-lg">A.I. Director</h2>
+                <p className="text-slate-400 text-xs">Campaign management powered by AI</p>
+              </div>
+            </div>
+            <AIDirectorPanel />
+          </div>
         </div>
 
         {/* Medals & Achievements Manager */}

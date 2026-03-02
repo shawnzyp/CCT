@@ -3,7 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/components/theme/useTheme';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Search, Trash2, Edit2, CheckCircle, XCircle, Clock, Zap, Star, X, Save, Target, Shield, Bot, Layers } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, CheckCircle, XCircle, Clock, Zap, Star, X, Save, Target, Shield, Bot, Layers, FileText } from 'lucide-react';
+import MissionDebrief from '@/components/missions/MissionDebrief';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -90,7 +91,7 @@ function MissionForm({ initial, onSave, onCancel, colors, characters }) {
   );
 }
 
-function MissionCard({ mission, onEdit, onDelete, onStatusChange, colors, characters }) {
+function MissionCard({ mission, onEdit, onDelete, onStatusChange, onDebrief, colors, characters }) {
   const { accentA, panel0, panel1, text0, text1, muted } = colors;
   const sc = STATUS_CONFIG[mission.status] || STATUS_CONFIG.pending;
   const dc = DIFFICULTY_CONFIG[mission.difficulty] || DIFFICULTY_CONFIG.medium;
@@ -168,6 +169,7 @@ export default function Missions() {
   const [editing, setEditing] = useState(null);
   const [showAI, setShowAI] = useState(false);
   const [aiPrefill, setAiPrefill] = useState(null);
+  const [debriefMission, setDebriefMission] = useState(null);
 
   const { data: missions = [] } = useQuery({ queryKey: ['missions'], queryFn: () => base44.entities.Mission.list('-created_date') });
   const { data: characters = [] } = useQuery({ queryKey: ['characters'], queryFn: () => base44.entities.Character.list('-created_date') });
@@ -280,7 +282,8 @@ export default function Missions() {
               <MissionCard key={m.id} mission={m} colors={colors} characters={characters}
                 onEdit={m => { setEditing(m); setShowForm(true); }}
                 onDelete={id => deleteMission.mutate(id)}
-                onStatusChange={handleStatusChange} />
+                onStatusChange={handleStatusChange}
+                onDebrief={m => setDebriefMission(m)} />
             ))}
           </AnimatePresence>
         </div>
@@ -293,6 +296,10 @@ export default function Missions() {
           characters={characters}
           onSave={handleSave}
           onCancel={() => { setShowForm(false); setEditing(null); setAiPrefill(null); }} />
+      )}
+
+      {debriefMission && (
+        <MissionDebrief mission={debriefMission} colors={colors} onClose={() => setDebriefMission(null)} />
       )}
 
       {showAI && (
