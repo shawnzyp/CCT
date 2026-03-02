@@ -151,27 +151,27 @@ export default function CharacterSheet() {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
+      <PageWrapper className="flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         >
           <Zap className="h-8 w-8 text-violet-400" />
         </motion.div>
-      </div>
+      </PageWrapper>
     );
   }
   
   if (!character) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 flex items-center justify-center">
+      <PageWrapper className="flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl text-white mb-4">Character not found</h2>
           <Link to={createPageUrl('Home')}>
             <Button>Back Home</Button>
           </Link>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
   
@@ -293,7 +293,7 @@ export default function CharacterSheet() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950">
+    <PageWrapper>
       {/* Ambient glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
@@ -738,6 +738,6 @@ export default function CharacterSheet() {
           />
         )}
       </AnimatePresence>
-    </div>
+    </PageWrapper>
   );
 }
