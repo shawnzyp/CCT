@@ -280,7 +280,8 @@ export default function NotificationCenter({ accentA, panel0, panel1, text0, tex
       <AnimatePresence>
         {toast && (
           <motion.div
-            className="fixed bottom-24 right-4 z-[300] w-72 rounded-xl shadow-2xl flex items-start gap-3 px-4 py-3"
+            className="fixed bottom-24 right-2 z-[300] rounded-xl shadow-2xl flex items-start gap-3 px-4 py-3"
+            style={{ width: 'min(288px, calc(100vw - 16px))' }}
             style={{ background: panel0, border: `1px solid ${(typeStyle[toast.type] || typeStyle.system).color}50` }}
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
