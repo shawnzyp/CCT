@@ -102,6 +102,7 @@ function LayoutComponent({ children }) {
     {
       name: 'Tools',
       items: [
+        { name: 'Dashboard', path: 'Dashboard', icon: LayoutDashboard },
         { name: 'Dice Roller', path: 'DiceRoller', icon: Zap },
         { name: 'Economy', path: 'Economy', icon: Package },
         { name: 'Operations Map', path: 'OperationsMap', icon: Map },
