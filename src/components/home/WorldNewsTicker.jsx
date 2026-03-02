@@ -76,6 +76,10 @@ export default function WorldNewsTicker({ accentA, bg0, muted, text0 }) {
       ]);
       const h = await generateHeadlines(characters, missions, campaigns);
       setHeadlines(h);
+      // Push the first headline as a high-priority feed notification
+      if (h?.length && typeof window.__ccNotify === 'function') {
+        window.__ccNotify({ type: 'feed', title: 'NEWS FEED UPDATE', body: h[0] });
+      }
     } catch {
       setHeadlines(FALLBACK_HEADLINES);
     } finally {
