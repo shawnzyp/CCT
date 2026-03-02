@@ -10,7 +10,7 @@ import { Plus, MapPin, User, Book, Pencil, Trash2 } from "lucide-react";
 import CollaborativeNotes from "./CollaborativeNotes";
 import AILoreEngine from "./AILoreEngine";
 
-export default function WorldBuilder({ campaign, onUpdate }) {
+export default function WorldBuilder({ campaign, characters = [], onUpdate }) {
   const [showDialog, setShowDialog] = useState(false);
   const [dialogType, setDialogType] = useState('location');
   const [editingIndex, setEditingIndex] = useState(null);
