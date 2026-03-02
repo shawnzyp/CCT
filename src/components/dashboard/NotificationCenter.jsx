@@ -167,8 +167,8 @@ export default function NotificationCenter({ accentA, panel0, panel1, text0, tex
         <AnimatePresence>
           {open && (
             <motion.div
-              className="absolute right-0 top-11 z-[200] w-80 rounded-xl overflow-hidden shadow-2xl"
-              style={{ background: panel0, border }}
+              className="fixed sm:absolute right-2 sm:right-0 top-16 sm:top-11 z-[200] rounded-xl overflow-hidden shadow-2xl"
+              style={{ background: panel0, border, width: 'min(320px, calc(100vw - 16px))' }}
               initial={{ opacity: 0, y: -8, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.96 }}
