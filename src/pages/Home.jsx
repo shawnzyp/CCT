@@ -129,9 +129,8 @@ export default function Home() {
           </div>
 
           {/* Status Clearance Block */}
-          <div className="mb-6 mx-auto max-w-xs w-full rounded-lg border px-4 py-3 text-left"
-            style={{ borderColor: currentCharacter ? accentA + '40' : '#FF3B3B25', background: '#0F1216CC' }}>
-            {currentCharacter ? [
+          {(() => {
+            const rows = currentCharacter ? [
               { label: 'Operative', value: currentCharacter.name },
               { label: 'Clearance', value: 'APPROVED' },
               { label: 'Level', value: `${currentCharacter.level || 1} · TIER ${currentCharacter.tier ?? '?'}` },
@@ -140,14 +139,20 @@ export default function Home() {
               { label: 'Operative', value: 'UNASSIGNED', warn: true },
               { label: 'Clearance', value: 'PENDING', warn: true },
               { label: 'Field Deployment', value: 'LOCKED', warn: true },
-              { label: 'Status', value: 'NO OPERATIVE', warn: true },
-            ].map((row) => row)}.map((row) => (
-              <div key={row.label} className="flex items-center justify-between py-0.5">
-                <span className="text-[10px] font-mono" style={{ color: muted }}>{row.label}:</span>
-                <span className="text-[10px] font-mono font-bold" style={{ color: row.warn ? '#FF3B3B' : accentA }}>{row.value}</span>
+              { label: 'Status', value: 'NO OPERATIVE SELECTED', warn: true },
+            ];
+            return (
+              <div className="mb-6 mx-auto max-w-xs w-full rounded-lg border px-4 py-3 text-left"
+                style={{ borderColor: currentCharacter ? accentA + '35' : '#FF3B3B30', background: '#0F1216CC' }}>
+                {rows.map((row) => (
+                  <div key={row.label} className="flex items-center justify-between py-0.5">
+                    <span className="text-[10px] font-mono" style={{ color: muted }}>{row.label}:</span>
+                    <span className="text-[10px] font-mono font-bold" style={{ color: row.warn ? '#FF3B3B' : accentA }}>{row.value}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
 
           {/* CTA Buttons */}
           <div className="flex flex-col gap-2.5 items-center w-full max-w-xs mx-auto">
