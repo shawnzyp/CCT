@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, BookOpen, Play, Pause, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Search, BookOpen, Play, Pause, CheckCircle, Archive, Copy, LayoutDashboard, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import CreateCampaignDialog from "@/components/campaign/CreateCampaignDialog";
+import CampaignDashboardOverview from "@/components/campaign/CampaignDashboardOverview";
 import PullToRefresh from "@/components/utils/PullToRefresh";
 import { useSettings } from '@/components/utils/useSettings';
 import { useTheme } from '@/components/theme/useTheme';
+import { toast } from 'sonner';
 
 const STATUS_ICONS = {
   planning: Pause,
@@ -23,6 +26,9 @@ const STATUS_ICONS = {
 export default function Campaigns() {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('-created_date');
+  const [showDashboard, setShowDashboard] = useState(true);
   const queryClient = useQueryClient();
   const { settings } = useSettings();
   const { theme } = useTheme();
@@ -32,13 +38,55 @@ export default function Campaigns() {
     queryFn: () => base44.entities.Campaign.list('-created_date')
   });
 
+  const updateCampaignMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Campaign.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['campaigns'] })
+  });
+
+  const createCampaignMutation = useMutation({
+    mutationFn: (data) => base44.entities.Campaign.create(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['campaigns'] })
+  });
+
   const handleRefresh = async () => {
     await queryClient.refetchQueries({ queryKey: ['campaigns'] });
   };
-  
-  const filteredCampaigns = campaigns.filter(c => 
-    c.name?.toLowerCase().includes(search.toLowerCase())
-  );
+
+  const handleArchive = async (e, campaign) => {
+    e.preventDefault(); e.stopPropagation();
+    await updateCampaignMutation.mutateAsync({ id: campaign.id, data: { status: 'completed' } });
+    toast.success(`"${campaign.name}" archived`);
+  };
+
+  const handleDuplicate = async (e, campaign) => {
+    e.preventDefault(); e.stopPropagation();
+    await createCampaignMutation.mutateAsync({
+      name: `${campaign.name} (Copy)`,
+      description: campaign.description,
+      status: 'planning',
+      world_locations: campaign.world_locations || [],
+      world_npcs: campaign.world_npcs || [],
+      world_lore: campaign.world_lore || [],
+      quests: campaign.quests || [],
+      story_arcs: campaign.story_arcs || [],
+      custom_currencies: campaign.custom_currencies || [],
+    });
+    toast.success('Campaign duplicated');
+  };
+
+  const filteredCampaigns = campaigns
+    .filter(c => {
+      const matchSearch = c.name?.toLowerCase().includes(search.toLowerCase());
+      const matchStatus = statusFilter === 'all' || c.status === statusFilter;
+      return matchSearch && matchStatus;
+    })
+    .sort((a, b) => {
+      if (sortBy === '-created_date') return new Date(b.created_date) - new Date(a.created_date);
+      if (sortBy === 'created_date') return new Date(a.created_date) - new Date(b.created_date);
+      if (sortBy === 'name') return a.name?.localeCompare(b.name);
+      if (sortBy === '-session_count') return (b.session_count || 0) - (a.session_count || 0);
+      return 0;
+    });
 
   const accentA = theme?.colors?.accentA || '#00E5FF';
   const bg0 = theme?.colors?.bg0 || '#0F1216';
