@@ -5,6 +5,7 @@ import WidgetRecentActivity from './WidgetRecentActivity';
 import WidgetSystemStatus from './WidgetSystemStatus';
 import WidgetKPI from './WidgetKPI';
 import WidgetQuickLinks from './WidgetQuickLinks';
+import WidgetAmbientNarrative from './WidgetAmbientNarrative';
 
 const PREFS_KEY = 'cc_widget_prefs';
 
@@ -13,6 +14,7 @@ const ALL_WIDGETS = [
   { id: 'status',    label: 'System Status Overview',  Component: WidgetSystemStatus  },
   { id: 'kpi',       label: 'Key Performance Indicators', Component: WidgetKPI        },
   { id: 'links',     label: 'Quick Access Links',      Component: WidgetQuickLinks    },
+  { id: 'narrative', label: 'A.I. World Feed',         Component: WidgetAmbientNarrative },
 ];
 
 function loadPrefs() {
