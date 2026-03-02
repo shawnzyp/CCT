@@ -245,11 +245,33 @@ export default function Campaigns() {
                         </p>
                         
                         {/* Stats footer */}
-                        <div className="flex items-center gap-3 text-[10px] sm:text-xs font-mono" style={{ color: muted }}>
-                          <span>📔 {campaign.journal_entries?.length || 0}</span>
-                          <span>•</span>
-                          <span>🌍 {campaign.world_events?.length || 0}</span>
-                        </div>
+                         <div className="flex items-center justify-between gap-2 mt-auto pt-2">
+                           <div className="flex items-center gap-2 text-[10px] sm:text-xs font-mono" style={{ color: muted }}>
+                             <span>📔 {campaign.journal_entries?.length || 0}</span>
+                             <span>•</span>
+                             <span>🌍 {campaign.world_events?.length || 0}</span>
+                           </div>
+                           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <button
+                               onClick={(e) => handleDuplicate(e, campaign)}
+                               className="h-6 w-6 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
+                               title="Duplicate"
+                               style={{ color: muted }}
+                             >
+                               <Copy className="h-3 w-3" />
+                             </button>
+                             {campaign.status !== 'completed' && (
+                               <button
+                                 onClick={(e) => handleArchive(e, campaign)}
+                                 className="h-6 w-6 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
+                                 title="Archive"
+                                 style={{ color: muted }}
+                               >
+                                 <Archive className="h-3 w-3" />
+                               </button>
+                             )}
+                           </div>
+                         </div>
                       </div>
                     </motion.div>
                   </Link>
