@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,6 +58,8 @@ html {
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  /* Prevent any element from exceeding the viewport width */
+  max-width: 100%;
 }
 
 /* ── BODY ───────────────────────────────────────────────────────────────── */
