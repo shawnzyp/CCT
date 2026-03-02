@@ -61,22 +61,22 @@ export default function TutorialOverlay() {
         )}
 
         {/* Tutorial Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 50, scale: 0.9 }}
-          className={cn(
-            "absolute z-[101]",
-            stepData.position === 'top' && "top-4 left-1/2 -translate-x-1/2",
-            stepData.position === 'bottom' && "bottom-4 left-1/2 -translate-x-1/2",
-            stepData.position === 'left' && "left-4 top-1/2 -translate-y-1/2",
-            stepData.position === 'right' && "right-4 top-1/2 -translate-y-1/2",
-            stepData.position === 'center' && "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-            !stepData.position && "bottom-8 right-8"
-          )}
-        >
-          <Card className="bg-gradient-to-br from-violet-900 to-slate-900 border-violet-500 shadow-2xl max-w-md">
-            <CardContent className="p-6">
+         <motion.div
+           initial={{ opacity: 0, y: 50, scale: 0.9 }}
+           animate={{ opacity: 1, y: 0, scale: 1 }}
+           exit={{ opacity: 0, y: 50, scale: 0.9 }}
+           className={cn(
+             "absolute z-[101] mx-4 max-w-sm",
+             stepData.position === 'top' && "top-4 left-1/2 -translate-x-1/2",
+             stepData.position === 'bottom' && "bottom-4 left-1/2 -translate-x-1/2",
+             stepData.position === 'left' && "left-4 top-1/2 -translate-y-1/2",
+             stepData.position === 'right' && "right-4 top-1/2 -translate-y-1/2",
+             stepData.position === 'center' && "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+             !stepData.position && "bottom-8 right-8"
+           )}
+         >
+           <Card className="bg-gradient-to-br from-violet-900 to-slate-900 border-violet-500 shadow-2xl">
+             <CardContent className="p-4 sm:p-6 max-h-[70vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-2">
