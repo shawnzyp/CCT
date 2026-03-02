@@ -139,7 +139,7 @@ export default function DMTools() {
             </CardContent>
           </Card>
         </motion.div>
-      </div>
+      </PageWrapper>
     );
   }
 
