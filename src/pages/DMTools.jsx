@@ -424,6 +424,6 @@ export default function DMTools() {
           onOpenChange={setShowPINSettings}
         />
       </div>
-    </div>
+    </PageWrapper>
   );
 }
