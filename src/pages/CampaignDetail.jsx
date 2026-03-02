@@ -210,6 +210,9 @@ export default function CampaignDetail({ currentCharacter }) {
           </TabsContent>
           
           <TabsContent value="world">
+            <WorldBuilder campaign={campaign} characters={characters} onUpdate={(data) => updateCampaign.mutate(data)} />
+          </TabsContent>
+          <TabsContent value="_world_readonly">
             <div className="rounded-lg border p-4 sm:p-6 space-y-6" style={{ background: panel0, borderColor: `${accentA}20` }}>
               <h3 className="text-base sm:text-lg font-mono font-semibold" style={{ color: text0 }}>World Information</h3>
               <div className="space-y-6">
