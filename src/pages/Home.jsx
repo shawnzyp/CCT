@@ -86,11 +86,11 @@ export default function Home() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: easing }}
-          className="text-center mb-10 sm:mb-14">
+          className="text-center mb-4 sm:mb-6">
 
           {/* Logo */}
-          <div className="relative inline-flex mb-5">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center">
+          <div className="relative inline-flex mb-2">
+            <div className="w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/696d1e71c654a257ffdf4599/6581787fa_B06D525E-EF70-4793-8658-76FD6C825B2B.png"
                 alt="O.M.N.I. Logo"

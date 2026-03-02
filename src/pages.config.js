@@ -62,6 +62,7 @@ import DMTools from './pages/DMTools';
 import DiceRoller from './pages/DiceRoller';
 import DiscordSettings from './pages/DiscordSettings';
 import Economy from './pages/Economy';
+import Factions from './pages/Factions';
 import Help from './pages/Help';
 import Home from './pages/Home';
 import Missions from './pages/Missions';
@@ -71,7 +72,6 @@ import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
 import ThreatIntel from './pages/ThreatIntel';
-import Factions from './pages/Factions';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +91,7 @@ export const PAGES = {
     "DiceRoller": DiceRoller,
     "DiscordSettings": DiscordSettings,
     "Economy": Economy,
+    "Factions": Factions,
     "Help": Help,
     "Home": Home,
     "Missions": Missions,
@@ -100,7 +101,6 @@ export const PAGES = {
     "Rules": Rules,
     "Settings": Settings,
     "ThreatIntel": ThreatIntel,
-    "Factions": Factions,
 }
 
 export const pagesConfig = {
