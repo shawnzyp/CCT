@@ -65,12 +65,13 @@ import Economy from './pages/Economy';
 import Help from './pages/Help';
 import Home from './pages/Home';
 import Missions from './pages/Missions';
+import Operations from './pages/Operations';
 import OperationsMap from './pages/OperationsMap';
 import RewardCenter from './pages/RewardCenter';
 import Rules from './pages/Rules';
 import Settings from './pages/Settings';
 import ThreatIntel from './pages/ThreatIntel';
-import Operations from './pages/Operations';
+import Factions from './pages/Factions';
 import __Layout from './Layout.jsx';
 
 
@@ -93,12 +94,13 @@ export const PAGES = {
     "Help": Help,
     "Home": Home,
     "Missions": Missions,
+    "Operations": Operations,
     "OperationsMap": OperationsMap,
     "RewardCenter": RewardCenter,
     "Rules": Rules,
     "Settings": Settings,
     "ThreatIntel": ThreatIntel,
-    "Operations": Operations,
+    "Factions": Factions,
 }
 
 export const pagesConfig = {
