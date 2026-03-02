@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, X, AlertTriangle, Info, CheckCircle, ShieldAlert, Settings, Mail, Trash2 } from 'lucide-react';
+import { Bell, X, AlertTriangle, Info, CheckCircle, ShieldAlert, Settings, Mail, Trash2, Swords, Radio } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const PREFS_KEY = 'cc_notif_prefs';
