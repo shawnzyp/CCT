@@ -415,7 +415,7 @@ function LayoutComponent({ children }) {
                     <button
                       key={item.label}
                       onClick={() => setShowCharacterSelector(true)}
-                      className="h-full"
+                      className="h-full w-full flex items-center justify-center"
                     >
                       {NavElement}
                     </button>
@@ -426,7 +426,7 @@ function LayoutComponent({ children }) {
                   <Link
                     key={item.label}
                     to={createPageUrl(item.path)}
-                    className="h-full"
+                    className="h-full w-full flex items-center justify-center"
                   >
                     {NavElement}
                   </Link>
