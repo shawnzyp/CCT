@@ -212,44 +212,6 @@ export default function CampaignDetail({ currentCharacter }) {
           <TabsContent value="world">
             <WorldBuilder campaign={campaign} characters={characters} onUpdate={(data) => updateCampaign.mutate(data)} />
           </TabsContent>
-          <TabsContent value="_world_readonly">
-            <div className="rounded-lg border p-4 sm:p-6 space-y-6" style={{ background: panel0, borderColor: `${accentA}20` }}>
-              <h3 className="text-base sm:text-lg font-mono font-semibold" style={{ color: text0 }}>World Information</h3>
-              <div className="space-y-6">
-                {campaign.world_locations?.length > 0 && (
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-mono font-semibold uppercase mb-3" style={{ color: accentA }}>Locations</h4>
-                    <div className="space-y-2">
-                      {campaign.world_locations.map((loc, i) => (
-                        <div key={i} className="rounded p-3" style={{ background: `${panel1}80`, borderLeft: `2px solid ${accentA}40` }}>
-                          <div className="font-mono font-semibold text-sm" style={{ color: text0 }}>{loc.name}</div>
-                          <p className="text-xs mt-1" style={{ color: text1 }}>{loc.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {campaign.world_npcs?.length > 0 && (
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-mono font-semibold uppercase mb-3" style={{ color: accentA }}>NPCs</h4>
-                    <div className="space-y-2">
-                      {campaign.world_npcs.map((npc, i) => (
-                        <div key={i} className="rounded p-3" style={{ background: `${panel1}80`, borderLeft: `2px solid ${accentA}40` }}>
-                          <div className="font-mono font-semibold text-sm" style={{ color: text0 }}>{npc.name}</div>
-                          <p className="text-[10px] sm:text-xs mt-1" style={{ color: muted }}>{npc.role}</p>
-                          <p className="text-xs mt-2" style={{ color: text1 }}>{npc.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {!campaign.world_locations?.length && !campaign.world_npcs?.length && (
-                  <p className="text-center text-xs sm:text-sm font-mono" style={{ color: muted }}>No world information yet</p>
-                )}
-              </div>
-            </div>
-          </TabsContent>
-          
           <TabsContent value="log">
             <SessionLog 
               sessionLog={campaign.session_log || []} 
