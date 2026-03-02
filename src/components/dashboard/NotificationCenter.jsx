@@ -58,6 +58,20 @@ export default function NotificationCenter({ accentA, panel0, panel1, text0, tex
 
     const unsubs = [];
 
+    // Mission status changes
+    unsubs.push(base44.entities.Mission.subscribe((event) => {
+      if (event.type !== 'update') return;
+      const data = event.data;
+      if (!data) return;
+      if (data.status === 'completed') {
+        addNotification({ type: 'success', title: 'Mission Complete', body: `"${data.title}" has been completed.` });
+      } else if (data.status === 'failed') {
+        addNotification({ type: 'warning', title: 'Mission Failed', body: `"${data.title}" has failed.` });
+      } else if (data.status === 'in_progress' || data.status === 'active') {
+        addNotification({ type: 'mission', title: 'Mission Active', body: `"${data.title}" is now in progress.` });
+      }
+    }));
+
     // GameEvent notifications
     if (prefs.system) {
       unsubs.push(base44.entities.GameEvent.subscribe((event) => {
