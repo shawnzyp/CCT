@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import {
   Shield, Users, Zap, Settings, Coins, BookOpen,
-  Trophy, Package, Store, MapPin, Calendar, FileText, Radio, Webhook, Gift
+  Trophy, Package, Store, MapPin, Calendar, FileText, Radio, Webhook, Gift, Bot
 } from 'lucide-react';
 import MedalsAchievementsManager from '@/components/dm/MedalsAchievementsManager';
 import AllCharactersModal from '@/components/dm/AllCharactersModal';

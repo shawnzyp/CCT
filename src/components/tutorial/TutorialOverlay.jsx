@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { X, ChevronLeft, ChevronRight, Lightbulb, Sparkles } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Lightbulb, Sparkles, Bot } from 'lucide-react';
+import AskAIButton from '@/components/aegis/AskAIButton';
 import { cn } from '@/lib/utils';
 import { useTutorial } from './TutorialSystem';
 
@@ -132,6 +133,13 @@ export default function TutorialOverlay() {
                     <p className="text-xs text-amber-200">
                       <strong>Try it:</strong> {stepData.action}
                     </p>
+                  </div>
+                )}
+
+                {stepData.aegisPrompt && (
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="text-xs text-slate-400">Still unsure?</span>
+                    <AskAIButton prompt={stepData.aegisPrompt} label="Ask A.E.G.I.S." />
                   </div>
                 )}
               </div>

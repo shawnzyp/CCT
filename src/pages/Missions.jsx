@@ -117,6 +117,11 @@ function MissionCard({ mission, onEdit, onDelete, onStatusChange, onDebrief, col
           </div>
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
+          {mission.status === 'completed' && (
+            <button onClick={() => onDebrief(mission)} className="p-1.5 rounded hover:opacity-70" title="Generate Debrief">
+              <FileText className="h-3.5 w-3.5" style={{ color: 'rgba(167,139,250,0.7)' }} />
+            </button>
+          )}
           <button onClick={() => onEdit(mission)} className="p-1.5 rounded hover:opacity-70"><Edit2 className="h-3.5 w-3.5" style={{ color: muted }} /></button>
           <button onClick={() => onDelete(mission.id)} className="p-1.5 rounded hover:opacity-70"><Trash2 className="h-3.5 w-3.5" style={{ color: '#FF3B3B' }} /></button>
         </div>
