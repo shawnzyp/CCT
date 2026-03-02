@@ -22,7 +22,7 @@ import EchoEventsDeployment from './EchoEventsDeployment';
 import GameSettings from '../dm/GameSettings';
 import AchievementsManager from '../dm/AchievementsManager';
 import { Shield, DollarSign, Settings as SettingsIcon, Trophy } from 'lucide-react';
-import CampaignEconomyPanel from './../../components/economy/CampaignEconomyPanel';
+import CampaignEconomyPanel from '../economy/CampaignEconomyPanel';
 
 export default function GMToolsPanel({ campaign, characters, onUpdate }) {
   const [npcs, setNpcs] = useState(campaign.gm_npcs || []);
