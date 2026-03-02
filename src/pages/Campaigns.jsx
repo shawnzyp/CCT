@@ -126,17 +126,62 @@ export default function Campaigns() {
             </div>
           </div>
           
-          {/* Search */}
-          <div className="relative mb-6" style={{ opacity: 0.9 }}>
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: muted }} />
-            <Input
-              placeholder="Search campaigns..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 text-xs sm:text-sm"
-              style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}
-              autoFocus={false}
-            />
+          {/* Dashboard Toggle */}
+          <button
+            onClick={() => setShowDashboard(v => !v)}
+            className="flex items-center gap-2 mb-3 text-xs font-mono transition-opacity hover:opacity-80"
+            style={{ color: accentA }}
+          >
+            <LayoutDashboard className="h-3.5 w-3.5" />
+            {showDashboard ? 'Hide' : 'Show'} Overview
+            <ChevronDown className={cn("h-3 w-3 transition-transform", showDashboard && "rotate-180")} />
+          </button>
+
+          <AnimatePresence>
+            {showDashboard && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                <CampaignDashboardOverview campaigns={campaigns} theme={theme} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Search + Filters */}
+          <div className="flex flex-col sm:flex-row gap-2 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: muted }} />
+              <Input
+                placeholder="Search campaigns..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 text-xs sm:text-sm"
+                style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}
+                autoFocus={false}
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-36 text-xs" style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}>
+                <SlidersHorizontal className="h-3.5 w-3.5 mr-1.5" style={{ color: muted }} />
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent style={{ background: panel0 }}>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="planning">Planning</SelectItem>
+                <SelectItem value="on_hold">On Hold</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full sm:w-40 text-xs" style={{ background: `${panel0}80`, borderColor: `${accentA}25`, color: text0 }}>
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent style={{ background: panel0 }}>
+                <SelectItem value="-created_date">Newest First</SelectItem>
+                <SelectItem value="created_date">Oldest First</SelectItem>
+                <SelectItem value="name">Name A–Z</SelectItem>
+                <SelectItem value="-session_count">Most Sessions</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         
           {/* Campaigns Grid */}
