@@ -43,6 +43,7 @@ import PlayerJournal from '@/components/character/PlayerJournal';
 import EnhancedLevelUpDialog from '@/components/character/EnhancedLevelUpDialog';
 import { canLevelUp } from '@/components/character/ProgressionData';
 import ManualSaveSlots from '@/components/character/ManualSaveSlots';
+import CharacterHistoryLog from '@/components/character/CharacterHistoryLog';
 import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
