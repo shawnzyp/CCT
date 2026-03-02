@@ -87,7 +87,7 @@ export default function Home() {
     <PullToRefresh onRefresh={handleRefresh} className="min-h-screen relative">
 
       {/* ── WORLD NEWS TICKER ── */}
-      <div className="sticky top-14 sm:top-16 z-40 -mt-0">
+      <div className="sticky top-14 sm:top-16 z-40" style={{ marginTop: '-1px' }}>
         <WorldNewsTicker accentA={accentA} bg0={bg0} muted={muted} text0={text0} />
       </div>
 
