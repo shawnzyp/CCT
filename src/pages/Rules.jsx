@@ -5,6 +5,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Shield, Zap, Swords, Users, AlertCircle, Download, FileText } from "lucide-react";
+import AskAIButton from "@/components/aegis/AskAIButton";
 
 export default function Rules() {
   const [activeTab, setActiveTab] = useState('rulebook');
@@ -108,7 +109,7 @@ export default function Rules() {
             {/* Classification */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Step 1: Classification</CardTitle>
+                <CardTitle className="text-white flex items-center gap-3">Step 1: Classification <AskAIButton prompt="Explain the Classification system in Catalyst Core — what does each classification mean mechanically and what perk does it grant?" /></CardTitle>
                 <p className="text-sm text-slate-400">Choose how you received your powers</p>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -130,7 +131,7 @@ export default function Rules() {
             {/* Power Styles */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Step 2: Power Styles (Up to 2)</CardTitle>
+                <CardTitle className="text-white flex items-center gap-3">Step 2: Power Styles (Up to 2) <AskAIButton prompt="Explain the Power Styles in Catalyst Core — how do primary vs secondary power styles work and what are good combos?" /></CardTitle>
                 <p className="text-sm text-slate-400">Choose your superpowers (only one grants perk)</p>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -154,7 +155,7 @@ export default function Rules() {
             {/* Origin Stories */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Step 3: Origin Story</CardTitle>
+                <CardTitle className="text-white flex items-center gap-3">Step 3: Origin Story <AskAIButton prompt="Explain Origin Stories in Catalyst Core and which origins are best for different playstyles." /></CardTitle>
                 <p className="text-sm text-slate-400">What influenced you becoming a vigilante</p>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -264,9 +265,10 @@ export default function Rules() {
           <TabsContent value="combat" className="space-y-4">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-white flex items-center gap-3">
                   <Swords className="h-5 w-5 text-violet-400" />
                   Combat Mechanics
+                  <AskAIButton prompt="Walk me through a full combat round in Catalyst Core — initiative, action economy, attacks, and reactions." />
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -345,9 +347,10 @@ export default function Rules() {
           <TabsContent value="powers" className="space-y-4">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-white flex items-center gap-3">
                   <Zap className="h-5 w-5 text-violet-400" />
                   Stamina Points (SP)
+                  <AskAIButton prompt="Explain Stamina Points (SP) in Catalyst Core — how they work, SP costs, regeneration, and optimal SP management in combat." />
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

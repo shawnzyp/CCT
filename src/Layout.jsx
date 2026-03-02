@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useSoundEffects from '@/components/sounds/useSoundEffects';
 import SaveStatusDot from '@/components/utils/SaveStatusDot';
 import AegisAssistant from '@/components/aegis/AegisAssistant';
+import AegisContextWatcher from '@/components/aegis/AegisContextWatcher';
 import { AegisProvider } from '@/components/aegis/AegisContext';
 import { TutorialProvider } from '@/components/tutorial/TutorialSystem';
 import TutorialOverlay from '@/components/tutorial/TutorialOverlay';
@@ -440,6 +441,7 @@ function LayoutComponent({ children }) {
             />
           )}
 
+          <AegisContextWatcher />
           <AegisAssistant />
           <TutorialOverlay />
         </div>

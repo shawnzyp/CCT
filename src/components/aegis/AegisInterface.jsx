@@ -77,7 +77,7 @@ async function executeAction(type) {
   return null;
 }
 
-export default function AegisInterface() {
+export default function AegisInterface({ compact, initialPrompt, onPromptConsumed }) {
   const { settings } = useSettings();
   const [isDirector, setIsDirector] = useState(() => {
     return localStorage.getItem('isDM') === 'true';
@@ -107,6 +107,14 @@ export default function AegisInterface() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
+
+  // Consume injected prompt from useAIPrompt hook
+  useEffect(() => {
+    if (initialPrompt) {
+      setInput(initialPrompt);
+      onPromptConsumed?.();
+    }
+  }, [initialPrompt]);
   const { play } = useSoundEffects();
 
   useEffect(() => {
