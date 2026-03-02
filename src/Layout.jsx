@@ -444,6 +444,7 @@ function LayoutComponent({ children }) {
             />
           )}
 
+          <TutorialInitializer />
           <AegisContextWatcher />
           <AegisAssistant />
           <TutorialOverlay />
